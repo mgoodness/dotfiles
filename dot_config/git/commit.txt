@@ -1,0 +1,7 @@
+## Remember to follow: https://www.conventionalcommits.org/en/v1.0.0/#summary
+#
+# <type>[optional scope]: <description>
+
+# [optional body]
+
+# [optional footer(s)]

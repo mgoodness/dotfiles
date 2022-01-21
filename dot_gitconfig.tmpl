@@ -1,0 +1,120 @@
+[branch]
+  autoSetupRebase = always
+[color]
+  ui = true
+[commit]
+  gpgSign = true
+  template = ~/.config/git/commit.txt
+[core]
+  autocrlf = input
+  editor = code --wait
+  excludesFile = ~/.config/git/ignore
+  trustctime = false
+{{- if (eq .chezmoi.os "darwin") }}
+[credential]
+  helper = osxkeychain
+{{- end }}
+[diff]
+  noprefix = true
+  tool = vscode
+  colorMoved = zebra
+[difftool "vscode"]
+  cmd = code --wait --diff $LOCAL $REMOTE
+[fetch]
+  prune = true
+[gpg]
+  program = /usr/local/bin/gpg
+[hub]
+  protocol = ssh
+[init]
+  defaultBranch = main
+[merge]
+  tool = vscode
+[mergetool "vscode"]
+  cmd = code --wait $MERGED
+[pull]
+  rebase = merges
+[push]
+  default = upstream
+[rebase]
+  autoStash = true
+[tag]
+  forceSignAnnotated = true
+# [url "git@github.com:"]
+#   insteadOf = https://github.com/
+{{- if .work }}
+[url "git@github.mlbam.net:"]
+  insteadOf = https://github.mlbam.net/
+{{- end }}
+[user]
+  email = {{ .email | quote }}
+  name = Michael Goodness
+  signingkey = 4A31C228815AA553
+  useConfigOnly = true
+[web]
+  browser = open
+[color "status"]
+  branch = normal
+  added = 10 normal
+  updated = 10 normal
+  localbranch = normal
+  changed = 11 normal
+  header = normal
+  remotebranch = normal
+  nobranch = 1 normal italic
+  unmerged = 9 normal
+  untracked = normal dim
+[color "branch"]
+  plain = normal dim
+  remote = normal dim
+  current = normal
+  local = normal dim
+  upstream = normal
+[color "remote"]
+  hint = normal dim
+  success = 2 normal
+  error = 1 normal
+  warning = 3 normal
+[color "interactive"]
+  header = normal bold
+  prompt = 15 4
+  help = normal
+  error = 1 normal italic
+[color "diff"]
+  commit = 3 normal
+  newMoved = 14 normal
+  oldMovedAlternativeDimmed = 4 normal dim
+  frag = normal ul
+  oldMovedAlternative = 12 normal dim
+  contextBold = normal bold
+  newBold = 10 normal bold
+  context = normal
+  oldMoved = 14 normal dim
+  oldBold = 9 normal dim bold
+  newMovedDimmed = 6 normal
+  func = normal ul
+  meta = normal
+  newDimmed = 2 normal
+  newMovedAlternative = 12 normal
+  new = 10 normal
+  newMovedAlternativeDimmed = 4 normal
+  whitespace = normal 9
+  oldMovedDimmed = 6 normal dim
+  oldDimmed = 1 normal dim
+  old = 9 normal dim
+[color "decorate"]
+  branch = normal
+  tag = 3 normal
+  remotebranch = normal
+  stash = normal
+  grafted = 1 normal italic
+  HEAD = normal dim
+[alias]
+  finishpr = !"finishpr () { \
+      default=$(git head-branch); \
+      git checkout $default && git pull origin $default; \
+      git push --delete origin $1; \
+      git branch --delete --force $1; \
+    }; finishpr"
+  head-branch = !git remote show $(git upstream-name) | awk '/HEAD branch/ {print $NF}'
+  upstream-name = !git remote | rg -o '(origin|upstream)' | tail -1

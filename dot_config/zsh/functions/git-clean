@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+for branch in $(git branch --merged "$1" | rg -v "$1"); do
+  git push --delete origin $branch
+  git branch --delete $branch
+done

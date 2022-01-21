@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+for m in $(rg --files-with-matches -- $1); do
+  sed -i '' -e "s/$1/$2/g" $m
+done

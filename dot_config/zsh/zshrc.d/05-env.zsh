@@ -1,0 +1,81 @@
+# Ref: https://github.com/marlonrichert/zsh-launchpad/blob/main/.config/zsh/rc.d/05-env.zsh
+# Ref: https://github.com/marlonrichert/.config/blob/main/zsh/zshrc.d/02-env.zsh
+
+##
+# Environment variables
+#
+
+export LANG=en_US.UTF-8  # Not set on macOS.
+
+[[ $OSTYPE == linux-gnu ]] &&
+  export LC_COLLATE=C.UTF-8  # Other UTF-8 locales on Linux give weird whitespace sorting.
+
+export HOMEBREW_BAT=1 HOMEBREW_COLOR=1 HOMEBREW_NO_AUTO_UPDATE=1
+path=( /home/linuxbrew/.linuxbrew/bin(N) $path[@] )
+znap eval brew-shellenv 'brew shellenv'
+
+export GOPATH=~/go
+export GOBIN=$GOPATH/bin
+
+export PYENV_ROOT=~/.local/opt/pyenv
+export PYENV_VERSION=3.10.1
+znap eval pyenv-path 'pyenv init --path'
+
+export PIPX_HOME=~/.local/opt/pipx
+
+export KREW_ROOT=~/.krew
+
+export -U PATH path FPATH fpath MANPATH manpath # -U removes duplicates
+export -UT INFOPATH infopath                    # -T creates a "tied" pair
+
+# (N) omits the item if it doesn't exist.
+path=(
+  $GOBIN(N)
+  $KREW_ROOT/bin(N)
+  ~/.local/bin(N)
+  $path[@]
+)
+
+fpath=(
+  $ZDOTDIR/completions(N)
+  $ZDOTDIR/functions(N)
+  ~/.local/share/zsh/site-functions
+  $HOMEBREW_PREFIX/share/zsh/site-functions
+  $fpath[@]
+)
+
+autoload -Uz $ZDOTDIR/functions/*(.:t)
+
+export VISUAL=code EDITOR=nvim
+[[ -v SSH_CONNECTION ]] ||
+  VISUAL=code
+
+export PAGER=less MANPAGER='bat -l man' READNULLCMD=bat
+export LESSCHARSET='utf-8'
+export LESS='-FiMr -j.5 --incsearch' LESSHISTFILE=${XDG_DATA_HOME:=~/.local/share}/less/lesshst
+mkdir -pm 0700 $LESSHISTFILE:h
+
+export QUOTING_STYLE=escape # Used by GNU ls
+
+if [[ $VENDOR == apple ]]; then
+  MANPAGER="col -bpx | $MANPAGER"
+fi
+
+export KUBECONFIG=~/.kube/config
+znap eval docker-env 'minikube docker-env'
+
+export FZF_DEFAULT_COMMAND='fd --color=always --exclude .git --follow --hidden --type f'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_DEFAULT_OPTS='--ansi --color=16 --height=40% --reverse'
+
+export TREE_IGNORE='cache|log|logs'
+
+# Ref: https://github.com/ajeetdsouza/zoxide
+# znap eval zoxide 'zoxide init --cmd cd zsh'
+znap eval zoxide 'zoxide init zsh'
+
+# # Number of matches to list without asking first
+# export LISTMAX=50
+
+# # Treat these characters as part of a word
+# export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'

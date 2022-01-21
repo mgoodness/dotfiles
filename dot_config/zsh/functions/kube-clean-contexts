@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+local current_context=$(kubectl config current-context)
+local ktemp=$(mktemp)
+
+kubectl config-cleanup --raw > $ktemp
+mv ~/.kube/config ~/.kube/config.old
+mv $ktemp ~/.kube/config
+
+kubectl config use-context $current_context

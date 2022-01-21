@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+git rebase --rebase-merges "$1"
+
+root_dir=(git rev-parse --show-toplevel)
+while [[ -f "${root_dir}/.git/rebase-merge/stopped-sha" ]]; do
+  stopped_sha=(cat "${root_dir}/.git/rebase-merge/stopped-sha")
+  git_author_string=(git show -s --format='%an <%ae>' "${stopped_sha}")
+
+  for c in (git diff --name-only --diff-filter=U); do
+    eval "${GIT_EDITOR}" "${root_dir}/$c"
+  done
+
+  git commit --all--author="${git_author_string}"
+  git rebase --continue
+done

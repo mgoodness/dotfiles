@@ -1,0 +1,11 @@
+{{- $email := promptString "email" -}}
+{{- $work := promptBool "work" -}}
+
+[data]
+  email = {{ $email | quote }}
+  work = {{ $work }}
+
+{{- if (eq .chezmoi.os "darwin") }}
+[pinentry]
+  command = "/usr/local/bin/pinentry-mac"
+{{- end }}

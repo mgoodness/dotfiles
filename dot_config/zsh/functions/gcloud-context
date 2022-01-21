@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+local context contexts fzf_query
+
+contexts=$(gcloud config configurations list --format='value(name)')
+
+[[ -n "$@" ]] && fzf_query="--query=$@"
+context=$(printf $contexts | fzf --no-multi $fzf_query)
+[[ -n "$context" ]] && gcloud config configurations activate "$context"

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+local clusters=$(gcloud container clusters list --format='table(name,zone)' \
+  | fzf --header-lines=1 --no-multi)
+
+gcloud container clusters get-credentials \
+  "$(printf $clusters | cut -f1 -d' ')" \
+  --region=$(printf $clusters | tr -s ' ' | cut -f2 -d' ')

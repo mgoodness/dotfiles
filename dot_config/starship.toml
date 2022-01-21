@@ -1,0 +1,99 @@
+[aws]
+symbol = "  "
+
+[battery]
+disabled = true
+
+[cmd_duration]
+style = 'yellow'
+
+[conda]
+symbol = " "
+
+[dart]
+symbol = " "
+
+[directory]
+read_only = " "
+style = 'blue'
+
+[docker_context]
+symbol = " "
+
+[elixir]
+symbol = " "
+
+[elm]
+symbol = " "
+
+[gcloud]
+format='in [$symbol$project]($style) '
+symbol = " "
+
+[git_branch]
+style = 'purple'
+symbol = " "
+
+[git_commit]
+disabled = false
+style = 'green'
+
+[git_state]
+style = 'yellow'
+
+[git_status]
+style = 'red'
+
+[golang]
+symbol = " "
+
+[hg_branch]
+symbol = " "
+
+[java]
+symbol = " "
+
+[julia]
+symbol = " "
+
+[kubernetes]
+disabled = false
+style = 'cyan'
+symbol = 'ﴱ '
+
+[memory_usage]
+symbol = " "
+
+[nim]
+symbol = " "
+
+[nix_shell]
+symbol = " "
+
+[package]
+symbol = " "
+
+[perl]
+symbol = " "
+
+[php]
+symbol = " "
+
+[python]
+pyenv_version_name = true
+symbol = " "
+
+[ruby]
+symbol = " "
+
+[rust]
+symbol = " "
+
+[scala]
+symbol = " "
+
+[shlvl]
+symbol = " "
+
+[swift]
+symbol = "ﯣ "

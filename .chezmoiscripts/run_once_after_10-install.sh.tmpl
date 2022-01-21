@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+echo "## Installing Homebrew applications"
+[[ -f ~/.Brewfile ]] && brew bundle --global
+
+if command -v helm >/dev/null 2>&1; then
+  echo "## Installing Helm plugins"
+  helm plugin install https://github.com/jkroepke/helm-secrets
+fi
+
+mkdir -p ~/.kube
+touch ~/.kube/config
+
+if command -v kubectl krew >/dev/null 2>&1; then
+  echo "## Installing kubectl plugins"
+  kubectl krew install get-all
+fi
+
+if command -v pyenv >/dev/null 2>&1; then
+  echo "## Installing global Python $PYENV_VERSION"
+  pyenv install $PYENV_VERSION
+  pyenv rehash
+  pyenv global $PYENV_VERSION
+fi
+
+if command -v pipx >/dev/null 2>&1; then
+  echo "Installing Python tools"
+  pipx install pip-autoremove
+  pipx install pipdeptree
+  pipx install pipenv
+fi
+
+curl -fsSL https://install.python-poetry.org | python -
+
+mkdir -p ~/go/bin

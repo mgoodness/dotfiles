@@ -1,0 +1,7 @@
+README.md
+
+{{- if not (eq .chezmoi.os "darwin") }}
+.config/iterm2/
+.gnupg/scdaemon.conf
+.minikube/config/config.json
+{{- end }}

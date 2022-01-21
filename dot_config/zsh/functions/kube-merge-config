@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+local kube_tmp=$(mktemp)
+KUBECONFIG=$HOME/.kube/config:$1 kubectl config view --merge --flatten > $kube_tmp
+cp $kube_tmp $HOME/.kube/config

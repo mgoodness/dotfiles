@@ -1,0 +1,35 @@
+#!/usr/bin/env zsh
+
+# Ref: https://github.com/marlonrichert/zsh-launchpad/blob/main/.config/zsh/.zshrc
+
+##
+# Zsh runs .zshrc for each interactive shell session
+#
+
+# zmodload zsh/zprof
+# typeset -F SECONDS
+
+() {
+  # Load all of the files in rc.d that start with <number>- and end in .zsh
+  # (n) sorts the results in numerical order.
+  # <-> is an open-ended range. It matches any non-negative integer.
+  # <1-> matches any integer >= 1. <-9> matches any integer <= 9.
+  # <1-9> matches any integer that's >= 1 and <= 9.
+  local file=
+  for file in $ZDOTDIR/zshrc.d/<->-*.zsh(n); do
+    . $file
+  done
+} "$@"
+
+# zprof() {
+#   zprof() {
+#     unfunction zprof
+#     builtin zprof
+#     print $SECONDS
+#     echoti sc
+#     add-zle-hook-widget -d line-init zprof
+#   }
+#   add-zsh-hook -d precmd zprof
+#   add-zle-hook-widget line-init zprof
+# }
+# add-zsh-hook precmd zprof

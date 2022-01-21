@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+local rancher_tmp=$(mktemp)
+
+IFS=$'\n'
+for cluster_info in $(curl -k -s -u "$RANCHER_ACCESS_KEY:$RANCHER_SECRET_KEY" https://rke.mlbinfra.net/v3/clusters \
+  | jq -r '.data[] | "\(.name) \(.id)"'); do
+
+  cluster_name="$(printf "$cluster_info" | cut -f1 -d' ')"
+  cluster_id="$(printf "$cluster_info" | cut -f2 -d' ')"
+
+  curl -k -s -u "$RANCHER_ACCESS_KEY:$RANCHER_SECRET_KEY" -X POST -H 'Accept: application/json'  -d '{}' \
+    -H 'Content-Type: application/json' \
+    "https://rke.mlbinfra.net/v3/clusters/$cluster_id?action=generateKubeconfig" \
+    | jq -r '.config' \
+    | yq w - 'contexts[*].context.user' "$cluster_name" \
+    | yq w - 'users[*].name' "$cluster_name" > $rancher_tmp
+
+  kube-merge-config $rancher_tmp
+done
+unset IFS

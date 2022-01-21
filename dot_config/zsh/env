@@ -1,0 +1,22 @@
+#!/usr/bin/env zsh
+
+# Ref: https://github.com/marlonrichert/.config/blob/main/zsh/env
+
+##
+# This file is symlinked to ~/.zshenv, so it will run only when $ZDOTDIR is unset.
+#
+
+export XDG_CONFIG_HOME=~/.config
+export ZDOTDIR=$XDG_CONFIG_HOME/zsh
+
+# These are used in /etc/zshrc
+case $VENDOR in
+  ( apple )
+    export SHELL_SESSIONS_DISABLE=1
+  ;;
+  ( ubuntu )
+    export skip_global_compinit=1
+  ;;
+esac
+[[ $OSTYPE == linux-gnu ]] &&
+    export DEBIAN_PREVENT_KEYBOARD_CHANGES=1

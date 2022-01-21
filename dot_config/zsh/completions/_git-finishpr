@@ -1,0 +1,5 @@
+#compdef git-finishpr
+
+_git-finishpr () {
+  _git-branch
+}
