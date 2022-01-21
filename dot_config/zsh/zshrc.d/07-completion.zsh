@@ -65,13 +65,8 @@ zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl
 rm -f $HOMEBREW_PREFIX/share/zsh/site-functions/_git{,.zwc}
 
 znap fpath _chezmoi 'chezmoi completion zsh'
-znap fpath _gh      'gh completion --shell zsh'
-znap fpath _helm    'helm completion zsh'
-znap fpath _kubectl 'kubectl completion zsh'
-# znap fpath _pip     'curl -fsSL https://gist.githubusercontent.com/blueyed/54a257c411310a28805a/raw/_pip.zsh'
 znap fpath _pipenv  '_PIPENV_COMPLETE=zsh_source pipenv'
 znap fpath _poetry  'poetry completions zsh'
-# znap fpath _pyenv   'curl -fsSL https://gist.githubusercontent.com/mgoodness/aa4026fa154ee859e661a0d8f0999361/raw/_pyenv.zsh'
 
 # Set up lazy loading for pipx completions
 znap function _python_argcomplete pipx  'eval "$( register-python-argcomplete pipx  )"'

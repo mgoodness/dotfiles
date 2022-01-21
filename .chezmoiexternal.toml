@@ -1,3 +1,13 @@
+[".config/zsh/completions/_pip"]
+  refreshPeriod = "168h"
+  type = "file"
+  url = "https://gist.githubusercontent.com/blueyed/54a257c411310a28805a/raw/_pip.zsh"
+
+[".config/zsh/completions/_pyenv"]
+  refreshPeriod = "168h"
+  type = "file"
+  url = "https://gist.githubusercontent.com/mgoodness/aa4026fa154ee859e661a0d8f0999361/raw/_pyenv.zsh"
+
 [".gnupg/gpg.conf"]
   refreshPeriod = "168h"
   type = "file"
