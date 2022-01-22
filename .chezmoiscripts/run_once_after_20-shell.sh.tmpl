@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
+source ~/.profile
+
 grep -q $(brew --prefix)/bin/bash /etc/shells || echo $(brew --prefix)/bin/bash | sudo tee -a /etc/shells
 grep -q $(brew --prefix)/bin/zsh /etc/shells || echo $(brew --prefix)/bin/zsh | sudo tee -a /etc/shells
+{{- if (eq .chezmoi.os "linux") -}}
+{{ if (eq .chezmoi.osRelease.id "ubuntu") }}
 
-{{- if (eq .chezmoi.os "linux") }}
-{{- if (eq .chezmoi.osRelease.id "ubuntu") }}
 sudo usermod -s $(brew --prefix)/bin/zsh $(whoami)
 {{- end }}
 {{- end }}

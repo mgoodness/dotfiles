@@ -1,0 +1,15 @@
+[krew]
+  rootDir = "~/.local/opt/krew"
+
+[personal]
+  email = "mgoodness@gmail.com"
+
+[pipx]
+  homeDir = "~/.local/opt/pipx"
+
+[pyenv]
+  globalVersion = "3.10.2"
+  rootDir = "~/.local/opt/pyenv"
+
+[xdg]
+  configHome = "~/.config"

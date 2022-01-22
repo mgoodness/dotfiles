@@ -17,13 +17,12 @@ znap eval brew-shellenv 'brew shellenv'
 export GOPATH=~/go
 export GOBIN=$GOPATH/bin
 
-export PYENV_ROOT=~/.local/opt/pyenv
-export PYENV_VERSION=3.10.1
+export KREW_ROOT={{ .krew.rootDir }}
+export PIPX_HOME={{ .pipx.homeDir }}
+
+export PYENV_ROOT={{ .pyenv.rootDir }}
+export PYENV_VERSION={{ .pyenv.globalVersion }}
 znap eval pyenv-path 'pyenv init --path'
-
-export PIPX_HOME=~/.local/opt/pipx
-
-export KREW_ROOT=~/.krew
 
 export -U PATH path FPATH fpath MANPATH manpath # -U removes duplicates
 export -UT INFOPATH infopath                    # -T creates a "tied" pair
