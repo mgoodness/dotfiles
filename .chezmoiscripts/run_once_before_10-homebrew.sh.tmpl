@@ -12,6 +12,3 @@ sudo apt -y install build-essential curl file git procps
 
 echo "## Installing Homebrew"
 /usr/bin/env bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-[[ -d /home/linuxbrew/.linuxbrew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-echo -e "\neval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile

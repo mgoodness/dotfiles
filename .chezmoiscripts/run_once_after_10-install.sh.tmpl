@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source ~/.profile
+[[ -d /home/linuxbrew/.linuxbrew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 echo "## Installing Homebrew applications"
 [[ -f ~/.Brewfile ]] && brew bundle --global
