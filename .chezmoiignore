@@ -1,7 +1,13 @@
 README.md
 
-{{- if not (eq .chezmoi.os "darwin") }}
+{{ if not (eq .chezmoi.os "darwin") -}}
 .config/iterm2/
 .gnupg/scdaemon.conf
 .minikube/config/config.json
 {{- end }}
+
+{{- if not (eq .chezmoi.os "linux") }}
+{{- if not (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+.config/zsh/zshrc.d/07-gpg.zsh
+{{ end }}
+{{ end }}

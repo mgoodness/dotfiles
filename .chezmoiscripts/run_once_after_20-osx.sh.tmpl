@@ -1,6 +1,5 @@
+{{- if (eq .chezmoi.os "darwin") -}}
 #!/usr/bin/env bash
-
-[[ -d /home/linuxbrew/.linuxbrew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 echo "## Installing Homebrew applications"
 [[ -f ~/.Brewfile ]] && brew bundle --global
@@ -44,3 +43,18 @@ fi
 curl -fsSL https://install.python-poetry.org | python -
 
 mkdir -p ~/go/bin
+
+# Change shell to Homebrew-installed Zsh
+grep -q $(brew --prefix)/bin/bash /etc/shells || echo $(brew --prefix)/bin/bash | sudo tee -a /etc/shells
+grep -q $(brew --prefix)/bin/zsh /etc/shells || echo $(brew --prefix)/bin/zsh | sudo tee -a /etc/shells
+chsh -s $(brew --prefix)/bin/zsh
+
+# Add & arrange applications on Dock
+dockutil --add '/Applications/iTerm.app' --after Finder --replacing iTerm
+dockutil --add '/Applications/Visual Studio Code.app' --after iTerm --replacing 'Visual Studio Code'
+dockutil --add '/Applications/Google Chrome.app' --after 'Visual Studo Code' --replacing 'Google Chrome'
+dockutil --add '/Applications/Slack.app' --after 'Google Chrome' --replacing 'Slack'
+dockutil --add '/Applications/Microsoft Outlook.app' --after Slack --replacing 'Microsoft Outlook'
+
+defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
+{{- end }}
