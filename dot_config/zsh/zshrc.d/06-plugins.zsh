@@ -7,13 +7,13 @@
 # Initialize zsh-vi-mode at sourcing
 ZVM_INIT_MODE='sourcing'
 
+#   tekumara/zsh-pyenv-virtualenvwrapper-lazy
 local -a plugins=(
   Aloxaf/fzf-tab # Load before zsh-completions & fast-syntax-highlighting
   djui/alias-tips
   jeffreytse/zsh-vi-mode
   marlonrichert/zcolors
   paulirish/git-open
-  tekumara/zsh-pyenv-virtualenvwrapper-lazy
   zdharma-continuum/fast-syntax-highlighting
   zsh-users/zsh-autosuggestions
   zsh-users/zsh-completions
