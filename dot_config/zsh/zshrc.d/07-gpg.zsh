@@ -1,4 +1,3 @@
-{{- if (eq .chezmoi.os "linux") -}}
 ##
 # GnuPG
 #
@@ -26,4 +25,3 @@ if [ $? -ne 0 ]; then
         EXEC:"~/.ssh/wsl2-ssh-pageant.exe --gpg S.gpg-agent" \
       >/dev/null 2>&1 &
 fi
-{{- end }}
