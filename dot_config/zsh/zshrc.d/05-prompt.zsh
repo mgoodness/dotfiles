@@ -3,5 +3,6 @@
 #
 
 znap eval starship 'starship init zsh --print-full-init'
-prompt_starship_precmd # https://github.com/starship/starship/pull/3480
+# znap prompt starship
+prompt_starship_precmd # https://github.com/marlonrichert/zsh-snap/issues/163
 znap prompt

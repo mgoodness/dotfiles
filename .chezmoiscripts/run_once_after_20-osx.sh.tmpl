@@ -37,10 +37,10 @@ if command -v pipx >/dev/null 2>&1; then
   echo "Installing Python tools"
   pipx install pip-autoremove
   pipx install pipdeptree
-  pipx install pipenv
 fi
 
-curl -fsSL https://install.python-poetry.org | python -
+curl -fsSL https://install.python-poetry.org | python3 -
+curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python3 -
 
 mkdir -p ~/go/bin
 

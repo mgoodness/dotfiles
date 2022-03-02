@@ -21,8 +21,10 @@ export KREW_ROOT={{ .krew.rootDir }}
 export PIPX_HOME={{ .pipx.homeDir }}
 
 export PYENV_ROOT={{ .pyenv.rootDir }}
+export PYENV_SHELL=zsh
 export PYENV_VERSION={{ .pyenv.globalVersion }}
-znap eval pyenv-path 'pyenv init --path'
+
+znap eval pdm-pep582 'pdm --pep582'
 
 export -U PATH path FPATH fpath MANPATH manpath # -U removes duplicates
 export -UT INFOPATH infopath                    # -T creates a "tied" pair
@@ -31,6 +33,7 @@ export -UT INFOPATH infopath                    # -T creates a "tied" pair
 path=(
   $GOBIN(N)
   $KREW_ROOT/bin(N)
+  $PYENV_ROOT/shims(N)
   ~/.local/bin(N)
   $path[@]
 )

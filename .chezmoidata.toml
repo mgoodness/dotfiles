@@ -5,7 +5,7 @@
   homeDir = "~/.local/opt/pipx"
 
 [pyenv]
-  globalVersion = "3.10.1"
+  globalVersion = "3.10.2"
   rootDir = "~/.local/opt/pyenv"
 
 [xdg]

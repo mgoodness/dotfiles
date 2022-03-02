@@ -65,7 +65,7 @@ zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl
 rm -f $HOMEBREW_PREFIX/share/zsh/site-functions/_git{,.zwc}
 
 znap fpath _chezmoi 'chezmoi completion zsh'
-znap fpath _pipenv  '_PIPENV_COMPLETE=zsh_source pipenv'
+znap fpath _pdm 'pdm completion zsh'
 znap fpath _poetry  'poetry completions zsh'
 
 # Set up lazy loading for pipx completions
