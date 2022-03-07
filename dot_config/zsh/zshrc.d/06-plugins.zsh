@@ -25,6 +25,7 @@ local -a omz_paths=(
   plugins/git \
   plugins/gnu-utils \
   plugins/gpg-agent \
+  plugins/nvm \
   plugins/vscode
 )
 
