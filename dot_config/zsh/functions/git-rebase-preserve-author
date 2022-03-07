@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+branch="$(git symbolic-ref --short HEAD)"
+stash="$(git stash create)"
+
+git checkout "$1" && git pull && git checkout "$branch" || exit 1
+
 git rebase --rebase-merges "$1"
 
 root_dir=(git rev-parse --show-toplevel)
