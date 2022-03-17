@@ -2,7 +2,7 @@
 # https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html
 
 default-cache-ttl 60
-enable-ssh-support
+# enable-ssh-support
 max-cache-ttl 120
 pinentry-program {{ if (eq .chezmoi.os "darwin") }}/usr/local/bin/pinentry-mac{{ end }}
 ttyname $GPG_TTY

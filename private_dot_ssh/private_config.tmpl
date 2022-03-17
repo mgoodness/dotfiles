@@ -1,11 +1,7 @@
-{{- if .work -}}
-Host github.mlbam.net
-  User git
-  ControlMaster no
-  IdentitiesOnly yes
-  IdentityFile ~/.ssh/id_rsa.pub
-  MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
-{{- end }}
+Include ~/.ssh/drduh_config
+
+Host *
+  IdentityAgent ~/.1password/agent.sock
 
 Host bcrow-nation.com
   User charnoth
@@ -15,4 +11,13 @@ Host bcrow-nation.com
   IdentityFile ~/.ssh/id_rsa.pub
   MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
 
-Include ~/.ssh/drduh_config
+{{ if .work -}}
+Host github.mlbam.net
+  User git
+  ControlMaster no
+  IdentitiesOnly yes
+  {{- if (eq .chezmoi.os "darwin") }}
+  IdentityFile ~/.ssh/mlbam-github.pub
+  {{- end }}
+  MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
+{{- end }}

@@ -59,4 +59,6 @@ dockutil --add '/Applications/Slack.app' --after 'Google Chrome' --replacing 'Sl
 dockutil --add '/Applications/Microsoft Outlook.app' --after Slack --replacing 'Microsoft Outlook'
 
 defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
+
+mkdir -p ~/.1password && ln -sf ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock ~/.1password/agent.sock
 {{- end }}
