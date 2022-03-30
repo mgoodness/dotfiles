@@ -27,7 +27,6 @@ local -a omz_paths=(
   plugins/golang \
   plugins/gpg-agent \
   plugins/nvm \
-  plugins/vscode
 )
 
 # Speed up the first startup by cloning all plugins in parallel.

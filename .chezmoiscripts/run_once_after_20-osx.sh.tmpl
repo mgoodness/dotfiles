@@ -12,12 +12,17 @@ fi
 mkdir -p ~/.kube
 touch ~/.kube/config
 
+if command -v gcloud >/dev/null 2>&1; then
+  gcloud components install gke-gcloud-auth-plugin
+fi
+
 if command -v kubectl krew >/dev/null 2>&1; then
   export KREW_ROOT={{ .krew.rootDir }}
 
   echo "## Installing kubectl plugins"
   kubectl krew install get-all
 fi
+
 
 if command -v pyenv >/dev/null 2>&1; then
   export PYENV_ROOT={{ .pyenv.rootDir }}
@@ -42,9 +47,19 @@ fi
 curl -fsSL https://install.python-poetry.org | python3 -
 curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python3 -
 
+
 # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
-mkdir -p ~/go/bin
+
+if command -v go >/dev/null 2>&1; then
+  mkdir -p ~/go/bin
+
+  go install -v github.com/ramya-rao-a/go-outline@latest
+  go install -v github.com/go-delve/delve/cmd/dlv@latest
+  go install -v honnef.co/go/tools/cmd/staticcheck@latest
+  go install -v golang.org/x/tools/gopls@latest
+fi
+
 
 # Change shell to Homebrew-installed Zsh
 grep -q $(brew --prefix)/bin/bash /etc/shells || echo $(brew --prefix)/bin/bash | sudo tee -a /etc/shells

@@ -65,6 +65,8 @@ if [[ $VENDOR == apple ]]; then
 fi
 
 export KUBECONFIG=~/.kube/config
+USE_GKE_GCLOUD_AUTH_PLUGIN=True
+
 znap eval docker-env 'minikube docker-env'
 
 export FZF_DEFAULT_COMMAND='fd --color=always --exclude .git --follow --hidden --type f'
