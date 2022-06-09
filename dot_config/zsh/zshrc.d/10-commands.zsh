@@ -78,9 +78,6 @@ alias brewski='brew update && \
 
 alias dockerclean='docker system prune --all'
 
-alias gcontext=gcloud-context
-alias new-gcontext=new-gcloud-context
-
 alias gbsu='git branch --set-upstream-to'
 alias gcae='git commit --allow-empty --verbose'
 alias gcae!='git commit --allow-empty --amend --verbose'
@@ -92,8 +89,6 @@ alias gshow='git show --decorate'
 
 alias ghpr='gh pr create --fill'
 alias ghprco='gh pr checkout'
-
-[[ "$(alias gke)" ]] && unalias gke
 
 alias gpgpfix='gpgconf --kill gpg-agent'
 
