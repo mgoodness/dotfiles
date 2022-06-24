@@ -12,8 +12,3 @@
   refreshPeriod = "168h"
   type = "file"
   url = "https://raw.githubusercontent.com/drduh/config/master/gpg.conf"
-
-[".ssh/drduh_config"]
-  refreshPeriod = "168h"
-  type = "file"
-  url = "https://raw.githubusercontent.com/drduh/config/master/ssh_config"
