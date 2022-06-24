@@ -10,10 +10,8 @@
   editor = code --wait
   excludesFile = ~/.config/git/ignore
   trustctime = false
-{{- if (eq .chezmoi.os "darwin") }}
 [credential]
   helper = osxkeychain
-{{- end }}
 [diff]
   noprefix = true
   tool = vscode
@@ -40,8 +38,6 @@
   autoStash = true
 [tag]
   forceSignAnnotated = true
-# [url "git@github.com:"]
-#   insteadOf = https://github.com/
 {{- if .work }}
 [url "git@github.mlbam.net:"]
   insteadOf = https://github.mlbam.net/
