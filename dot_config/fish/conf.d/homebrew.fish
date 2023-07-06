@@ -1,5 +1,3 @@
-command -q brew || exit
-
 set -gx HOMEBREW_AUTOREMOVE 1
 set -gx HOMEBREW_BAT 1
 set -gx HOMEBREW_COLOR 1
@@ -7,19 +5,9 @@ set -gx HOMEBREW_NO_AUTO_UPDATE 1
 set -gx HOMEBREW_NO_ENV_HINTS 1
 
 # Faster `brew shellenv`
-if not set -q HOMEBREW_PREFIX
-    switch "$(uname -sm)"
-        case "Darwin arm64"
-            set -Ux HOMEBREW_PREFIX /opt/homebrew
-            set -Ux HOMEBREW_REPOSITORY $HOMEBREW_PREFIX
-        case "Linux x86_64"
-            set -Ux HOMEBREW_PREFIX /home/linuxbrew/.linuxbrew
-            set -Ux HOMEBREW_REPOSITORY $HOMEBREW_PREFIX/Homebrew
-        case '*'
-            set -Ux HOMEBREW_PREFIX /usr/local
-            set -Ux HOMEBREW_REPOSITORY $HOMEBREW_PREFIX/Homebrew
-    end
-end
+set -Ux HOMEBREW_PREFIX /opt/homebrew
+set -Ux HOMEBREW_REPOSITORY $HOMEBREW_PREFIX
+
 set -gx HOMEBREW_CELLAR $HOMEBREW_PREFIX/Cellar
 set -q MANPATH || set MANPATH ''
 set -gxp MANPATH $HOMEBREW_PREFIX/share/man
