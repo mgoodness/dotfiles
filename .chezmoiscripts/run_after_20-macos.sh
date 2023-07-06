@@ -7,6 +7,7 @@
 # - Inspiration: https://mths.be/macos
 
 ### General ###
+echo "Updating general settings..."
 defaults write NSGlobalDomain AppleInterfaceStyle -string Dark      # Dark mode
 defaults write NSGlobalDomain AppleWindowTabbingMode -string always # Prefer tabs
 # Touch ID for sudo
@@ -15,6 +16,7 @@ if ! grep -q pam_tid.so /etc/pam.d/sudo; then
 fi
 
 ### Dock ###
+echo "Updating Dock settings..."
 defaults write com.apple.dock orientation -string bottom # Place at bottom
 defaults write com.apple.dock show-recents -bool false   # Hide recent apps
 defaults write com.apple.dock magnification -int 1       # Enable magnification
@@ -34,6 +36,7 @@ dockutil --no-restart --add ~/Documents --sort name --display folder --view list
 dockutil --no-restart --add ~/Downloads --sort dateadded --display folder --view fan
 
 ### Finder ###
+echo "Updating Finder settings..."
 chflags nohidden ~/Library
 defaults write com.apple.finder NewWindowTarget -string "PfHm"             # Set default path to $HOME
 defaults write com.apple.finder FXPreferredViewStyle -string "clmv"        # Use column view
@@ -46,29 +49,35 @@ defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false # Don
 # done
 
 ### Mission Control ###
+echo "Updating Mission Control settings..."
 defaults write com.apple.dock mru-spaces -bool false
 defaults write com.apple.dock wvous-tl-corner -int 10 # Top left: Display sleep
 defaults write com.apple.dock wvous-tr-corner -int 12 # Top right: Notification center
 
 ### Sharing ###
+echo "Updating computer & host names..."
 if [ "$(scutil --get ComputerName)" != "Goodness's MacBook Pro" ]; then
-    scutil --set ComputerName "Goodness's MacBook Pro"
-    scutil --set LocalHostName "Goodness-MacBook-Pro"
+    scutil --set ComputerName "Goodness's MacBook Pro 14"
+    scutil --set LocalHostName "Goodness-MacBook-Pro-14"
 fi
 
 ### Siri ###
+echo "Disabling Siri..."
 defaults write com.apple.assistant.support "Assistant Enabled" -bool false
 
 ### Software Update ###
+echo "Checking for software updates daily..."
 defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1 # Check for updates daily
 
 ### Trackpad ###
+echo "Setting max trackpad speed..."
 defaults write -g com.apple.trackpad.scaling 3 # Max trackpad speed
 
 ### Wallpaper ###
 # osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/System/Library/Desktop Pictures/Ventura Graphic.heic"'
 
 # Restart affected apps
+echo "Restarting Dock applications..."
 for app in Dock Finder; do
     killall "$app"
 done
