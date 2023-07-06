@@ -1,6 +1,5 @@
 # Until https://github.com/kcrawford/dockutil/pull/131
-tap "branchvincent/tap"
-brew "branchvincent/tap/dockutil"
+cask "hpedrorodrigues/tools/dockutil"
 
 tap "beeftornado/rmtree"
 
