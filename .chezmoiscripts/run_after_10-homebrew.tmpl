@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 # shellcheck shell=bash
 
 export PATH="/opt/homebrew/bin:/usr/local/bin${PATH+:$PATH}"
 
 {{ if not (lookPath "brew") }}
 echo "Installing Homebrew..."
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+NONINTERACTIVE=1 bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 {{ end }}
 
 export HOMEBREW_BUNDLE_FILE=~/.config/homebrew/Brewfile
