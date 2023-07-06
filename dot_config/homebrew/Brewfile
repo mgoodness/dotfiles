@@ -1,7 +1,5 @@
-# Until https://github.com/kcrawford/dockutil/pull/131
-cask "hpedrorodrigues/tools/dockutil"
-
 tap "beeftornado/rmtree"
+tap "homebrew/command-not-found"
 
 brew "argocd"
 # brew "bash"
@@ -41,11 +39,54 @@ brew "kustomize"
 brew "less"
 # brew "lua-language-server"
 brew "mas"
+# brew "minikube"
+brew "moreutils"
+# brew "node"
+brew "pdm"
+# brew "pipgrip"
+brew "pipx"
+# brew "podman"
+brew "poetry"
+brew "pre-commit"
+# brew "ptpython"
+# brew "pyenv"
+brew "python"
+brew "python-lsp-server"
 brew "ripgrep"
 brew "sd"
 brew "skaffold"
 brew "sops"
+# brew "stern"
+brew "tfenv"
+brew "trash"
+brew "vault"
+brew "viddy"
+brew "wget"
 brew "yaml-language-server"
 brew "yq"
 brew "zoxide"
 # brew "zsh"
+
+cask "1password-cli"
+cask "caffeine"
+# cask "font-jetbrains-mono"
+# cask "font-jetbrains-mono-nerd-font"
+# cask "font-symbols-only-nerd-font"
+cask "google-cloud-sdk"
+# cask "google-drive"
+cask "kitty"
+# cask "omnidisksweeper"
+# cask "qlmarkdown", args: { no_quarantine: true }
+# cask "syntax-highlight", args: { no_quarantine: true }
+# cask "visual-studio-code"
+
+# Until https://github.com/kcrawford/dockutil/pull/131
+cask "hpedrorodrigues/tools/dockutil"
+
+mas "1Password for Safari", id: 1569813296
+mas "FoodNoms", id: 1479461686
+mas "Keynote", id: 409183694
+mas "Magnet", id: 441258766
+mas "Numbers", id: 409203825
+mas "Okta Extension App", id: 1439967473
+mas "Pages", id: 409201541
