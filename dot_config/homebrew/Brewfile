@@ -1,0 +1,8 @@
+brew "bat"
+brew "exa"
+brew "fd"
+brew "fish", args: ["HEAD"]
+brew "fzf"
+brew "gh"
+brew "git"
+brew "helix", args: ["HEAD"]
