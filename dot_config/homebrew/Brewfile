@@ -69,6 +69,7 @@ brew "yq"
 brew "zoxide"
 # brew "zsh"
 
+cask "1password"
 cask "1password-cli"
 cask "caffeine"
 cask "font-jetbrains-mono"
