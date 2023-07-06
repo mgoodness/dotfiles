@@ -2,6 +2,7 @@
 
 set -e
 
+{{ if not (lookPath "brew") }}
 # Prompt for and remember password
 echo "Prompting for sudo password..."
 sudo --validate
@@ -13,3 +14,10 @@ done &>/dev/null &
 
 echo "Installing Homebrew..."
 NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+{{ end }}
+
+export HOMEBREW_BUNDLE_FILE=~/.config/homebrew/Brewfile
+if ! brew bundle check &>/dev/null; then
+  echo "Installing Homebrew packages..."
+  brew bundle install --no-lock
+fi  
