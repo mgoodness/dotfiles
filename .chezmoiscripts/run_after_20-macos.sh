@@ -26,7 +26,7 @@ dockutil --no-restart --add /System/Applications/Messages.app
 dockutil --no-restart --add /Applications/Slack.app
 dockutil --no-restart --add /System/Applications/Music.app
 dockutil --no-restart --add /System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app # https://github.com/kcrawford/dockutil/issues/144
-# dockutil --no-restart --add /Applications/Kitty.app
+dockutil --no-restart --add /Applications/Kitty.app
 dockutil --no-restart --add /System/Applications/Notes.app
 dockutil --no-restart --add /System/Applications/Reminders.app
 dockutil --no-restart --add /System/Applications/System\ Settings.app
@@ -51,10 +51,10 @@ defaults write com.apple.dock wvous-tl-corner -int 10 # Top left: Display sleep
 defaults write com.apple.dock wvous-tr-corner -int 12 # Top right: Notification center
 
 ### Sharing ###
-# if [ "$(scutil --get ComputerName)" != "Goodness's MacBook Pro" ]; then
-#     scutil --set ComputerName "Goodness's MacBook Pro"
-#     scutil --set LocalHostName "Goodness-MacBook-Pro"
-# fi
+if [ "$(scutil --get ComputerName)" != "Goodness's MacBook Pro" ]; then
+    scutil --set ComputerName "Goodness's MacBook Pro"
+    scutil --set LocalHostName "Goodness-MacBook-Pro"
+fi
 
 ### Siri ###
 defaults write com.apple.assistant.support "Assistant Enabled" -bool false
