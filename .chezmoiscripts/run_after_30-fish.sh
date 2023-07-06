@@ -6,6 +6,6 @@ export PATH="/opt/homebrew/bin:/usr/local/bin${PATH+:$PATH}"
 shell=$(command -v fish)
 if ! grep -q "$shell" /etc/shells; then
   echo "Updating login shell..."
-  echo "$shell" | sudo tee -a /etc/shells
+  echo "$shell" | sudo tee -a /etc/shells >/dev/null
   chsh -s "$shell"
 fi
