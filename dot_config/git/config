@@ -1,0 +1,86 @@
+# -*- mode: ini -*-
+# Ref: https://dandavison.github.io/delta/get-started.html
+# Ref: https://dandavison.github.io/delta/configuration.html
+[branch]
+	autoSetupRebase = always
+[color]
+	ui = true
+[color "diff"]
+	meta = yellow
+	frag = magenta bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[commit]
+	gpgSign = true
+	template = ~/.config/git/commit
+[core]
+	autocrlf = input							# normalize line endings on commit (but not checkout)
+	excludesFile = ~/.config/git/ignore
+	pager = delta --diff-so-fancy --navigate	# use a better diff visualizer
+	trustctime = false
+[credential]
+	helper = osxkeychain
+[delta]
+	navigate = true
+[diff]
+	colorMoved = default	# color moved lines differently
+	; colorMoved = zebra
+	noprefix = true
+[fetch]
+	prune = true		# prune deleted remote refs
+	pruneTags = true	# prune deleted remote tags
+[format]
+	pretty = format:%C(bold magenta)%h %C(blue)%>(13,trunc)%ad %C(cyan)%<(15,trunc)%aN %C(red)%d %C(reset)%s
+[github]
+	user = mgoodness
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+[init]
+	defaultBranch = main
+[interactive]
+	diffFilter = delta --color-only
+[log]
+	date = relative
+	follow = true
+[merge]
+	autoStash = true
+	conflictstyle = diff3
+[pretty]
+	stash = format:%C(bold magenta)%gd %C(blue)%>(13,trunc)%ad %C(reset)%s
+[pull]
+	; ff = only
+	rebase = merges
+[push]
+	autoSetupRemote = true
+	default = upstream
+	followTags = true	# always push annotated tag(s)
+[rebase]
+	autoStash = true
+[tag]
+	forceSignAnnotated = true
+[url "git@github.mlbam.net:"]
+	insteadOf = https://github.mlbam.net/
+; [url "https://"]
+;	  insteadOf = git://
+; [url "https://github.com/"]
+;	  insteadOf = git@github.com:
+[user]
+	email = "mike@opsgoodness.net"
+	name = Michael Goodness
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKbq/cbVZYW8uIVsdCJxKKtB8OwL7+kzeN/1u6Z1ihEM
+	useConfigOnly = true
+[web]
+	browser = open
+[include]
+	path = aliases
+[includeIf "gitdir:~/Code/github.mlbam.net/"]
+	path = ~/Code/github.mlbam.net/.gitconfig

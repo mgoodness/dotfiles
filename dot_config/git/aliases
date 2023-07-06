@@ -1,0 +1,12 @@
+# -*- mode: ini -*-
+[alias]
+	finishpr = !"f () { \
+	  default="$(git head-branch)"; \
+	  git checkout "$default" && git pull origin "$default"; \
+	  git push --delete origin "$1"; \
+	  git branch --delete --force "$1"; \
+	}; f"
+
+	head-branch = !git remote show $(git upstream-name) | awk '/HEAD branch/ {print $NF}'
+
+	upstream-name = !git remote | rg -o '(origin|upstream)' | tail -1

@@ -1,0 +1,96 @@
+# Author : Gokul Soumya <gokulps15@gmail.com>
+
+"attribute" = { fg = "base0A" }
+"comment" = { fg = "base03", modifiers = ["italic"] }
+"constant" = { fg = "base0C" }
+"constant.numeric" = { fg = "base09" }
+"constant.builtin" = { fg = "base09" }
+"constant.character.escape" = { fg = "base09" }
+"constructor" = { fg = "base0D" }
+"function" = { fg = "base0D" }
+"function.builtin" = { fg = "base0D" }
+"function.macro" = { fg = "base0E" }
+"keyword" = { fg = "base08" }
+"keyword.control" = { fg = "base0E" }
+"keyword.control.import" = { fg = "base08" }
+"keyword.directive" = { fg = "base0E" }
+"label" = { fg = "base0E" }
+"namespace" = { fg = "base0D" }
+"operator" = { fg = "base0E" }
+"keyword.operator" = { fg = "base0E" }
+"special" = { fg = "base0D" }
+"string" = { fg = "base0B" }
+"type" = { fg = "base0A" }
+# "variable" = { fg = "base0D" }
+"variable.builtin" = { fg = "base0D" }
+"variable.parameter" = { fg = "base08" }
+"variable.other.member" = { fg = "base08" }
+
+"markup.heading" = { fg = "base08" }
+"markup.raw.inline" = { fg = "base0B" }
+"markup.bold" = { fg = "base09", modifiers = ["bold"] }
+"markup.italic" = { fg = "base0E", modifiers = ["italic"] }
+"markup.strikethrough" = { modifiers = ["crossed_out"] }
+"markup.list" = { fg = "base08" }
+"markup.quote" = { fg = "base0A" }
+"markup.link.url" = { fg = "base0C", modifiers = ["underlined"]}
+"markup.link.text" = { fg = "base0E" }
+
+"diff.plus" = "base0B"
+"diff.delta" = "base09"
+"diff.minus" = "base08"
+
+"diagnostic.info".underline = { color = "base0D", style = "curl" }
+"diagnostic.hint".underline = { color = "base0B", style = "curl" }
+"diagnostic.error".underline = { color = "base08", style = "curl" }
+"info" = { fg = "base0D", modifiers = ["bold"] }
+"hint" = { fg = "base0B", modifiers = ["bold"] }
+"warning" = { fg = "base0A", modifiers = ["bold"] }
+"error" = { fg = "base08", modifiers = ["bold"] }
+
+"ui.background" = { bg = "base00" }
+"ui.virtual" = { fg = "base02" }
+"ui.virtual.ruler" = { bg = "base01" }
+
+"ui.cursor" = { fg = "base05", modifiers = ["reversed"] }
+"ui.cursor.match" = { fg = "base0D", modifiers = ["underlined"]}
+
+"ui.selection" = { bg = "base02" }
+"ui.cursorline.primary" = { bg = "base03" }
+
+"ui.highlight" = { bg = "base03" }
+
+"ui.linenr" = { fg = "base03" }
+"ui.linenr.selected" = { fg = "base05" }
+
+"ui.statusline" = { fg = "base05", bg = "base01" }
+"ui.statusline.normal" = { fg = "base03", bg = "base0D" }
+"ui.statusline.insert" = { fg = "base03", bg = "base0B" }
+"ui.statusline.select" = { fg = "base03", bg = "base0E" }
+
+"ui.text" = { fg = "base05" }
+"ui.text.focus" = { fg = "base05", bg = "base03", modifiers = ["bold"] }
+
+"ui.help" = { fg = "base05", bg = "base03" }
+"ui.popup" = { bg = "base03" }
+"ui.window" = { fg = "base03" }
+"ui.menu" = { fg = "base05", bg = "base03" }
+"ui.menu.selected" = { fg = "base00", bg = "base0D" }
+
+[palette]
+base00 = "#282C34"
+base01 = "#353B45"
+base02 = "#3E4451"
+base03 = "#545862"
+base04 = "#565C64"
+base05 = "#ABB2BF"
+base06 = "#B6BDCA"
+base07 = "#C8CCD4"
+base08 = "#E06C75"
+base09 = "#D19A66"
+base0A = "#E5C07B"
+base0B = "#98C379"
+base0C = "#56B6C2"
+base0D = "#61AFEF"
+base0E = "#C678DD"
+base0F = "#BE5046"
