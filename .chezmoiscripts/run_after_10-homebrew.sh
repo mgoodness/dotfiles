@@ -3,10 +3,10 @@
 
 export PATH="/opt/homebrew/bin:/usr/local/bin${PATH+:$PATH}"
 
-{{ if not (lookPath "brew") }}
-echo "Installing Homebrew..."
-NONINTERACTIVE=1 bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-{{ end }}
+if ! command -v brew >/dev/null 2>&1; then
+  echo "Installing Homebrew..."
+  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
 
 export HOMEBREW_BUNDLE_FILE=~/.config/homebrew/Brewfile
 if ! brew bundle check &>/dev/null; then
