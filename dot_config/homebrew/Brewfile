@@ -6,6 +6,7 @@ tap "homebrew/command-not-found"
 brew "argocd"
 # brew "bash"
 brew "bat"
+brew "chezmoi"
 brew "curl"
 # brew "deno"
 brew "direnv"
@@ -80,6 +81,7 @@ cask "google-cloud-sdk"
 cask "kitty"
 # cask "omnidisksweeper"
 # cask "qlmarkdown", args: { no_quarantine: true }
+cask "rectangle"
 # cask "syntax-highlight", args: { no_quarantine: true }
 # cask "visual-studio-code"
 
