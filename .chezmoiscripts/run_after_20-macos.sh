@@ -55,11 +55,11 @@ defaults write com.apple.dock wvous-tl-corner -int 10 # Top left: Display sleep
 defaults write com.apple.dock wvous-tr-corner -int 12 # Top right: Notification center
 
 ### Sharing ###
-echo "Updating computer & host names..."
-if [ "$(scutil --get ComputerName)" != "Goodness's MacBook Pro" ]; then
-    scutil --set ComputerName "Goodness's MacBook Pro 14"
-    scutil --set LocalHostName "Goodness-MacBook-Pro-14"
-fi
+# echo "Updating computer & host names..."
+# if [ "$(scutil --get ComputerName)" != "Goodness's MacBook Pro 14" ]; then
+#     scutil --set ComputerName "Goodness's MacBook Pro 14"
+#     scutil --set LocalHostName "Goodness-MacBook-Pro-14"
+# fi
 
 ### Siri ###
 echo "Disabling Siri..."
