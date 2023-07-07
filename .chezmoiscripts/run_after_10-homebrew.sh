@@ -1,11 +1,10 @@
 #!/bin/bash
 # shellcheck shell=bash
 
-export PATH="/opt/homebrew/bin:/usr/local/bin${PATH+:$PATH}"
-
 if ! command -v brew >/dev/null 2>&1; then
   echo "Installing Homebrew..."
-  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 export HOMEBREW_BUNDLE_FILE=~/.config/homebrew/Brewfile
