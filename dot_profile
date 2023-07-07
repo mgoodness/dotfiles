@@ -4,13 +4,14 @@
 # shell, so instead if we are also interactive, just redirect to fish.
 
 unset HISTFILE
-export PATH="/opt/homebrew/bin:/usr/local/bin${PATH+:$PATH}"
 
 case "$-" in
 *i*)
-    fish="$(command -v fish)"
+    homebrew_paths=/opt/homebrew/bin:/usr/local/bin
+    fish="$(PATH="homebrew_paths${PATH+:$PATH}" command -v fish)"
     if [ -x "$fish" ] && [ "$fish" != "$SHELL" ]; then
-        exec env SHELL="$fish" SHLVL=0 "$fish" -il
+        printf "\e[33mNOTICE\e[0m: Replacing \e[1m%s\e[0m with \e[1mfish\e[0m\n" "${0#-}"  
+        exec env SHELL="$fish" "$fish" -il
     fi
     ;;
 esac
