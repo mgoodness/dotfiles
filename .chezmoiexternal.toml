@@ -1,0 +1,32 @@
+[".hushlogin"]
+  refreshPeriod = "168h"
+  type = "file"
+  url = "https://github.com/branchvincent/dotfiles/raw/main/.hushlogin"
+
+[".profile"]
+  refreshPeriod = "168h"
+  type = "file"
+  url = "https://github.com/branchvincent/dotfiles/raw/main/.profile"
+
+[".config/fish/conf.d/direnv.fish"]
+  refreshPeriod = "168h"
+  type = "file"
+  url = "https://github.com/branchvincent/dotfiles/raw/main/.config/fish/conf.d/direnv.fish"
+
+[".config/poetry/config.toml"]
+  refreshPeriod = "168h"
+  type = "file"
+  url = "https://github.com/branchvincent/dotfiles/raw/main/.config/poetry/config.toml"
+  
+[".config/python/startup.py"]
+  refreshPeriod = "168h"
+  type = "file"
+  url = "https://github.com/branchvincent/dotfiles/raw/main/.config/python/startup.py"
+
+[".config/zsh"]
+  exact = true
+  include = ["*/.config/zsh/**"]
+  refreshPeriod = "168h"
+  stripComponents = 3
+  type = "archive"
+  url = "https://github.com/branchvincent/dotfiles/archive/main.tar.gz"
