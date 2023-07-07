@@ -67,12 +67,12 @@
 	autoStash = true
 [tag]
 	forceSignAnnotated = true
+[url "git@github.com:"]
+	insteadOf = https://github.com/
 [url "git@github.mlbam.net:"]
 	insteadOf = https://github.mlbam.net/
 ; [url "https://"]
 ;	  insteadOf = git://
-; [url "https://github.com/"]
-;	  insteadOf = git@github.com:
 [user]
 	email = "mike@opsgoodness.net"
 	name = Michael Goodness
