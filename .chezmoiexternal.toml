@@ -1,27 +1,54 @@
-[".hushlogin"]
+["."]
+  include = ["*/.hushlogin", "*/.profile"]
   refreshPeriod = "168h"
-  type = "file"
-  url = "https://github.com/branchvincent/dotfiles/raw/main/.hushlogin"
+  stripComponents = 1
+  type = "archive"
+  url = "https://github.com/mgoodness/yadm-dotfiles/archive/main.tar.gz"
 
-[".profile"]
+[".config/direnv"]
+  exact = true
+  include = ["*/.config/direnv/**"]
   refreshPeriod = "168h"
-  type = "file"
-  url = "https://github.com/branchvincent/dotfiles/raw/main/.profile"
+  stripComponents = 3
+  type = "archive"
+  url = "https://github.com/mgoodness/yadm-dotfiles/archive/main.tar.gz"
 
-[".config/fish/conf.d/direnv.fish"]
+[".config/fish/completions"]
+  include = ["*/.config/fish/completions/rustup.fish", "*/.config/fish/completions/up.fish"]
   refreshPeriod = "168h"
-  type = "file"
-  url = "https://github.com/branchvincent/dotfiles/raw/main/.config/fish/conf.d/direnv.fish"
+  stripComponents = 4
+  type = "archive"
+  url = "https://github.com/mgoodness/yadm-dotfiles/archive/main.tar.gz"
 
-[".config/poetry/config.toml"]
+[".config/fish/conf.d"]
+  include = ["*/.config/fish/conf.d/__xdg.fish", "*/.config/fish/conf.d/direnv.fish", "*/.config/fish/conf.d/fisher.fish", "*/.config/fish/conf.d/python.fish"]
   refreshPeriod = "168h"
-  type = "file"
-  url = "https://github.com/branchvincent/dotfiles/raw/main/.config/poetry/config.toml"
-  
-[".config/python/startup.py"]
+  stripComponents = 4
+  type = "archive"
+  url = "https://github.com/mgoodness/yadm-dotfiles/archive/main.tar.gz"
+
+[".config/fish/functions"]
+  include = ["*/.config/fish/functions/__tide_item_python.fish", "*/.config/fish/functions/fish_log.fish"]
   refreshPeriod = "168h"
-  type = "file"
-  url = "https://github.com/branchvincent/dotfiles/raw/main/.config/python/startup.py"
+  stripComponents = 4
+  type = "archive"
+  url = "https://github.com/mgoodness/yadm-dotfiles/archive/main.tar.gz"
+
+[".config/poetry"]
+  exact = true
+  include = ["*/.config/poetry/**"]
+  refreshPeriod = "168h"
+  stripComponents = 3
+  type = "archive"
+  url = "https://github.com/mgoodness/yadm-dotfiles/archive/main.tar.gz"
+
+[".config/python"]
+  exact = true
+  include = ["*/.config/python/**"]
+  refreshPeriod = "168h"
+  stripComponents = 3
+  type = "archive"
+  url = "https://github.com/mgoodness/yadm-dotfiles/archive/main.tar.gz"
 
 [".config/zsh"]
   exact = true
@@ -29,4 +56,4 @@
   refreshPeriod = "168h"
   stripComponents = 3
   type = "archive"
-  url = "https://github.com/branchvincent/dotfiles/archive/main.tar.gz"
+  url = "https://github.com/mgoodness/yadm-dotfiles/archive/main.tar.gz"
