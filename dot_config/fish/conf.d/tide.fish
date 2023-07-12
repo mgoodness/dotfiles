@@ -27,12 +27,23 @@ set tide_right_prompt_items \
     cmd_duration \
     context \
     jobs \
-    # gcloud \
-    kubectl \
-    go \
+    direnv \
     node \
-    # python \
+    python \
     rustc \
-    # direnv \
+    java \
+    php \
+    pulumi \
+    chruby \
+    go \
+    gcloud \
+    kubectl \
+    distrobox \
+    toolbox \
+    terraform \
+    aws \
+    nix_shell \
+    crystal \
+    elixir \
     shlvl \
     && :

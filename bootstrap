@@ -3,6 +3,7 @@
 # Minimal script to bootstrap https://chezmoi.io before it clones our dotfiles
 
 set -euo pipefail
+unset XDG_CONFIG_HOME
 command -v bash &>/dev/null || { echo >&2 "ERROR: bash must be installed!" && exit 1; }
 command -v git &>/dev/null || { echo >&2 "ERROR: git must be installed!" && exit 1; }
 
