@@ -3,6 +3,9 @@
 status is-interactive || exit
 
 ### Abbreviations ###
+abbr acd "argocd --grpc-web"
+abbr akcd "akuity argocd"
+
 abbr b brew
 abbr brewski "brew update && brew bundle && brew upgrade && brew cleanup && brew doctor"
 
@@ -24,7 +27,7 @@ abbr ghpr "gh pr create --fill"
 
 abbr --position anywhere k kubectl
 abbr --position anywhere ksys "kubectl --namespace=kube-system"
-abbr kbuild "kustomize build"
+abbr kbuild "kustomize build --enable-alpha-plugins --enable-exec"
 abbr kc k8s-context
 abbr kdrain "kubectl drain --delete-emptydir-data --ignore-daemonsets"
 abbr kfailed "kubectl delete pods -A --field-selector=status.phase=Failed"
