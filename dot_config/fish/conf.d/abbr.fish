@@ -3,7 +3,7 @@
 status is-interactive || exit
 
 ### Abbreviations ###
-abbr acd "argocd --grpc-web"
+abbr --position anywhere acd "argocd --grpc-web"
 abbr akcd "akuity argocd"
 
 abbr b brew

@@ -73,6 +73,7 @@ brew "zoxide"
 
 cask "1password"
 cask "1password-cli"
+cask "akuity"
 cask "caffeine"
 cask "font-jetbrains-mono"
 cask "font-jetbrains-mono-nerd-font"
