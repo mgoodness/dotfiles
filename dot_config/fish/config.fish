@@ -12,7 +12,12 @@ set -gx PAGER less
 set -gx USE_GKE_GCLOUD_AUTH_PLUGIN True
 
 set -Uq fish_features || set -U fish_features all
+
+# fzf.fish
+set -gx fzf_diff_highlighter delta --paging=never --width=20
 set -gx fzf_fd_opts --hidden
+set -gx fzf_preview_dir_cmd eza --all --color=always
+
 set -gx man_bold --bold $fish_color_command
 set -gx man_standout --reverse $fish_color_search_match
 set -gx man_underline --underline $fish_color_param

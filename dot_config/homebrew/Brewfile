@@ -12,7 +12,7 @@ brew "curl"
 brew "direnv"
 brew "dlv"
 # brew "duti"
-brew "exa"
+brew "eza"
 brew "fd"
 brew "fish", args: ["HEAD"]
 brew "fzf"
