@@ -2,6 +2,7 @@ status is-login || exit
 
 # Environment
 set -gx BAT_THEME base16-256
+set -gx DOCKER_HOST unix://$HOME/.colima/default/docker.sock
 set -gx EDITOR hx
 set -gx FZF_DEFAULT_OPTS --ansi --color=16 --cycle --height=80% --layout=reverse --marker="*" --preview-window=wrap
 set -gx GIT_MERGE_AUTOEDIT no # accept default merge commit message
