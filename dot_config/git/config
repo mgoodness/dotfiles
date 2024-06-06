@@ -23,7 +23,7 @@
 [core]
 	autocrlf = input							# normalize line endings on commit (but not checkout)
 	excludesFile = ~/.config/git/ignore
-	pager = delta --diff-so-fancy --navigate	# use a better diff visualizer
+	pager = delta --dark --diff-so-fancy --navigate    # use dark theme explicitly until https://github.com/dandavison/delta/issues/1707 is resolved
 	trustctime = false
 [credential]
 	helper = osxkeychain
@@ -31,7 +31,6 @@
 	navigate = true
 [diff]
 	colorMoved = default	# color moved lines differently
-	; colorMoved = zebra
 	noprefix = true
 [fetch]
 	prune = true		# prune deleted remote refs
@@ -47,7 +46,7 @@
 [init]
 	defaultBranch = main
 [interactive]
-	diffFilter = delta --color-only
+	diffFilter = delta --color-only --dark     # use dark theme explicitly until https://github.com/dandavison/delta/issues/1707 is resolved
 [log]
 	date = relative
 	follow = true
@@ -57,22 +56,21 @@
 [pretty]
 	stash = format:%C(bold magenta)%gd %C(blue)%>(13,trunc)%ad %C(reset)%s
 [pull]
-	; ff = only
 	rebase = merges
 [push]
 	autoSetupRemote = true
 	default = upstream
 	followTags = true	# always push annotated tag(s)
 [rebase]
+    autoSquash = true
 	autoStash = true
+	updateRefs = true
 [tag]
 	forceSignAnnotated = true
-[url "git@github.com:"]
-	insteadOf = https://github.com/
+# [url "git@github.com:"]
+# 	insteadOf = https://github.com/
 [url "git@github.mlbam.net:"]
 	insteadOf = https://github.mlbam.net/
-; [url "https://"]
-;	  insteadOf = git://
 [user]
 	email = "mike@opsgoodness.net"
 	name = Michael Goodness
