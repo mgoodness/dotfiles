@@ -19,10 +19,7 @@ abbr gbsu "git branch --set-upstream-to"
 abbr gcae "git commit --allow-empty --verbose"
 abbr gcae! "git commit --allow-empty --amend --verbose"
 abbr gpdo "git push --delete origin"
-# abbr grp git-rebase-preserve-author
-# abbr grpm "git-rebase-preserve-author $(git_main_branch)"
 
-# abbr gff "git-fresh -f"
 abbr ghpr "gh pr create --fill"
 
 abbr --position anywhere k kubectl
@@ -42,14 +39,13 @@ abbr pc pbcopy
 abbr pp pbpaste
 abbr py python3
 
-# abbr sternsys "stern --namespace=kube-system"
-
 abbr tf terraform
 abbr tfgp "terraform get -update && terraform plan"
 
 abbr urldecode "string unescape --style=url"
 abbr urlencode "string escape --style=url"
 
+abbr za "zed --add"
 
 ### Aliases ###
 function _alias
