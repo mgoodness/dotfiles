@@ -1,6 +1,5 @@
 set -gx HOMEBREW_BAT 1
 set -gx HOMEBREW_COLOR 1
-set -e HOMEBREW_NO_AUTO_UPDATE
 set -gx HOMEBREW_NO_ENV_HINTS 1
 
 # Faster `brew shellenv`
