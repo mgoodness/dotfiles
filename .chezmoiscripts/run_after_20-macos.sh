@@ -29,6 +29,7 @@ dockutil --no-restart --add /Applications/Slack.app
 dockutil --no-restart --add /System/Applications/Music.app
 dockutil --no-restart --add /System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app # https://github.com/kcrawford/dockutil/issues/144
 dockutil --no-restart --add /Applications/Kitty.app
+dockutil --no-restart --add /Applications/Zed.app
 dockutil --no-restart --add /System/Applications/Notes.app
 dockutil --no-restart --add /System/Applications/Reminders.app
 dockutil --no-restart --add /System/Applications/System\ Settings.app

@@ -22,6 +22,7 @@
 	template = ~/.config/git/commit
 [core]
 	autocrlf = input							# normalize line endings on commit (but not checkout)
+	editor = zed --wait
 	excludesFile = ~/.config/git/ignore
 	pager = delta --dark --diff-so-fancy --navigate    # use dark theme explicitly until https://github.com/dandavison/delta/issues/1707 is resolved
 	trustctime = false
