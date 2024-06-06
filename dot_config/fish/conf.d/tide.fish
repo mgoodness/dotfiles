@@ -18,7 +18,7 @@ set -gx tide_gcloud_color blue
 set -gx tide_gcloud_icon 
 set -gx tide_kubectl_icon 󱃾
 # set -gx tide_node_color 68A063
-set -gx tide_node_icon 
+set -gx tide_node_icon 󰋘
 set -gx tide_rustc_icon R
 set -gx tide_transient_enabled true
 
