@@ -24,7 +24,7 @@
 	autocrlf = input							# normalize line endings on commit (but not checkout)
 	editor = zed --wait
 	excludesFile = ~/.config/git/ignore
-	pager = delta --diff-so-fancy --navigate
+	pager = delta --dark --diff-so-fancy --navigate    # use dark theme explicitly until https://github.com/zed-industries/zed/issues/8497 is resolved
 	trustctime = false
 [credential]
 	helper = osxkeychain
@@ -47,7 +47,7 @@
 [init]
 	defaultBranch = main
 [interactive]
-	diffFilter = delta --color-only
+	diffFilter = delta --color-only --dark     # use dark theme explicitly until https://github.com/zed-industries/zed/issues/8497 is resolved
 [log]
 	date = relative
 	follow = true
