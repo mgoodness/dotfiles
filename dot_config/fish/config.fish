@@ -7,6 +7,7 @@ set -gx EDITOR zed -w
 set -gx FZF_DEFAULT_OPTS --ansi --color=16 --cycle --height=80% --layout=reverse --marker="*" --preview-window=wrap
 set -gx GIT_MERGE_AUTOEDIT no # accept default merge commit message
 set -gx GIT_WORKSPACE ~/Code
+set -gx KREW_ROOT $HOME/.krew/bin
 set -gx LESS --incsearch --ignore-case --jump-target=.5 --LONG-PROMPT --raw-control-chars --quit-if-one-screen
 set -gx LESSCHARSET utf-8
 set -gx PAGER less
