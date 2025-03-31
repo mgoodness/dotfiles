@@ -1,10 +1,10 @@
 [".config/direnv"]
-  exact = true
-  include = ["*/.config/direnv/**"]
-  refreshPeriod = "168h"
-  stripComponents = 3
-  type = "archive"
-  url = "https://github.com/mgoodness/yadm-dotfiles/archive/main.tar.gz"
+exact = true
+include = ["*/.config/direnv/**"]
+refreshPeriod = "168h"
+stripComponents = 3
+type = "archive"
+url = "https://github.com/branchvincent/dotfiles/archive/main.tar.gz"
 
 [".config/fish/completions"]
   include = ["*/.config/fish/completions/rustup.fish", "*/.config/fish/completions/up.fish"]
