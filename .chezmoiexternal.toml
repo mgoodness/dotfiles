@@ -1,10 +1,3 @@
-["."]
-  include = ["*/.hushlogin", "*/.profile"]
-  refreshPeriod = "168h"
-  stripComponents = 1
-  type = "archive"
-  url = "https://github.com/mgoodness/yadm-dotfiles/archive/main.tar.gz"
-
 [".config/direnv"]
   exact = true
   include = ["*/.config/direnv/**"]
