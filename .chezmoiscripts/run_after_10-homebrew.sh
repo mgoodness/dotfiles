@@ -10,5 +10,5 @@ fi
 export HOMEBREW_BUNDLE_FILE=~/.config/homebrew/Brewfile
 if ! brew bundle check &>/dev/null; then
   echo "Installing Homebrew packages..."
-  brew bundle install --no-lock
-fi  
+  brew bundle install
+fi
