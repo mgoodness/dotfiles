@@ -1,14 +1,15 @@
 function gh --wraps=gh
     if test \( "$argv[1]" = repo -a "$argv[2]" = clone \) -a -n "$argv[3]"
-        switch (string split / "$argv[3]" | count)
+        set repo_arg "$argv[3]"
+        switch (string split / "$repo_arg" | count)
             case 1
-                set repo_dir "$GIT_WORKSPACE/github.com/mgoodness/$argv[3]"
+                set repo_dir "$GIT_WORKSPACE/github.com/mgoodness/$repo_arg"
             case 2
-                set org_repo "$argv[3]"
-                if test ( string sub -l 4 "$org_repo" ) = "mlb-"
-                    set repo_dir "$GIT_WORKSPACE/emu.github.com/$org_repo"
+                if test ( string sub -l 4 "$repo_arg" ) = "mlb-"
+                    set argv[3] "emu.github.com/$repo_arg"
+                    set repo_dir "$GIT_WORKSPACE/emu.github.com/$repo_arg"
                 else
-                    set repo_dir "$GIT_WORKSPACE/github.com/$org_repo"
+                    set repo_dir "$GIT_WORKSPACE/github.com/$repo_arg"
                 end
             case 3
                 set repo_dir "$GIT_WORKSPACE/$argv[3]"

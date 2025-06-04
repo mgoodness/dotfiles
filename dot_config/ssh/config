@@ -1,6 +1,13 @@
 # -*- mode: ssh-config -*-
 # Ref: https://github.com/drduh/config/blob/master/ssh_config
 
+Host emu.github.com
+    ControlMaster no
+    HostName github.com
+    IdentityFile ~/.config/ssh/git@emu.github.com.pub
+    MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
+    User git
+
 Host gitlab.com
     ControlMaster no
     User git

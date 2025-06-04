@@ -68,8 +68,8 @@
 	updateRefs = true
 [tag]
 	forceSignAnnotated = true
-# [url "git@github.com:"]
-# 	insteadOf = https://github.com/
+[url "git@github.com:"]
+	insteadOf = https://github.com/
 [url "git@github.mlbam.net:"]
 	insteadOf = https://github.mlbam.net/
 [user]
