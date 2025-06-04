@@ -83,3 +83,5 @@
 	path = aliases
 [includeIf "gitdir:~/Code/github.mlbam.net/"]
 	path = ~/Code/github.mlbam.net/.gitconfig
+[includeIf "gitdir:~/Code/emu.github.com/"]
+	path = ~/Code/emu.github.com/.gitconfig
