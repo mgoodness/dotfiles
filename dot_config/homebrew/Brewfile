@@ -75,7 +75,7 @@ cask "font-iosevka"
 cask "font-iosevka-term-nerd-font"
 cask "font-symbols-only-nerd-font"
 cask "google-cloud-sdk"
-cask "kitty"
+cask "ghostty"
 # cask "omnidisksweeper"
 # cask "qlmarkdown", args: { no_quarantine: true }
 cask "rectangle"
