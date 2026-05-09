@@ -14,7 +14,7 @@ url = "https://github.com/branchvincent/dotfiles/archive/main.tar.gz"
   url = "https://github.com/mgoodness/yadm-dotfiles/archive/main.tar.gz"
 
 [".config/fish/conf.d"]
-  include = ["*/.config/fish/conf.d/__xdg.fish", "*/.config/fish/conf.d/direnv.fish", "*/.config/fish/conf.d/fisher.fish", "*/.config/fish/conf.d/python.fish"]
+  include = ["*/.config/fish/conf.d/__xdg.fish", "*/.config/fish/conf.d/direnv.fish", "*/.config/fish/conf.d/python.fish"]
   refreshPeriod = "168h"
   stripComponents = 4
   type = "archive"

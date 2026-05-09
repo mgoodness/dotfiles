@@ -14,6 +14,7 @@ set -gx USE_GKE_GCLOUD_AUTH_PLUGIN True
 
 set -Uq fish_features || set -U fish_features all
 
+fish_config theme choose "TokyoNight Day"
 # fzf.fish
 set -gx fzf_diff_highlighter delta --paging=never --width=20
 set -gx fzf_fd_opts --hidden
