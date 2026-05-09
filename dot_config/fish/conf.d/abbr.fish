@@ -34,18 +34,17 @@ abbr kn k8s-namespace
 abbr kport "kubectl port-forward"
 abbr kwatch "watch kubectl"
 
-abbr p poetry
 abbr pc pbcopy
 abbr pp pbpaste
 abbr py python3
+
+abbr reload "source ~/.config/fish/config.fish"
 
 abbr tf terraform
 abbr tfgp "terraform get -update && terraform plan"
 
 abbr urldecode "string unescape --style=url"
 abbr urlencode "string escape --style=url"
-
-abbr za "zed --add"
 
 ### Aliases ###
 function _alias
