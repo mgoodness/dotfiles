@@ -8,18 +8,18 @@
 
 ### General ###
 echo "Updating general settings..."
-defaults write NSGlobalDomain AppleInterfaceStyle -string Dark      # Dark mode
 defaults write NSGlobalDomain AppleWindowTabbingMode -string always # Prefer tabs
 # Touch ID for sudo
 if ! grep -q pam_tid.so /etc/pam.d/sudo; then
-    sudo sed -i .bak -e "2s/^/auth       sufficient     pam_tid.so\n/" /etc/pam.d/sudo
+  sudo sed -i .bak -e "2s/^/auth       sufficient     pam_tid.so\n/" /etc/pam.d/sudo
 fi
 
 ### Dock ###
 echo "Updating Dock settings..."
-defaults write com.apple.dock orientation -string bottom # Place at bottom
-defaults write com.apple.dock show-recents -bool false   # Hide recent apps
-defaults write com.apple.dock magnification -int 1       # Enable magnification
+defaults write com.apple.dock orientation -string bottom     # Place at bottom
+defaults write com.apple.dock show-recents -bool false       # Hide recent apps
+defaults write com.apple.dock minimize-to-application -int 1 # Minimize apps into itself
+defaults write com.apple.dock magnification -int 1           # Enable magnification
 defaults write com.apple.dock largesize -int 80
 dockutil --no-restart --remove all
 dockutil --no-restart --add /System/Applications/Calendar.app
@@ -28,7 +28,7 @@ dockutil --no-restart --add /System/Applications/Messages.app
 dockutil --no-restart --add /Applications/Slack.app
 dockutil --no-restart --add /System/Applications/Music.app
 dockutil --no-restart --add /System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app # https://github.com/kcrawford/dockutil/issues/144
-dockutil --no-restart --add /Applications/Ghostty.app
+dockutil --no-restart --add /Applications/cmux.app
 dockutil --no-restart --add /Applications/Zed.app
 dockutil --no-restart --add /System/Applications/Notes.app
 dockutil --no-restart --add /System/Applications/Reminders.app
@@ -45,9 +45,9 @@ defaults write com.apple.finder _FXSortFoldersFirst -int 1                 # Sor
 defaults write com.apple.finder QLEnableTextSelection -bool true           # Enable copy from quicklook
 defaults write com.apple.finder WarnOnEmptyTrash -bool false               # Don't warn when emptying trash
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false # Don't warn when changing an extension
-# for ext in public.{data,json,plain-text,python-script,shell-script,source-code,text,unix-executable} .go .java .{j,t}s{,x} .json .md .py .rb .txt .toml .y{,a}ml; do
-#     duti -s com.microsoft.VSCode "$ext" all # Set VSCode as default app for code
-# done
+for ext in public.{data,json,plain-text,python-script,shell-script,source-code,text,unix-executable} .go .java .{j,t}s{,x} .json .md .py .rb .txt .toml .y{,a}ml; do
+  duti -s dev.zed.Zed "$ext" all # Set Zed as default app for code
+done
 
 ### Mission Control ###
 echo "Updating Mission Control settings..."
@@ -74,11 +74,8 @@ defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1 # Check for upd
 echo "Setting max trackpad speed..."
 defaults write -g com.apple.trackpad.scaling 3 # Max trackpad speed
 
-### Wallpaper ###
-# osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/System/Library/Desktop Pictures/Ventura Graphic.heic"'
-
 # Restart affected apps
 echo "Restarting Dock applications..."
 for app in Dock Finder; do
-    killall "$app"
+  killall "$app"
 done
