@@ -1,4 +1,6 @@
+[url "git@emu.github.com:mlb-nextgen"]
+	insteadOf = git@github.com:mlb-nextgen
 [user]
 	email = "michael.goodness@mlb.com"
 	name = Michael Goodness
-    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAb/g0+cWz4/0BM4xr8VV/eErixEhe0D6qyHGXPBt6Hq
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAb/g0+cWz4/0BM4xr8VV/eErixEhe0D6qyHGXPBt6Hq
