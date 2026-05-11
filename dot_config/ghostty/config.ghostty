@@ -1,3 +1,6 @@
 copy-on-select = clipboard
 font-family = "FiraCode Nerd Font Mono"
 theme = light:tokyonight_white,dark:tokyonight_night
+
+# gtab managed include
+config-file = "/Users/Michael.Goodness/.config/gtab/ghostty-shortcut.conf"
