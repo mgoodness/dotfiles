@@ -29,7 +29,6 @@
 [credential]
 	helper = osxkeychain
 [delta]
-	features = tokyonight_day
 	navigate = true
 [diff]
 	colorMoved = default	# color moved lines differently

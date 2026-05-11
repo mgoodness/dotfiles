@@ -1,5 +1,6 @@
-[url "git@emu.github.com:mlb-nextgen"]
-	insteadOf = git@github.com:mlb-nextgen
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+	insteadOf = git@emu.github.com
 [user]
 	email = "michael.goodness@mlb.com"
 	name = Michael Goodness
