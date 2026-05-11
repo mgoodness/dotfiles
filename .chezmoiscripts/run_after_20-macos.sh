@@ -45,9 +45,10 @@ defaults write com.apple.finder _FXSortFoldersFirst -int 1                 # Sor
 defaults write com.apple.finder QLEnableTextSelection -bool true           # Enable copy from quicklook
 defaults write com.apple.finder WarnOnEmptyTrash -bool false               # Don't warn when emptying trash
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false # Don't warn when changing an extension
-for ext in public.{data,json,plain-text,python-script,shell-script,source-code,text,unix-executable} .go .java .{j,t}s{,x} .json .md .py .rb .txt .toml .y{,a}ml; do
+for ext in public.{data,json,plain-text,python-script,shell-script,source-code,text} .go .java .{j,t}s{,x} .json .md .py .rb .txt .toml .y{,a}ml; do
   duti -s dev.zed.Zed "$ext" all # Set Zed as default app for code
 done
+duti -s com.mitchellh.ghostty "public.unix-executable" all # Set Ghostty as default terminal
 
 ### Mission Control ###
 echo "Updating Mission Control settings..."

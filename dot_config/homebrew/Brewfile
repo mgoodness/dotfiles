@@ -1,26 +1,23 @@
 tap "beeftornado/rmtree"
-tap "franvy/gtab"
 tap "hashicorp/tap"
+tap "homebrew/core"
 
+brew "anomalyco/tap/opencode"
 brew "argocd"
 brew "bash"
 brew "bat"
 brew "chezmoi"
 brew "cocoapods"
-brew "colima"
 brew "coreutils"
 brew "curl"
 brew "delve"
 brew "direnv"
-brew "docker"
-brew "docker-buildx"
 brew "dockutil"
 brew "duti"
 brew "eza"
 brew "fd"
 brew "fish", args: ["HEAD"]
 brew "fnm"
-brew "franvy/gtab/gtab"
 brew "fzf"
 brew "gemini-cli"
 brew "gh"
@@ -48,13 +45,13 @@ brew "mise"
 brew "neovim"
 brew "parallel"
 brew "pre-commit"
-brew "python"
-brew "qemu"
 brew "ripgrep"
 brew "sd"
+brew "sesh"
 brew "skaffold"
 brew "sops"
 brew "tfenv", args: ["HEAD"]
+brew "tmux"
 brew "trash"
 brew "uv"
 brew "viddy"
@@ -74,13 +71,21 @@ cask "flutter"
 cask "font-fira-code"
 cask "font-fira-code-nerd-font"
 cask "gcloud-cli"
+cask "ghostty"
+cask "macdive"
 cask "rectangle"
 cask "slack"
 cask "zed"
 
+krew "config-cleanup"
+krew "get-all"
+krew "support-bundle"
+
 mas "1Password for Safari", id: 1569813296
 mas "AdBlock", id: 1402042596
-mas "Apple Developer", id: 640199958
+mas "Developer", id: 640199958
+mas "GarageBand", id: 682658836
+mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
 mas "Magnet", id: 441258766
 mas "Numbers", id: 409203825
@@ -88,4 +93,5 @@ mas "Okta Extension App", id: 1439967473
 mas "Okta Verify", id: 490179405
 mas "Pages", id: 409201541
 mas "Submersion", id: 6757456915
+mas "TestFlight", id: 899247664
 mas "Xcode", id: 497799835
