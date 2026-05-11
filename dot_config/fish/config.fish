@@ -7,6 +7,7 @@ set -gx BAT_THEME_LIGHT tokyonight_white
 set -gx EDITOR nvim
 set -gx EZA_CONFIG_DIR $HOME/.config/eza
 set -gx FZF_DEFAULT_OPTS --ansi --color=16 --cycle --height=80% --layout=reverse --marker="*" --preview-window=wrap
+set -gx LG_CONFIG_FILE "$HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme.yml"
 
 set -gx GIT_MERGE_AUTOEDIT no # accept default merge commit message
 set -gx GIT_WORKSPACE ~/Code
@@ -14,6 +15,7 @@ set -gx GIT_WORKSPACE ~/Code
 set -gx LESS --incsearch --ignore-case --jump-target=.5 --LONG-PROMPT --raw-control-chars --quit-if-one-screen
 set -gx LESSCHARSET utf-8
 set -gx PAGER less
+
 set -gx USE_GKE_GCLOUD_AUTH_PLUGIN True
 
 set -Uq fish_features || set -U fish_features all
