@@ -1,10 +1,10 @@
 [".config/direnv"]
-exact = true
-include = ["*/.config/direnv/**"]
-refreshPeriod = "168h"
-stripComponents = 3
-type = "archive"
-url = "https://github.com/branchvincent/dotfiles/archive/main.tar.gz"
+  exact = true
+  include = ["*/.config/direnv/**"]
+  refreshPeriod = "168h"
+  stripComponents = 3
+  type = "archive"
+  url = "https://github.com/branchvincent/dotfiles/archive/main.tar.gz"
 
 [".config/fish/completions"]
   include = ["*/.config/fish/completions/rustup.fish", "*/.config/fish/completions/up.fish"]
@@ -24,14 +24,6 @@ url = "https://github.com/branchvincent/dotfiles/archive/main.tar.gz"
   include = ["*/.config/fish/functions/__tide_item_python.fish", "*/.config/fish/functions/fish_log.fish"]
   refreshPeriod = "168h"
   stripComponents = 4
-  type = "archive"
-  url = "https://github.com/mgoodness/yadm-dotfiles/archive/main.tar.gz"
-
-[".config/poetry"]
-  exact = true
-  include = ["*/.config/poetry/**"]
-  refreshPeriod = "168h"
-  stripComponents = 3
   type = "archive"
   url = "https://github.com/mgoodness/yadm-dotfiles/archive/main.tar.gz"
 
