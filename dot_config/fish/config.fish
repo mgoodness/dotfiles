@@ -2,10 +2,10 @@ status is-login || exit
 
 # Environment
 set -gx BAT_THEME_DARK tokyonight_night
-set -gx BAT_THEME_LIGHT tokyonight_day
+set -gx BAT_THEME_LIGHT tokyonight_white
 
 set -gx EDITOR nvim
-
+set -gx EZA_CONFIG_DIR $HOME/.config/eza
 set -gx FZF_DEFAULT_OPTS --ansi --color=16 --cycle --height=80% --layout=reverse --marker="*" --preview-window=wrap
 
 set -gx GIT_MERGE_AUTOEDIT no # accept default merge commit message

@@ -25,7 +25,7 @@ fish_pager_color_description 565f89
 fish_pager_color_selected_background --background=283457
 
 [light]
-# preferred_background: e1e2e7
+# preferred_background: ffffff
 fish_color_normal 3760bf
 fish_color_command 007197
 fish_color_keyword 9854f1
