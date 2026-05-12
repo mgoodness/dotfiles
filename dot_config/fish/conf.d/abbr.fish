@@ -38,8 +38,7 @@ abbr pc pbcopy
 abbr pp pbpaste
 abbr py python3
 
-abbr reload "source ~/.config/fish/config.fish"
-
+abbr reload "exec fish"
 abbr tf terraform
 abbr tfgp "terraform get -update && terraform plan"
 
@@ -66,3 +65,4 @@ if command -q eza
 end
 
 alias less "less --force --no-init --hilite-search --ignore-case --SILENT --status-column --underline-special"
+alias wget "wget --hsts-file=$XDG_CACHE_HOME/wget-hsts"
