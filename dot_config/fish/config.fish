@@ -7,7 +7,6 @@ set -gx BAT_THEME_LIGHT "Catppuccin Latte"
 set -gx EDITOR "zed --wait"
 set -gx EZA_CONFIG_DIR $XDG_CONFIG_HOME/eza
 set -gx FZF_DEFAULT_OPTS --ansi --color=16 --cycle --height=80% --layout=reverse --marker="*" --preview-window=wrap
-set -gx LG_CONFIG_FILE "$HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme.yml"
 
 set -gx GIT_MERGE_AUTOEDIT no # accept default merge commit message
 set -gx GIT_WORKSPACE ~/Code
