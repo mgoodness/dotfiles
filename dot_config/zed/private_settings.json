@@ -7,12 +7,62 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "file_types": {
+    "Git Config": ["dot_gitconfig"]
+  },
+  "languages": {
+    "Git Config": {
+      "hard_tabs": true,
+      "tab_size": 8
+    }
+  },
+  "cli_default_open_behavior": "existing_window",
+  "buffer_font_family": "FiraCode Nerd Font Mono",
+  "ui_font_family": ".SystemUIFont",
+  "agent_servers": {
+    "opencode": {
+      "type": "registry"
+    },
+    "claude-acp": {
+      "type": "registry"
+    },
+    "gemini": {
+      "type": "registry"
+    },
+    "github-copilot-cli": {
+      "type": "registry"
+    }
+  },
+  "edit_predictions": {
+    "provider": "zed"
+  },
+  "icon_theme": {
+    "mode": "system",
+    "light": "Zed (Default)",
+    "dark": "Zed (Default)"
+  },
   "base_keymap": "VSCode",
-  "theme": "One Dark",
+  "theme": {
+    "mode": "system",
+    "light": "Catppuccin Latte",
+    "dark": "Catppuccin Frappé"
+  },
   "ui_font_size": 16,
   "buffer_font_size": 16,
   "terminal": {
+    "working_directory": "current_file_directory",
     "copy_on_select": true,
-    "font_family": "IosevkaTerm Nerd Font Mono"
+    "font_family": "FiraCode Nerd Font Mono"
+  },
+  "lsp": {
+    "yaml-language-server": {
+      "settings": {
+        "yaml": {
+          "format": {
+            "singleQuote": false
+          }
+        }
+      }
+    }
   }
 }

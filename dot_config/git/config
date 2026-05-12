@@ -1,4 +1,3 @@
-# -*- mode: ini -*-
 # Ref: https://dandavison.github.io/delta/get-started.html
 # Ref: https://dandavison.github.io/delta/configuration.html
 [branch]
@@ -22,7 +21,7 @@
 	template = ~/.config/git/commit
 [core]
 	autocrlf = input							# normalize line endings on commit (but not checkout)
-	editor = nvim
+	editor = "zed --wait"
 	excludesFile = ~/.config/git/ignore
 	pager = delta --navigate
 	trustctime = false
