@@ -1,8 +1,8 @@
 status is-login || exit
 
 # Environment
-set -gx BAT_THEME_DARK tokyonight_night
-set -gx BAT_THEME_LIGHT tokyonight_white
+set -gx BAT_THEME_DARK "Catppuccin Frappe"
+set -gx BAT_THEME_LIGHT "Catppuccin Latte"
 
 set -gx EDITOR "zed --wait"
 set -gx EZA_CONFIG_DIR $XDG_CONFIG_HOME/eza
@@ -20,7 +20,7 @@ set -gx USE_GKE_GCLOUD_AUTH_PLUGIN True
 
 set -Uq fish_features || set -U fish_features all
 
-fish_config theme choose TokyoNight
+fish_config theme choose catppuccin-frappe
 
 # fzf.fish
 set -gx fzf_diff_highlighter delta --paging=never --width=20

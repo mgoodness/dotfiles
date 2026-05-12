@@ -74,7 +74,7 @@
 	browser = open
 [include]
 	path = aliases
-	path = ~/.config/delta/themes.gitconfig
+	path = ~/.config/delta/catppuccin-frappe.gitconfig
 [includeIf "gitdir:~/Code/emu.github.com/"]
 	path = ~/Code/emu.github.com/.gitconfig
 [includeIf "gitdir:~/Code/github.com/"]
