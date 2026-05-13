@@ -7,6 +7,9 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "git_panel": {
+    "tree_view": true
+  },
   "file_types": {
     "Git Config": ["dot_gitconfig"]
   },
@@ -24,6 +27,14 @@
       "type": "registry"
     },
     "claude-acp": {
+      "default_config_options": {
+        "mode": "auto"
+      },
+      "favorite_config_option_values": {
+        "effort": [
+          "medium"
+        ]
+      },
       "type": "registry"
     },
     "gemini": {
@@ -34,6 +45,7 @@
     }
   },
   "edit_predictions": {
+    "allow_data_collection": "no",
     "provider": "zed"
   },
   "icon_theme": {
