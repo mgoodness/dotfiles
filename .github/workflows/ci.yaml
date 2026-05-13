@@ -2,10 +2,6 @@ name: CI
 
 on:
   push:
-    branches: [main]
-    paths-ignore: ["**.md"]
-  pull_request:
-    branches: [main]
     paths-ignore: ["**.md"]
 
 concurrency:
@@ -26,4 +22,4 @@ jobs:
   bootstrap:
     runs-on: macos-latest
     steps:
-      - run: sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply --branch ${GITHUB_REF_NAME} mgoodness
+      - run: sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply --branch=${GITHUB_REF_NAME} mgoodness
