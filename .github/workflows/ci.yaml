@@ -26,4 +26,4 @@ jobs:
   bootstrap:
     runs-on: macos-latest
     steps:
-      - run: sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply mgoodness
+      - run: sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply --branch ${GITHUB_REF_NAME} mgoodness
