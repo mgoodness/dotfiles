@@ -27,7 +27,7 @@ Options:
 
 Commands:"
     for cmd in (functions -a | string replace -rf "^__up_(?!all|auto|help)" "")
-        printf "  %-13""s %s\n" $cmd (desc __up_$cmd)
+        printf "  %-13s %s\n" "$cmd" (desc __up_$cmd)
     end
 end
 
@@ -46,59 +46,90 @@ end
 function __up_all --description "Update everything"
     test -e ~/.cache/fish || mkdir -p ~/.cache/fish
     touch ~/.cache/fish/last-updated
-    for cmd in (functions -a | string replace -rf "^__up_(?!all|auto|help)" "")
+    for cmd in (functions -a | string replace -rf "^__up_(?!all|auto|docker|help)" "")
         echo (set_color blue)"dotfiles"(set_color normal): updating (set_color --bold)$cmd(set_color normal) >&2
         __up_$cmd
     end
 end
 
+function __up_apt --description "Update apt packages"
+    if test (id -u) -ne 0 && not command -q sudo
+        fish_log -w "Skipping as sudo is required but not found"
+        return
+    end
+    command -q sudo && set -l apt sudo apt || set -l apt apt
+    $apt update -qqq
+    $apt upgrade -qqq
+    $apt autoremove -qqq
+end
+
 function __up_homebrew --description "Update Homebrew packages"
-    brew upgrade
-    brew autoremove
-    brew cleanup
-    brew doctor
+    brew upgrade -q
+    brew autoremove -q
+    brew cleanup -q
+    brew doctor -q
+end
+
+function __up_docker --description "Update Docker images"
+    docker images --format '{{.Repository}}:{{.Tag}}' | xargs -n1 docker pull -q
+    docker system prune -f
 end
 
 function __up_dotfiles --description "Update dotfiles"
-    # Update repo
-    chezmoi update
-
-    # Update package lists
-    # command -q brew && brew bundle dump --force --no-restart
-    # cat $HOMEBREW_BUNDLE_FILE | string replace -r '("qlmarkdown"|"syntax-highlight")$' '$1, args: { no_quarantine: true }' >$HOMEBREW_BUNDLE_FILE
-    # command -q code && code --list-extensions >$XDG_CONFIG_HOME/code/extensions.txt
-
-    # Trash non-xdg cache
-    command rm -rf ~/.{bash_history,bundle,config/configstore,kube,lesshst,node,npm,rustup,yarnrc}
+    chezmoi update --apply --exclude=scripts >/dev/null
+    command -q brew && brew bundle dump --force && sort-brewfile -i
 end
 
 function __up_fisher --description "Update fish packages"
     fisher update >/dev/null
-    fish_update_completions >/dev/null
+    fish_update_completions &>/dev/null || true
 end
 
-function __up_gcloud --description "Update gcloud"
+function __up_gcloud --description "Update gcloud components"
     gcloud components update -q &>/dev/null
 end
 
-function __up_mas --description "Update macOS apps"
-    mas outdated | grep -q " " && mas upgrade
+function __up_gh --description "Update gh extensions"
+    gh extension upgrade --all >/dev/null
 end
 
-# function __up_macos --description "Update macOS"
-#     softwareupdate --list &| grep -q "No new" || softwareupdate --install --all
-# end
+function __up_git --description "Update git repos"
+    git workspace update &>/dev/null
+    env -u GIT_DIR -u GIT_WORK_TREE git workspace switch-and-pull &>/dev/null
+    git workspace run touch .envrc &>/dev/null
+end
+
+function __up_mas --description "Update macOS apps"
+    mas outdated | grep -qvz " " || mas upgrade
+end
+
+function __up_macos --description "Update macOS"
+    softwareupdate --list &| grep -q "No new" || softwareupdate --install --all
+end
+
+function __up_rustup --description "Update Rust"
+    rustup check &| grep -qvz available || rustup update
+end
 
 # Remove any unfound items
 for item in (functions -a | string replace -rf "^__up_(?!all|auto|help)" "")
     set -l cmd $item
     switch $item
+        case apt
+            set cmd apt-get
+        case docker
+            set cmd docker podman
         case dotfiles
             set cmd chezmoi
         case fisher
-            set cmd fish
-        case homebrew
-            set cmd brew
+            functions -q fisher || functions -e __up_$item
+            continue
+        case gcloud
+            set cmd gcloud
+        case gh
+            set cmd gh
+        case git
+            set cmd git-workspace
         case macos
             set cmd softwareupdate
     end
