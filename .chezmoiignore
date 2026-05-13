@@ -1,7 +1,7 @@
 .github/
 .local/
 
-.pre-commit-config.yaml
+prek.toml
 .prekignore
 bootstrap
 chezmoi.toml
