@@ -28,10 +28,7 @@
     },
     "claude-acp": {
       "default_config_options": {
-        "mode": "auto"
-      },
-      "favorite_config_option_values": {
-        "effort": ["medium"]
+        "mode": "plan"
       },
       "type": "registry"
     },
