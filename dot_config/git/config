@@ -23,11 +23,13 @@
 	autocrlf = input							# normalize line endings on commit (but not checkout)
 	editor = "zed --wait"
 	excludesFile = ~/.config/git/ignore
-	pager = delta --navigate
+	pager = command -v delta >/dev/null 2>&1 && delta || ${PAGER:-less}
 	trustctime = false
 [credential]
 	helper = osxkeychain
 [delta]
+    # diff-so-fancy = true
+    # hyperlinks = true
 	navigate = true
 [diff]
 	colorMoved = default	# color moved lines differently
@@ -41,6 +43,14 @@
 	format = ssh
 [gpg "ssh"]
 	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+[include]
+	path = ~/.config/delta/catppuccin-frappe.gitconfig
+[includeIf "gitdir:~/Code/emu.github.com/"]
+	path = ~/Code/emu.github.com/.gitconfig
+[includeIf "gitdir:~/Code/github.com/"]
+	path = ~/Code/github.com/.gitconfig
+[includeIf "gitdir:~/Code/github.mlbam.net/"]
+	path = ~/Code/github.mlbam.net/.gitconfig
 [init]
 	defaultBranch = main
 [interactive]
@@ -54,10 +64,11 @@
 [pretty]
 	stash = format:%C(bold magenta)%gd %C(blue)%>(13,trunc)%ad %C(reset)%s
 [pull]
+    # ff = only
 	rebase = merges
 [push]
 	autoSetupRemote = true
-	default = upstream
+	# default = upstream
 	followTags = true	# always push annotated tag(s)
 [rebase]
 	autoSquash = true
@@ -72,12 +83,3 @@
 	useConfigOnly = true
 [web]
 	browser = open
-[include]
-	path = aliases
-	path = ~/.config/delta/catppuccin-frappe.gitconfig
-[includeIf "gitdir:~/Code/emu.github.com/"]
-	path = ~/Code/emu.github.com/.gitconfig
-[includeIf "gitdir:~/Code/github.com/"]
-	path = ~/Code/github.com/.gitconfig
-[includeIf "gitdir:~/Code/github.mlbam.net/"]
-	path = ~/Code/github.mlbam.net/.gitconfig
