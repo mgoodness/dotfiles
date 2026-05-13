@@ -6,6 +6,11 @@
 # References
 # - Inspiration: https://mths.be/macos
 
+if [ -n "${CI:-}" ]; then
+    debugw "Skipping due to \$CI"
+    return
+fi
+
 ### General ###
 echo "Updating general settings..."
 defaults write NSGlobalDomain AppleWindowTabbingMode -string always # Prefer tabs

@@ -1,6 +1,13 @@
 #!/bin/bash
 # shellcheck shell=bash
 
+# Install Homebrew and packages
+
+if [ -n "${CI:-}" ]; then
+    debugw "Skipping due to \$CI"
+    return
+fi
+
 if ! command -v brew >/dev/null 2>&1; then
     echo "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
