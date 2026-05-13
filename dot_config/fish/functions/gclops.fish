@@ -7,7 +7,7 @@ function gclops
 
     if test -n $project
         gcloud container operations list \
-          --project="$(string split ' ' -f2 -n $project)" \
-          --format="table(NAME,TYPE,LOCATION,TARGET,STATUS_MESSAGE,STATUS,START_TIME,END_TIME)"
+            --project="$(string split ' ' -f2 -n $project)" \
+            --format="table(NAME,TYPE,LOCATION,TARGET,STATUS_MESSAGE,STATUS,START_TIME,END_TIME)"
     end
 end

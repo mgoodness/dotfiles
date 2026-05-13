@@ -31,9 +31,7 @@
         "mode": "auto"
       },
       "favorite_config_option_values": {
-        "effort": [
-          "medium"
-        ]
+        "effort": ["medium"]
       },
       "type": "registry"
     },

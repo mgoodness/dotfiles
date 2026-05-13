@@ -22,18 +22,19 @@ External resources (`.chezmoiexternal.toml`) are fetched from remote archives on
 
 Scripts in `.chezmoiscripts/` run in alphanumeric order after `chezmoi apply`. They are idempotent and guard against re-running with condition checks:
 
-| Script | Does |
-|--------|------|
+| Script                     | Does                                                    |
+| -------------------------- | ------------------------------------------------------- |
 | `run_after_10-homebrew.sh` | Installs Homebrew if absent, then `brew bundle install` |
-| `run_after_20-macos.sh` | Sets macOS defaults, Dock layout, Touch ID sudo |
-| `run_after_30-fish.sh` | Adds fish to `/etc/shells` and sets it as login shell |
-| `run_after_40-gh.sh` | Installs `gh-copilot` and `gh-poi` extensions |
+| `run_after_20-macos.sh`    | Sets macOS defaults, Dock layout, Touch ID sudo         |
+| `run_after_30-fish.sh`     | Adds fish to `/etc/shells` and sets it as login shell   |
+| `run_after_40-gh.sh`       | Installs `gh-copilot` and `gh-poi` extensions           |
 
 ## Architecture
 
 ### Git workspace (`Code/`)
 
 Repos are organized by git host under `~/Code/`:
+
 - `github.com/` — personal repos
 - `emu.github.com/` — MLB GitHub Enterprise (corporate)
 - `github.mlbam.net/` — additional corporate host

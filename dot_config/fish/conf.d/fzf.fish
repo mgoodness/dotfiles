@@ -31,5 +31,5 @@ set -gx FZF_THEME_CATPPUCCIN_MOCHA "\
 
 # fzf.fish
 set -gx fzf_diff_highlighter "delta --paging=never --width=20"
-set -gx fzf_fd_opts "--hidden"
+set -gx fzf_fd_opts --hidden
 set -gx fzf_preview_dir_cmd "eza --all"
