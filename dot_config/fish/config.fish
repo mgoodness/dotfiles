@@ -1,10 +1,12 @@
 status is-login || exit
 
 # Environment
+set -e BAT_THEME_DARK
+set -e BAT_THEME_LIGHT
 set -gx EDITOR "zed --wait"
 set -gx GIT_MERGE_AUTOEDIT no # accept default merge commit message
 set -gx GIT_WORKSPACE ~/Code
-set -gx LESS --incsearch --ignore-case --jump-target=.5 --LONG-PROMPT --raw-control-chars --quit-if-one-screen
+set -gx LESS "--incsearch --ignore-case --jump-target=.5 --LONG-PROMPT --raw-control-chars --quit-if-one-screen"
 set -gx LESSCHARSET utf-8
 set -gx LS_COLORS $(vivid generate catppuccin-latte)
 set -gx PAGER less
