@@ -7,8 +7,8 @@
 # - Inspiration: https://mths.be/macos
 
 if [ -n "${CI:-}" ]; then
-    debugw "Skipping due to \$CI"
-    return
+    echo "Skipping due to \$CI"
+    exit
 fi
 
 ### General ###

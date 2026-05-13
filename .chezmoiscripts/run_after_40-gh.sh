@@ -4,8 +4,8 @@
 # Install GitHub CLI extensions
 
 if [ -n "${CI:-}" ]; then
-    debugw "Skipping due to \$CI"
-    return
+    echo "Skipping due to \$CI"
+    exit
 fi
 
 gh extension install github/gh-copilot
