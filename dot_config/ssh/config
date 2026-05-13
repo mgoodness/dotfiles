@@ -41,4 +41,4 @@ Host *
     # UseKeychain yes
     UserKnownHostsFile ~/.config/ssh/known_hosts
     VerifyHostKeyDNS yes
-    VisualHostKey yes
+    # VisualHostKey yes
