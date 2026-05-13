@@ -16,7 +16,7 @@ else
 fi
 if [ "$shell" = "$fish" ]; then
     echo "Login shell is already $shell"
-    return
+    exit
 fi
 
 echo "Updating login shell: $shell -> $fish"

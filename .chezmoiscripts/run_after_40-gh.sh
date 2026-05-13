@@ -8,5 +8,4 @@ if [ -n "${CI:-}" ]; then
     exit
 fi
 
-gh extension install github/gh-copilot
 gh extension install seachicken/gh-poi
