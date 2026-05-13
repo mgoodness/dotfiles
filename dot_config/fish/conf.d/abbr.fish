@@ -42,9 +42,6 @@ abbr reload "exec fish"
 abbr tf terraform
 abbr tfgp "terraform get -update && terraform plan"
 
-abbr urldecode "string unescape --style=url"
-abbr urlencode "string escape --style=url"
-
 ### Aliases ###
 function _alias
     command -q $argv[2] && alias $argv
@@ -52,7 +49,6 @@ end
 
 _alias cat bat
 _alias rm trash
-_alias top glances
 _alias watch viddy
 
 if command -q eza
