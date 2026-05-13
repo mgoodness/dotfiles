@@ -5,7 +5,7 @@ function gh --wraps=gh
             case 1
                 set repo_dir "$GIT_WORKSPACE/github.com/mgoodness/$argv[3]"
             case 2
-                if test ( string sub -l 4 "$argv[3]" ) = "mlb-"
+                if test ( string sub -l 4 "$argv[3]" ) = mlb-
                     set GH_HOST "emu.github.com"
                     set repo_dir "$GIT_WORKSPACE/$GH_HOST/$argv[3]"
                 else

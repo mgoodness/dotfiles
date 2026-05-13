@@ -1,4 +1,8 @@
+.github/
 .local/
-CLAUDE.md
-README.md
+
+.prekignore
+prek.toml
 bootstrap
+chezmoi.toml
+CLAUDE.md

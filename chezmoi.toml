@@ -1,2 +1,2 @@
 [diff]
-  pager = "delta --line-numbers"
+pager = "delta --line-numbers"

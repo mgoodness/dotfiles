@@ -12,17 +12,30 @@ Create `commitlint.config.js`:
 
 ```javascript
 module.exports = {
-  extends: ['@commitlint/config-conventional'],
+  extends: ["@commitlint/config-conventional"],
   rules: {
-    'type-enum': [2, 'always', [
-      'feat', 'fix', 'docs', 'style', 'refactor',
-      'perf', 'test', 'build', 'ci', 'chore', 'revert'
-    ]],
-    'scope-case': [2, 'always', 'kebab-case'],
-    'subject-case': [2, 'never', ['start-case', 'pascal-case', 'upper-case']],
-    'subject-max-length': [2, 'always', 100],
-    'body-max-line-length': [2, 'always', 100],
-  }
+    "type-enum": [
+      2,
+      "always",
+      [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "perf",
+        "test",
+        "build",
+        "ci",
+        "chore",
+        "revert",
+      ],
+    ],
+    "scope-case": [2, "always", "kebab-case"],
+    "subject-case": [2, "never", ["start-case", "pascal-case", "upper-case"]],
+    "subject-max-length": [2, "always", 100],
+    "body-max-line-length": [2, "always", 100],
+  },
 };
 ```
 
@@ -50,7 +63,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
       - run: npm install --save-dev @commitlint/{cli,config-conventional}
       - run: npx commitlint --from ${{ github.event.pull_request.base.sha || 'HEAD~1' }} --to HEAD
 ```

@@ -31,19 +31,19 @@ Conventional Commits structures commit messages as `type(scope): description` to
 
 ## Types and Their Versioning Impact
 
-| Type | Purpose | SemVer Impact |
-|------|---------|---------------|
-| `feat` | New feature | MINOR bump |
-| `fix` | Bug fix | PATCH bump |
-| `docs` | Documentation only | No bump |
-| `style` | Formatting, no logic change | No bump |
-| `refactor` | Code change that neither fixes nor adds | No bump |
-| `perf` | Performance improvement | No bump (or PATCH) |
-| `test` | Adding or correcting tests | No bump |
-| `build` | Build system or external dependencies | No bump |
-| `ci` | CI configuration changes | No bump |
-| `chore` | Other changes not modifying src/test | No bump |
-| `revert` | Reverts a previous commit | Depends on reverted type |
+| Type       | Purpose                                 | SemVer Impact            |
+| ---------- | --------------------------------------- | ------------------------ |
+| `feat`     | New feature                             | MINOR bump               |
+| `fix`      | Bug fix                                 | PATCH bump               |
+| `docs`     | Documentation only                      | No bump                  |
+| `style`    | Formatting, no logic change             | No bump                  |
+| `refactor` | Code change that neither fixes nor adds | No bump                  |
+| `perf`     | Performance improvement                 | No bump (or PATCH)       |
+| `test`     | Adding or correcting tests              | No bump                  |
+| `build`    | Build system or external dependencies   | No bump                  |
+| `ci`       | CI configuration changes                | No bump                  |
+| `chore`    | Other changes not modifying src/test    | No bump                  |
+| `revert`   | Reverts a previous commit               | Depends on reverted type |
 
 ## Breaking Changes
 

@@ -1,31 +1,18 @@
 status is-login || exit
 
 # Environment
-set -gx BAT_THEME_DARK tokyonight_night
-set -gx BAT_THEME_LIGHT tokyonight_white
-
-set -gx EDITOR nvim
-set -gx EZA_CONFIG_DIR $HOME/.config/eza
-set -gx FZF_DEFAULT_OPTS --ansi --color=16 --cycle --height=80% --layout=reverse --marker="*" --preview-window=wrap
-set -gx LG_CONFIG_FILE "$HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme.yml"
-
+set -gx EDITOR "zed --wait"
 set -gx GIT_MERGE_AUTOEDIT no # accept default merge commit message
 set -gx GIT_WORKSPACE ~/Code
-
 set -gx LESS --incsearch --ignore-case --jump-target=.5 --LONG-PROMPT --raw-control-chars --quit-if-one-screen
 set -gx LESSCHARSET utf-8
+set -gx LS_COLORS $(vivid generate catppuccin-latte)
 set -gx PAGER less
-
 set -gx USE_GKE_GCLOUD_AUTH_PLUGIN True
 
-set -Uq fish_features || set -U fish_features all
-
-fish_config theme choose TokyoNight
-
-# fzf.fish
-set -gx fzf_diff_highlighter delta --paging=never --width=20
-set -gx fzf_fd_opts --hidden
-set -gx fzf_preview_dir_cmd eza --all --color=always
+set -gx fish_features all
+set -gx fish_greeting
+set -g fish_key_bindings fish_vi_key_bindings
 
 set -gx man_bold --bold $fish_color_command
 set -gx man_standout --reverse $fish_color_search_match
@@ -35,5 +22,3 @@ command -q delta || set -gx GIT_PAGER $PAGER
 
 # Daily update
 up --auto
-
-fish_add_path $HOME/.krew/bin

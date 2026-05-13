@@ -6,12 +6,17 @@
 # References
 # - Inspiration: https://mths.be/macos
 
+if [ -n "${CI:-}" ]; then
+    echo "Skipping due to \$CI"
+    exit
+fi
+
 ### General ###
 echo "Updating general settings..."
 defaults write NSGlobalDomain AppleWindowTabbingMode -string always # Prefer tabs
 # Touch ID for sudo
 if ! grep -q pam_tid.so /etc/pam.d/sudo; then
-  sudo sed -i .bak -e "2s/^/auth       sufficient     pam_tid.so\n/" /etc/pam.d/sudo
+    sudo sed -i .bak -e "2s/^/auth       sufficient     pam_tid.so\n/" /etc/pam.d/sudo
 fi
 
 ### Dock ###
@@ -45,10 +50,9 @@ defaults write com.apple.finder _FXSortFoldersFirst -int 1                 # Sor
 defaults write com.apple.finder QLEnableTextSelection -bool true           # Enable copy from quicklook
 defaults write com.apple.finder WarnOnEmptyTrash -bool false               # Don't warn when emptying trash
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false # Don't warn when changing an extension
-for ext in public.{data,json,plain-text,python-script,shell-script,source-code,text} .go .java .{j,t}s{,x} .json .md .py .rb .txt .toml .y{,a}ml; do
-  duti -s dev.zed.Zed "$ext" all # Set Zed as default app for code
+for ext in public.{data,json,plain-text,python-script,shell-script,source-code,text,unix-executable} .go .java .{j,t}s{,x} .json .md .log .py .rb .txt .toml .y{,a}ml; do
+    duti -s dev.zed.Zed "$ext" all # Set Zed as default app for code
 done
-duti -s com.mitchellh.ghostty "public.unix-executable" all # Set Ghostty as default terminal
 
 ### Mission Control ###
 echo "Updating Mission Control settings..."
@@ -78,5 +82,5 @@ defaults write -g com.apple.trackpad.scaling 3 # Max trackpad speed
 # Restart affected apps
 echo "Restarting Dock applications..."
 for app in Dock Finder; do
-  killall "$app"
+    killall "$app"
 done

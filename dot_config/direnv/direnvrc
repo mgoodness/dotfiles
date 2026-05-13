@@ -1,0 +1,122 @@
+#!/bin/bash
+
+[ -z "${DIRENV_DEBUG:-}" ] || set -x
+
+# Usage: layout auto
+#
+# Detects and loads project based on file structure
+layout_auto() {
+    log_status "detecting layout"
+    if [[ -f go.mod ]]; then
+        log_status "detected go project"
+        layout go
+    elif [[ -f package.json ]]; then
+        log_status "detected node project"
+        use nodejs
+        layout nodejs
+    elif [[ -f pyproject.toml || -f setup.py ]]; then
+        log_status "detected python project"
+        layout python
+    fi
+    dotenv_if_exists
+}
+
+# Usage: approx_newer_than <file1> <file2> [<tolerance>]
+#
+# Returns 0 if <file1> is approximately newer than <file2>, within a tolerance
+# of <tolerance> seconds.
+approx_newer_than() {
+    tolerance=${3:-1}
+    mtime1=$(date -r "${1:-}" +%s 2>/dev/null || echo 0)
+    mtime2=$(date -r "${2:-}" +%s 2>/dev/null || echo 0)
+    [ $((mtime1 - mtime2)) -gt "$tolerance" ]
+}
+
+### Go ###
+
+layout_go() {
+    export GOBIN="$PWD/bin"
+    export GOTOOLCHAIN=auto
+    PATH_add bin
+}
+
+### Node ###
+
+# Usage: use nodejs [<version>]
+use_nodejs() {
+    version=$(parse_version .nvmrc '(.*)' "$@")
+    use_pkgx +node"$version" +npm
+}
+
+layout_nodejs() {
+    PATH_add node_modules/.bin
+
+    # Install, if deps are outdated
+    if [[ package-lock.json -nt node_modules/.package-lock.json ]]; then
+        npm install
+    elif approx_newer_than yarn.lock node_modules; then
+        yarn install
+        touch node_modules
+    fi
+    watch_file package-lock.json yarn.lock
+}
+
+### Python ###
+
+layout_python() {
+    # Activate venv
+    export VIRTUAL_ENV="$PWD/.venv"
+    PATH_add "$VIRTUAL_ENV/bin"
+    watch_file .python-version poetry.lock uv.lock
+
+    # Install, if deps are outdated
+    if [[ ! -f poetry.lock && ! -f uv.lock && ! -d .venv ]]; then
+        log_status "using uv pip"
+        uv venv -q
+        uv pip install -e '.[dev]'
+    elif [[ uv.lock -nt "$(echo .venv/lib/python*/site-packages)" ]]; then
+        log_status "using uv"
+        uv sync --frozen
+    elif approx_newer_than poetry.lock .venv/lib/python*/site-packages; then
+        log_status "using poetry"
+        [ -d .venv ] || uv venv -q
+        poetry install
+    fi
+    touch .venv/lib/python*/site-packages
+}
+
+### Pkgx ###
+
+# Usage: parse_version <filename> <regex> [version]
+#
+# Returns a version constraint for pkgx, constructed from either the given version or file
+parse_version() {
+    version_file=$1
+    version_regex=$2
+    version=${3:-any}
+    via=".envrc"
+
+    if [[ "$version" = "any" && -f "$version_file" && $(<"$version_file") =~ $version_regex ]]; then
+        version=${BASH_REMATCH[1]}
+        via="$version_file"
+    fi
+
+    log_status "resolved version $version (via $via)"
+    watch_file "$version_file"
+    [[ "$version" = "any" ]] || echo "~${version#v}"
+}
+
+# Usage: use pkgx [<pkg> ...]
+#
+# Loads the given packages
+use_pkgx() {
+    log_status "using pkgx $*"
+    # shellcheck disable=SC2016
+    eval "$("${direnv:?}" dotenv bash <(SHELL=bash pkgx -q "$@" | sed 's|${PATH:+:$PATH}|:${PATH}|g'))"
+}
+
+### Main ###
+
+if [[ ! -s .envrc ]]; then # empty .envrc
+    layout auto
+fi

@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    paths-ignore: ["**.md"]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6 # zizmor: ignore[unpinned-uses]
+        with:
+          persist-credentials: false
+      - uses: j178/prek-action@v2 # zizmor: ignore[unpinned-uses]
+
+  bootstrap:
+    runs-on: macos-latest
+    steps:
+      - run: sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply --branch=${GITHUB_REF_NAME} mgoodness
