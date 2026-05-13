@@ -1,5 +1,8 @@
+.github/
 .local/
-CLAUDE.md
-README.md
+
+.pre-commit-config.yaml
+.prekignore
 bootstrap
 chezmoi.toml
+CLAUDE.md
