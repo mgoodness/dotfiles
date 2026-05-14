@@ -15,10 +15,11 @@ abbr byaml "bat -l yaml"
 abbr calfix "launchctl stop com.apple.CalendarAgent && launchctl start com.apple.CalendarAgent"
 
 abbr c chezmoi
+abbr cadd "chezmoi add"
 abbr capply "chezmoi apply --exclude=scripts"
 abbr cdiff "chezmoi diff"
 abbr cedit "chezmoi edit --apply"
-abbr cmerge "chezmoi merge"
+abbr creadd "chezmoi re-add"
 abbr cstatus "chezmoi status"
 abbr cupdate "chezmoi update"
 
