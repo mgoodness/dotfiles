@@ -76,7 +76,7 @@ function __up_docker --description "Update Docker images"
 end
 
 function __up_dotfiles --description "Update dotfiles"
-    chezmoi update --apply --exclude=scripts >/dev/null
+    chezmoi update --apply --exclude=scripts
     command -q brew && brew bundle dump --force && sort-brewfile -i
 end
 

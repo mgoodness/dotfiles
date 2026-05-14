@@ -1,9 +1,10 @@
 jorgebucaran/fisher
 PatrickF1/fzf.fish
 decors/fish-colored-man
-mgoodness/tide@main
+mgoodness/tide
 kidonng/zoxide.fish
 jorgebucaran/autopair.fish
 nickeb96/puffer-fish
 lewisacidic/fish-git-abbr
-mgoodness/tide-show-on-cmd@main
+mgoodness/tide-show-on-cmd
+halostatue/fish-chezmoi

@@ -13,7 +13,14 @@ abbr bjson "bat -l json"
 abbr byaml "bat -l yaml"
 
 abbr calfix "launchctl stop com.apple.CalendarAgent && launchctl start com.apple.CalendarAgent"
-abbr gpgfix "gpgconf --kill gpg-agent"
+
+abbr c chezmoi
+abbr capply "chezmoi apply --exclude=scripts"
+abbr cdiff "chezmoi diff"
+abbr cedit "chezmoi edit --apply"
+abbr cmerge "chezmoi merge"
+abbr cstatus "chezmoi status"
+abbr cupdate "chezmoi update"
 
 abbr gbsu "git branch --set-upstream-to"
 abbr gcae "git commit --allow-empty --verbose"
@@ -48,7 +55,6 @@ function _alias
 end
 
 _alias cat bat
-_alias rm trash
 _alias watch viddy
 
 if command -q eza
