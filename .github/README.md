@@ -4,6 +4,7 @@
 - [XDG spec](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)-compliant (where possible)
 - [chezmoi](https://www.chezmoi.io/) for management
 - [1Password](https://1password.com/downloads/command-line/) for secrets
+- [Catppuccin](https://catppuccin.com) for themes
 
 ## Installation
 
