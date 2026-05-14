@@ -1,3 +1,5 @@
+# vim: set ft=ssh
+
 # Ref: https://github.com/drduh/config/blob/master/ssh_config
 
 Match host github.com exec "pwd | string match -e -q \"$HOME/Code/emu.github.com\""

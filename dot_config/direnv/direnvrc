@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# shellcheck shell=bash
 
 [ -z "${DIRENV_DEBUG:-}" ] || set -x
 

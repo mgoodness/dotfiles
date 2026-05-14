@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # shellcheck shell=bash
 
 # Install GitHub CLI extensions
