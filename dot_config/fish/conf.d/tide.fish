@@ -33,17 +33,17 @@ set -g tide_context_hostname_parts 1
 set -g tide_crystal_bg_color normal
 set -g tide_crystal_color FFFFFF
 set -g tide_crystal_icon 
-set -g tide_direnv_bg_color normal
-set -g tide_direnv_bg_color_denied normal
-set -g tide_direnv_color D7AF00
-set -g tide_direnv_color_denied FF0000
-set -g tide_direnv_icon ▼
+# set -g tide_direnv_bg_color normal
+# set -g tide_direnv_bg_color_denied normal
+# set -g tide_direnv_color D7AF00
+# set -g tide_direnv_color_denied FF0000
+# set -g tide_direnv_icon ▼
 set -g tide_distrobox_bg_color normal
 set -g tide_distrobox_color FF00FF
 set -g tide_distrobox_icon 󰆧
 set -g tide_docker_bg_color normal
 set -g tide_docker_color 2496ED
-set -g tide_docker_default_contexts default colima
+# set -g tide_docker_default_contexts default colima
 set -g tide_docker_icon 
 set -g tide_elixir_bg_color normal
 set -g tide_elixir_color 4E2A8E
@@ -123,7 +123,8 @@ set -g tide_python_bg_color normal
 set -g tide_python_color 4584B6
 set -g tide_python_icon 󰌠
 set -g tide_right_prompt_frame_enabled false
-set -g tide_right_prompt_items status cmd_duration context jobs node python rustc java php pulumi ruby go gcloud kubectl distrobox toolbox terraform aws nix_shell crystal elixir pkgx direnv shlvl
+# set -g tide_right_prompt_items status cmd_duration context jobs node python rustc java php pulumi ruby go gcloud kubectl distrobox toolbox terraform aws nix_shell crystal elixir pkgx direnv shlvl
+set -g tide_right_prompt_items status cmd_duration context jobs node python rustc java php pulumi ruby go gcloud kubectl distrobox toolbox terraform aws nix_shell crystal elixir pkgx shlvl
 set -g tide_right_prompt_prefix ' '
 set -g tide_right_prompt_separator_diff_color ' '
 set -g tide_right_prompt_separator_same_color ' '
