@@ -1,44 +1,32 @@
+# vim: set ft=gitconfig
+
 # Ref: https://dandavison.github.io/delta/get-started.html
 # Ref: https://dandavison.github.io/delta/configuration.html
+
 [branch]
-	autoSetupRebase = always
+	autoSetupRebase = always	# rebase (not merge) when pulling for all new branches
 [color]
 	ui = true
-[color "diff"]
-	meta = yellow
-	frag = magenta bold
-	commit = yellow bold
-	old = red bold
-	new = green bold
-	whitespace = red reverse
-[color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = red bold 52
-	newNormal = green bold
-	newHighlight = green bold 22
 [commit]
 	gpgSign = true
 	template = ~/.config/git/commit
 [core]
-	autocrlf = input							# normalize line endings on commit (but not checkout)
+	autocrlf = input	# normalize line endings on commit (but not checkout)
 	editor = "zed --wait"
 	excludesFile = ~/.config/git/ignore
 	pager = command -v delta >/dev/null 2>&1 && delta || ${PAGER:-less}
-	trustctime = false
+	trustctime = false	# don't trust ctime for file-change detection; unreliable on network/virtual filesystems
 [credential]
 	helper = osxkeychain
 [delta]
-    # diff-so-fancy = true
-    # hyperlinks = true
-	navigate = true
+    	hyperlinks = true	# make file paths clickable in supported terminals
+	navigate = true		# enable n/N to jump between diff hunks
 [diff]
 	colorMoved = default	# color moved lines differently
-	noprefix = true
+	noprefix = true		# strip a/ b/ path prefixes from diff output
 [fetch]
 	prune = true		# prune deleted remote refs
 	pruneTags = true	# prune deleted remote tags
-[format]
-	pretty = format:%C(bold magenta)%h %C(blue)%>(13,trunc)%ad %C(cyan)%<(15,trunc)%aN %C(red)%d %C(reset)%s
 [gpg]
 	format = ssh
 [gpg "ssh"]
@@ -56,26 +44,25 @@
 [interactive]
 	diffFilter = delta --color-only
 [log]
-	date = relative
-	follow = true
+	date = relative		# show "3 days ago" instead of a timestamp
+	follow = true		# track renames in git log -- <file>
 [merge]
-	autoStash = true
-	conflictstyle = diff3
-[pretty]
-	stash = format:%C(bold magenta)%gd %C(blue)%>(13,trunc)%ad %C(reset)%s
+	autoStash = true	# stash/restore dirty worktree automatically
+	conflictstyle = diff3	# show common ancestor in conflict markers (3-way view)
 [pull]
-    # ff = only
-	rebase = merges
+	# ff only fires with --no-rebase; rebase = merges takes precedence during normal pulls
+    	ff = only		# abort if pull can't fast-forward
+	rebase = merges		# rebase on pull, preserving merge commits
 [push]
-	autoSetupRemote = true
-	# default = upstream
+	autoSetupRemote = true	# auto-create remote tracking branch on first push
+	default = upstream	# push to upstream even if branch names differ
 	followTags = true	# always push annotated tag(s)
 [rebase]
-	autoSquash = true
-	autoStash = true
-	updateRefs = true
+	autoSquash = true	# auto-apply fixup!/squash! commits during interactive rebase
+	autoStash = true	# stash/restore dirty worktree automatically
+	updateRefs = true	# when rebasing, move any branch ref that points to a rebased commit
 [tag]
-	forceSignAnnotated = true
+	forceSignAnnotated = true	# sign all annotated tags
 [user]
 	email = "mike@opsgoodness.net"
 	name = Michael Goodness

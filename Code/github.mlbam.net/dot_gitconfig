@@ -1,3 +1,5 @@
+# vim: set ft=gitconfig
+
 [url "git@github.mlbam.net:"]
 	insteadOf = https://github.mlbam.net/
 [user]

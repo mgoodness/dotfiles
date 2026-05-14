@@ -11,7 +11,7 @@
     "tree_view": true
   },
   "file_types": {
-    "Git Config": ["dot_gitconfig"]
+    "Git Config": ["*gitconfig"]
   },
   "languages": {
     "Git Config": {
