@@ -1,8 +1,2 @@
-.github/
-.local/
-
-.prekignore
 prek.toml
-bootstrap
-chezmoi.toml
 CLAUDE.md

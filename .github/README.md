@@ -19,17 +19,6 @@ Otherwise:
 sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply mgoodness
 ```
 
-or
-
-```sh
-bash -c "$(curl -fsSL https://github.com/mgoodness/dotfiles/raw/main/bootstrap)"
-```
-
 ## Acknowledgements
 
 - [@branchv](https://github.com/branchv/dotfiles)
-
-## References
-
-- [Shell initialization](https://github.com/rbenv/rbenv/wiki/unix-shell-initialization)
-- [Shell comparisons](https://hyperpolyglot.org/unix-shells)
