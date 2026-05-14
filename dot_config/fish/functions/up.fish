@@ -93,11 +93,11 @@ function __up_gh --description "Update gh extensions"
     gh extension upgrade --all >/dev/null
 end
 
-function __up_git --description "Update git repos"
-    git workspace update &>/dev/null
-    env -u GIT_DIR -u GIT_WORK_TREE git workspace switch-and-pull &>/dev/null
-    git workspace run touch .envrc &>/dev/null
-end
+# function __up_git --description "Update git repos"
+#     git workspace update &>/dev/null
+#     env -u GIT_DIR -u GIT_WORK_TREE git workspace switch-and-pull &>/dev/null
+#     git workspace run touch .envrc &>/dev/null
+# end
 
 function __up_mas --description "Update macOS apps"
     mas outdated | grep -qvz " " || mas upgrade
@@ -128,8 +128,8 @@ for item in (functions -a | string replace -rf "^__up_(?!all|auto|help)" "")
             set cmd gcloud
         case gh
             set cmd gh
-        case git
-            set cmd git-workspace
+            # case git
+            #     set cmd git-workspace
         case macos
             set cmd softwareupdate
     end
