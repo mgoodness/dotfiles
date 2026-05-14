@@ -3,4 +3,6 @@
 
 # bat config dir hash: {{ output "sh" "-c" "find ~/.config/bat -type f -exec sha256sum {} + 2>/dev/null | sort | sha256sum" }}
 
-command -v bat &>/dev/null && bat cache --build
+if command -v bat &>/dev/null; then
+    bat cache --build
+fi
