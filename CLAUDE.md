@@ -20,14 +20,15 @@ External resources (`.chezmoiexternal.toml`) are fetched from remote archives on
 
 ## Post-apply scripts
 
-Scripts in `.chezmoiscripts/` run in alphanumeric order after `chezmoi apply`. They are idempotent and guard against re-running with condition checks:
+Scripts in `.chezmoiscripts/` run in alphanumeric order after `chezmoi apply`. `run_after_*` scripts are idempotent and guard against re-running with condition checks. `run_onchange_*` scripts re-run whenever the file they watch changes.
 
-| Script                     | Does                                                    |
-| -------------------------- | ------------------------------------------------------- |
-| `run_after_10-homebrew.sh` | Installs Homebrew if absent, then `brew bundle install` |
-| `run_after_20-macos.sh`    | Sets macOS defaults, Dock layout, Touch ID sudo         |
-| `run_after_30-fish.sh`     | Adds fish to `/etc/shells` and sets it as login shell   |
-| `run_after_40-gh.sh`       | Installs `gh-copilot` and `gh-poi` extensions           |
+| Script                                  | Does                                                    |
+| --------------------------------------- | ------------------------------------------------------- |
+| `run_after_10-homebrew.sh`              | Installs Homebrew if absent, then `brew bundle install` |
+| `run_after_20-macos.sh`                 | Sets macOS defaults, Dock layout, Touch ID sudo         |
+| `run_after_30-fish.sh`                  | Adds fish to `/etc/shells` and sets it as login shell   |
+| `run_onchange_build-bat-cache.sh`       | Rebuilds bat theme cache after theme changes            |
+| `run_onchange_install-gh-extensions.sh` | Installs `gh-poi` extension                             |
 
 ## Architecture
 
@@ -46,7 +47,7 @@ Each directory has a `.gitconfig` that overrides identity and signing key for th
 ### Fish shell
 
 - `dot_config/fish/config.fish` — environment variables, tool initialization
-- `dot_config/fish/conf.d/abbr.fish` — abbreviations for k8s, git, terraform, docker
+- `dot_config/fish/conf.d/abbr.fish` — abbreviations for chezmoi, k8s, git, terraform, docker
 - `dot_config/fish/fish_plugins` — Fisher plugin list (source of truth; run `fisher update` to sync)
 - `dot_config/fish/functions/` — custom functions (`gh`, `gconfig`, `new-gke`, `k8s-context`, etc.)
 
@@ -54,7 +55,7 @@ On shell startup, `up --auto` runs to check for daily updates.
 
 ### Themes
 
-TokyoNight is used across all tools consistently. Ghostty, Zed, bat, and fish all switch light/dark automatically based on system appearance.
+Catppuccin is used across bat, eza, and ghostty; themes are fetched via `.chezmoiexternal.toml` and are not committed. Ghostty and Zed switch light/dark automatically based on system appearance.
 
 ### Secrets / signing
 
