@@ -1,0 +1,6 @@
+[diff]
+exclude = ["scripts"]
+pager = "delta --line-numbers"
+
+[status]
+exclude = ["scripts"]
