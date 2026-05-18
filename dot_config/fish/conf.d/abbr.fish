@@ -7,7 +7,7 @@ abbr --position anywhere acd "argocd --grpc-web"
 abbr akcd "akuity argocd"
 
 abbr b brew
-abbr brewski "brew update && brew bundle && brew upgrade && brew cleanup && brew doctor"
+abbr brewski "brew update && brew bundle && brew upgrade && brew autoremove && brew cleanup && brew doctor"
 
 abbr bjson "bat -l json"
 abbr byaml "bat -l yaml"
@@ -17,6 +17,8 @@ abbr calfix "launchctl stop com.apple.CalendarAgent && launchctl start com.apple
 abbr c chezmoi
 abbr cadd "chezmoi add"
 abbr capply "chezmoi apply --exclude=scripts"
+abbr ccd "chezmoi cd"
+abbr cdestroy "chezmoi destroy"
 abbr cdiff "chezmoi diff"
 abbr cedit "chezmoi edit --apply"
 abbr creadd "chezmoi re-add"

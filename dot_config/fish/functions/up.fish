@@ -64,6 +64,8 @@ function __up_apt --description "Update apt packages"
 end
 
 function __up_homebrew --description "Update Homebrew packages"
+    brew update -q
+    brew bundle -q
     brew upgrade -q
     brew autoremove -q
     brew cleanup -q

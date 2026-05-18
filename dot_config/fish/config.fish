@@ -1,7 +1,7 @@
 status is-login || exit
 
 # Environment
-set -gx EDITOR "zed --wait"
+set -gx EDITOR hx
 
 set -gx GIT_MERGE_AUTOEDIT no # accept default merge commit message
 set -gx GIT_WORKSPACE ~/Code
@@ -20,4 +20,4 @@ set -g fish_key_bindings fish_vi_key_bindings
 command -q delta || set -gx GIT_PAGER $PAGER
 
 # Daily update
-up --auto
+# up --auto
