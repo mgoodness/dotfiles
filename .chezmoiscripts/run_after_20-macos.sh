@@ -32,9 +32,10 @@ dockutil --no-restart --add /System/Applications/Mail.app
 dockutil --no-restart --add /System/Applications/Messages.app
 dockutil --no-restart --add /Applications/Slack.app
 dockutil --no-restart --add /System/Applications/Music.app
-dockutil --no-restart --add /System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app # https://github.com/kcrawford/dockutil/issues/144
-dockutil --no-restart --add /Applications/Ghostty.app
+dockutil --no-restart --add /System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app
+dockutil --no-restart --add /Applications/cmux.app
 dockutil --no-restart --add /Applications/Zed.app
+dockutil --no-restart --add /Applications/Claude.app
 dockutil --no-restart --add /System/Applications/Notes.app
 dockutil --no-restart --add /System/Applications/Reminders.app
 dockutil --no-restart --add /System/Applications/System\ Settings.app
