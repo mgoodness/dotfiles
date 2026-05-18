@@ -9,7 +9,6 @@
 	ui = true
 [commit]
 	gpgSign = true
-	template = ~/.config/git/commit
 [core]
 	autocrlf = input	# normalize line endings on commit (but not checkout)
 	editor = "zed --wait"
@@ -51,7 +50,7 @@
 	conflictstyle = diff3	# show common ancestor in conflict markers (3-way view)
 [pull]
 	# ff only fires with --no-rebase; rebase = merges takes precedence during normal pulls
-    	ff = only		# abort if pull can't fast-forward
+    	# ff = only		# abort if pull can't fast-forward
 	rebase = merges		# rebase on pull, preserving merge commits
 [push]
 	autoSetupRemote = true	# auto-create remote tracking branch on first push
