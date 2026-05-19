@@ -1,10 +1,8 @@
-tap "anomalyco/tap"
 tap "beeftornado/rmtree"
 tap "hashicorp/tap"
 tap "homebrew/core"
 tap "rossnicholson/tap"
 
-brew "anomalyco/tap/opencode"
 brew "argocd"
 brew "bash"
 brew "bat"
