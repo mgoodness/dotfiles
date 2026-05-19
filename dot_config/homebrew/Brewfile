@@ -1,8 +1,9 @@
+tap "anomalyco/tap"
 tap "beeftornado/rmtree"
 tap "hashicorp/tap"
 tap "homebrew/core"
-tap "rossnicholson/tap"
 
+brew "anomalyco/tap/opencode"
 brew "argocd"
 brew "bash"
 brew "bat"
@@ -71,7 +72,6 @@ cask "font-fira-code"
 cask "gcloud-cli"
 cask "macdive"
 cask "rectangle"
-cask "rossnicholson/tap/clawdbar"
 cask "slack"
 cask "zed"
 
