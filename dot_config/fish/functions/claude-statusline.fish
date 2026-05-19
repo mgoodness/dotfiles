@@ -2,13 +2,16 @@ function claude-statusline
     read -z input
 
     set -l git_dir (printf '%s' $input | jq -r '.workspace.current_dir // .cwd // empty')
+    test -z "$git_dir" && set git_dir $PWD
     set -l cwd (string replace -- $HOME '~' $git_dir)
 
     set -l git_branch (git -C $git_dir --no-optional-locks branch --show-current 2>/dev/null)
     set -l git_dirty ""
     if test -n "$git_branch"
-        if test (string length -- $git_branch) -gt $tide_git_truncation_length
-            set git_branch (string sub -l $tide_git_truncation_length -- $git_branch)...
+        set -l trunc_len 24
+        test -n "$tide_git_truncation_length" && set trunc_len $tide_git_truncation_length
+        if test (string length -- $git_branch) -gt $trunc_len
+            set git_branch (string sub -l $trunc_len -- $git_branch)...
         end
         set -l porcelain (git -C $git_dir --no-optional-locks status --porcelain 2>/dev/null | head -1)
         test -n "$porcelain" && set git_dirty " *"
@@ -18,6 +21,16 @@ function claude-statusline
     set -l used_pct (printf '%s' $input | jq -r '.context_window.used_percentage // empty')
     set -l five_pct (printf '%s' $input | jq -r '.rate_limits.five_hour.used_percentage // empty')
     set -l vim_mode (printf '%s' $input | jq -r '.vim.mode // empty')
+
+    set -q tide_pwd_color_anchors[1]; or set -l tide_pwd_color_anchors normal
+    set -q tide_git_color_branch[1]; or set -l tide_git_color_branch normal
+    set -q tide_git_color_dirty[1]; or set -l tide_git_color_dirty normal
+    set -q tide_context_color_default[1]; or set -l tide_context_color_default normal
+    set -q tide_cmd_duration_color[1]; or set -l tide_cmd_duration_color normal
+    set -q tide_vi_mode_color_default[1]; or set -l tide_vi_mode_color_default normal
+    set -q tide_vi_mode_color_insert[1]; or set -l tide_vi_mode_color_insert normal
+    set -q tide_vi_mode_color_replace[1]; or set -l tide_vi_mode_color_replace normal
+    set -q tide_vi_mode_color_visual[1]; or set -l tide_vi_mode_color_visual normal
 
     set_color $tide_pwd_color_anchors
     printf '%s %s' $tide_pwd_icon $cwd
