@@ -3,9 +3,5 @@
     "superpowers@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {},
-  "theme": "auto",
-  "statusLine": {
-    "type": "command",
-    "command": "fish -c claude-statusline"
-  }
+  "theme": "auto"
 }
