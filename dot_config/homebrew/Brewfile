@@ -25,6 +25,7 @@ brew "go"
 brew "goreleaser"
 brew "grep"
 brew "hashicorp/tap/vault"
+brew "helix", args: ["HEAD"]
 brew "helm"
 brew "httpie"
 brew "jfrog-cli"
