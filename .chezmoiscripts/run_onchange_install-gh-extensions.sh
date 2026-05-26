@@ -9,3 +9,4 @@ if [ -n "${CI:-}" ]; then
 fi
 
 gh extension install seachicken/gh-poi
+gh extension install dlvhdr/gh-dash
