@@ -80,6 +80,7 @@ end
 function __up_dotfiles --description "Update dotfiles"
     chezmoi update --apply --exclude=scripts
     command -q brew && brew bundle dump --force && sort-brewfile -i
+    chezmoi status
 end
 
 function __up_fisher --description "Update fish packages"
@@ -126,12 +127,10 @@ for item in (functions -a | string replace -rf "^__up_(?!all|auto|help)" "")
         case fisher
             functions -q fisher || functions -e __up_$item
             continue
-        case gcloud
-            set cmd gcloud
-        case gh
-            set cmd gh
             # case git
             #     set cmd git-workspace
+        case homebrew
+            set cmd brew
         case macos
             set cmd softwareupdate
     end
