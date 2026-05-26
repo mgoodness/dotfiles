@@ -61,7 +61,7 @@ _alias cat bat
 _alias watch viddy
 
 if command -q eza
-    set -gx TREE_IGNORE "cache|log|logs"
+    set -g TREE_IGNORE "cache|log|logs"
     alias la "eza --all --git --group-directories-first --header --icons --long"
     alias ll "eza --git --group-directories-first --header --icons --long"
     alias ls "eza --git --group-directories-first --icons"

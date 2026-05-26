@@ -13,9 +13,9 @@ set -gx PAGER less
 
 set -gx USE_GKE_GCLOUD_AUTH_PLUGIN True
 
-set -gx fish_features all
-set -gx fish_greeting
-set -g fish_key_bindings fish_vi_key_bindings
+set -g fish_features all
+set -g fish_greeting
+set -g fish_key_bindings fish_default_key_bindings
 
 command -q delta || set -gx GIT_PAGER $PAGER
 

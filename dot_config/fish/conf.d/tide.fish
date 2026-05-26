@@ -139,8 +139,8 @@ set -g tide_shlvl_bg_color normal
 set -g tide_shlvl_color d78700
 set -g tide_shlvl_icon 
 set -g tide_shlvl_threshold 1
-set -gx tide_show_gcloud_on gcloud
-set -gx tide_show_kubectl_on k8s-context k8s-namespace kubectl helm
+set -g tide_show_gcloud_on gcloud
+set -g tide_show_kubectl_on k8s-context k8s-namespace kubectl helm
 set -g tide_status_bg_color normal
 set -g tide_status_bg_color_failure normal
 set -g tide_status_color 5FAF00
@@ -173,7 +173,7 @@ set -g tide_zig_color F7A41D
 set -g tide_zig_icon 
 
 if string match -q "$TERM_PROGRAM" zed && status is-login
-    set -gx tide_shlvl_threshold "$SHLVL"
+    set -g tide_shlvl_threshold "$SHLVL"
 end
 status is-interactive && function tide_prompt_at_bottom --on-event fish_prompt --on-variable LINES
     printf "\e[$LINES;1H" # tput cup $LINES
