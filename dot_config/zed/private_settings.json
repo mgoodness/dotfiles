@@ -34,7 +34,12 @@
     "provider": "zed"
   },
   "file_types": {
-    "Git Config": ["*gitconfig"]
+    "Git Config": [
+      "**/*.gitconfig",
+      "**/.git/config",
+      "**/dot_gitconfig",
+      "**/dot_config/git/config"
+    ]
   },
   "icon_theme": {
     "dark": "Catppuccin Frappé",
