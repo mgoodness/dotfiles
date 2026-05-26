@@ -52,6 +52,10 @@ abbr reload "exec fish"
 abbr tf terraform
 abbr tfgp "terraform get -update && terraform plan"
 
+abbr zp zed-preview
+abbr zpa "zed-preview -a ."
+abbr zpn "zed-preview -n ."
+
 ### Aliases ###
 function _alias
     command -q $argv[2] && alias $argv
