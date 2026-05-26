@@ -1,9 +1,9 @@
 {
   "agent": {
     "default_model": {
-      "effort": "high",
+      "effort": "medium",
       "enable_thinking": true,
-      "model": "claude-sonnet-4-6",
+      "model": "gpt-5.4",
       "provider": "zed.dev"
     },
     "default_profile": "write",
@@ -80,6 +80,5 @@
     "mode": "system"
   },
   "ui_font_family": ".SystemUIFont",
-  "ui_font_size": 16,
-  "vim_mode": true
+  "ui_font_size": 16
 }
