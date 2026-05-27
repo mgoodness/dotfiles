@@ -25,7 +25,6 @@ brew "go"
 brew "goreleaser"
 brew "grep"
 brew "hashicorp/tap/vault"
-brew "helix", args: ["HEAD"]
 brew "helm"
 brew "httpie"
 brew "jfrog-cli"
@@ -56,14 +55,13 @@ brew "worktrunk"
 brew "yq"
 brew "zoxide"
 
-cask "1password-cli"
-cask "1password"
+cask "1password-cli@beta"
+cask "1password@beta"
 cask "akuity"
 cask "betterdisplay"
 cask "caffeine"
 cask "claude-code"
 cask "claude"
-cask "claudebar"
 cask "cmux"
 cask "discord"
 cask "flutter"
@@ -80,7 +78,7 @@ krew "config-cleanup"
 krew "get-all"
 krew "support-bundle"
 
-mas "1Password for Safari", id: 1569813296
+# mas "1Password for Safari", id: 1569813296
 mas "AdBlock", id: 1402042596
 mas "Developer", id: 640199958
 mas "GarageBand", id: 682658836
