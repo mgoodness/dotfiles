@@ -1,4 +1,4 @@
-# vim: set ft=gitignore
+# -*- mode: gitignore; -*-
 
 /.cache
 /.local/state
