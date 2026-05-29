@@ -1,7 +1,5 @@
 {
-  "enabledPlugins": {
-    "superpowers@claude-plugins-official": true
-  },
+  "enabledPlugins": {},
   "extraKnownMarketplaces": {},
   "theme": "auto"
 }
