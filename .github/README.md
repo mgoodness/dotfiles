@@ -23,3 +23,4 @@ sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply mgoodness
 ## Acknowledgements
 
 - [@branchv](https://github.com/branchv/dotfiles)
+- [@injust](https://codeberg.org/jsu/dotfiles)
