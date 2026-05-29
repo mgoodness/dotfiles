@@ -2,11 +2,16 @@
 # a command-line option that you want to pass to `bat` by default. You can
 # run `bat --help` to get a list of all possible configuration options.
 
+--style=full,-changes,-numbers
+
 # Specify desired highlighting theme (e.g. "TwoDark"). Run `bat --list-themes`
 # for a list of all available themes
 --theme=auto:system
 --theme-dark="Catppuccin Mocha"
 --theme-light="Catppuccin Latte"
+
+# Let pager handle text wrapping to unbreak terminal search
+--wrap=never
 
 # Enable this to use italic text on the terminal. This is not supported on all
 # terminal emulators (like tmux, by default):
