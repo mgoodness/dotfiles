@@ -4,9 +4,6 @@ status is-interactive || return
 if test -e /opt/homebrew/bin/brew
     set -gx HOMEBREW_PREFIX /opt/homebrew
     set -gx HOMEBREW_REPOSITORY $HOMEBREW_PREFIX
-else if test -e /home/linuxbrew/.linuxbrew/bin/brew
-    set -gx HOMEBREW_PREFIX /home/linuxbrew/.linuxbrew
-    set -gx HOMEBREW_REPOSITORY $HOMEBREW_PREFIX/Homebrew
 else
     return
 end

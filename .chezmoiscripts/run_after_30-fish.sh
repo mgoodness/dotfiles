@@ -11,8 +11,6 @@ fi
 
 if [ "$(uname)" = Darwin ]; then
     shell=$(dscl . -read ~/ UserShell | sed 's/UserShell: //')
-else
-    shell=$(getent passwd "$(whoami)" | cut -d: -f7)
 fi
 if [ "$shell" = "$fish" ]; then
     echo "Login shell is already $shell"
