@@ -9,6 +9,7 @@ set -gx GIT_WORKSPACE ~/Code
 set -gx LESS "--incsearch --ignore-case --jump-target=.5 --LONG-PROMPT --raw-control-chars --quit-if-one-screen"
 set -gx LESSCHARSET utf-8
 set -gx LS_COLORS $(vivid generate catppuccin-latte)
+set -gx MISE_IGNORED_CONFIG_PATHS $XDG_DATA_HOME/chezmoi/dot_config/mise/config.toml
 set -gx PAGER less
 
 set -gx USE_GKE_GCLOUD_AUTH_PLUGIN True

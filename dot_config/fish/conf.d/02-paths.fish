@@ -10,45 +10,37 @@ function __maybe_mkdir
 end
 
 # Core directories
-set -gx LOCAL_BIN ~/.local/bin # Non-XDG standard
+set -gx LOCAL_BIN ~/.local/bin
 __maybe_mkdir $LOCAL_BIN
 
 set -gx XDG_CACHE_HOME ~/.cache
 set -gx XDG_CONFIG_HOME ~/.config
 set -gx XDG_DATA_HOME ~/.local/share
 set -gx XDG_STATE_HOME ~/.local/state
-set -gx --path LOCAL_BIN_DIRS $LOCAL_BIN
 set -gx --path XDG_DATA_DIRS $HOMEBREW_PREFIX/share /usr/local/share /usr/share
 
 for d in XDG_{CACHE,CONFIG,DATA,STATE}_HOME
     __maybe_mkdir $$d
 end
 
+# Claude
+set -gx CLAUDE_CONFIG_DIR $XDG_CONFIG_HOME/claude
+
 # Homebrew
 set -gx HOMEBREW_BUNDLE_FILE $XDG_CONFIG_HOME/homebrew/Brewfile
 set -gx HOMEBREW_CACHE $XDG_CACHE_HOME/homebrew
 set -gx HOMEBREW_LOGS $XDG_CACHE_HOME/homebrew/logs
 
-# Deno
-set -gx DENO_INSTALL_ROOT ~/.local
-
-# Eza
-set -gx EZA_CONFIG_DIR $XDG_CONFIG_HOME/eza
-
-# gcloud
-set -gx CLOUDSDK_CONFIG $XDG_CONFIG_HOME/gcloud
-__maybe_mkdir $CLOUDSDK_CONFIG
-
 # GNU utilities
-set -gx GNU_BINS /usr/local/opt/gnu-{sed,tar}/libexec/gnubin
+set -gx --path GNU_BINS /usr/local/opt/{coreutils,gnu-{sed,tar}}/libexec/gnubin
 
 # Go
 set -gx GOBIN $LOCAL_BIN
 set -gx GOPATH $XDG_DATA_HOME/go
 
 # Krew
-# set -gx KREW_ROOT $XDG_CACHE_HOME/krew
-fish_add_path $HOME/.krew/bin
+set -gx HOMEBREW_KREW_ROOT $XDG_DATA_HOME/krew
+set -gx KREW_ROOT $XDG_DATA_HOME/krew
 
 # K8s
 set -gx KUBECONFIG $XDG_DATA_HOME/kube/config.yaml
@@ -71,23 +63,24 @@ set -gx PIP_CONFIG_FILE $XDG_CONFIG_HOME/pip/pip.conf
 set -gx PKGX_DIR $XDG_DATA_HOME/pkgx
 
 # Poetry
-set -gx POETRY_CACHE_DIR $XDG_CACHE_HOME/poetry
-set -gx POETRY_CONFIG_DIR $XDG_CONFIG_HOME/poetry
-set -gx POETRY_DATA_DIR $XDG_DATA_HOME/poetry
+set -gx POETRY_CACHE_DIR $XDG_CACHE_HOME/pypoetry
+set -gx POETRY_CONFIG_DIR $XDG_CONFIG_HOME/pypoetry
+set -gx POETRY_DATA_DIR $XDG_DATA_HOME/pypoetry
 
-# psql
+# PostgreSQL
 set -gx PSQL_HISTORY /dev/null
 
 # Python
 set -gx PYTHONSTARTUP $XDG_CONFIG_HOME/python/startup.py
 
 # Ripgrep
-set -gx RIPGREP_CONFIG_PATH $XDG_CONFIG_HOME/ripgrep/ripgrep.conf
+set -gx RIPGREP_CONFIG_PATH $XDG_CONFIG_HOME/ripgrep/config
 
 # Ruby
 set -gx BUNDLE_USER_CACHE $XDG_CACHE_HOME/bundle
-set -gx BUNDLE_USER_CONFIG $XDG_CONFIG_HOME/bundle
+set -gx BUNDLE_USER_CONFIG $XDG_CONFIG_HOME/bundle/config
 set -gx BUNDLE_USER_PLUGIN $XDG_DATA_HOME/bundle
+
 set -gx GEM_HOME $XDG_DATA_HOME/gem
 set -gx GEM_SPEC_CACHE $XDG_CACHE_HOME/gem
 
@@ -108,11 +101,10 @@ set -gxp MANPATH : # defer to $PATH
 
 # PATH
 if status is-login
-    fish_add_path -g $HOMEBREW_PREFIX/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin
-    fish_add_path -g $HOMEBREW_PREFIX/opt/python/libexec/bin
+    fish_add_path -g --move --path $HOMEBREW_PREFIX/{,s}bin
+    fish_add_path -g $KREW_ROOT/bin
     fish_add_path -g $HOMEBREW_PREFIX/opt/ruby/bin
-    # fish_add_path -g $GNU_BINS
-    # fish_add_path -g $KREW_ROOT
-    fish_add_path -g --move --path $LOCAL_BIN_DIRS $HOMEBREW_PREFIX/{,s}bin
+    fish_add_path -g $GEM_HOME/bin
+    fish_add_path -g $LOCAL_BIN
     set PATH (path filter -d $PATH)
 end
