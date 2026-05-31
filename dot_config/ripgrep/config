@@ -1,4 +1,4 @@
---glob=!.git/
+--glob="!{.git/,.Trash/,Library/}"
 --hidden
 --max-columns=0
 --max-columns-preview
