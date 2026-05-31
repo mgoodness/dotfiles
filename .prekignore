@@ -1,4 +1,2 @@
-#vim: ft=gitignore
-
 # Disable workspace discovery: https://prek.j178.dev/workspace/#discovery
 *
