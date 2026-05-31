@@ -37,6 +37,7 @@
     "mcp-server-context7": true,
     "python-requirements": true,
     "ruby": true,
+    "scheme": true,
     "ssh-config": true,
     "terraform": true,
     "tombi": true,
@@ -83,12 +84,13 @@
   "file_types": {
     "Ghostty": ["**/com.mitchellh.ghostty/config", "**/ghostty/config", "**/ghostty/themes/*"],
     "Git Attributes": ["**/{.git,.git/info,git}/attributes"],
-    "Git Config": ["**/*gitconfig", "**/{.git,.git/modules,.git/modules/*,git}/config"],
-    "Git Ignore": ["**/{.git,git}/ignore", "**/.git/info/exclude"],
-    "GitHub Actions": ["**/.github/workflows/*.yml", "**/.github/workflows/*.yaml"],
+    "Git Config": ["*gitconfig", "**/{.git,.git/modules,.git/modules/*,git}/config"],
+    "Git Ignore": ["*ignore", "**/{.git,git}/ignore", "**/.git/info/exclude"],
+    "GitHub Actions": ["**/.github/workflows/*.{yml,yaml}"],
     "JSONC": ["*.json"],
     "Python constraints": ["*constraints*.txt"],
-    "Python requirements": ["**/requirements/*.{in,txt}", "*requirements*.{in,txt}"]
+    "Python requirements": ["**/requirements/*.{in,txt}", "*requirements*.{in,txt}"],
+    "SSH Config": ["**/ssh/config"]
   },
   "focus_follows_mouse": { "enabled": true, "debounce_ms": 100 },
   "git": { "inline_blame": { "show_commit_summary": true } },
@@ -114,11 +116,13 @@
     "Python": {
       "language_servers": ["ruff", "ty"],
       "code_actions_on_format": { "source.fixAll.ruff": true }
-    }
+    },
+    "Ruby": { "language_servers": ["ruby-lsp", "!solargraph"] }
   },
   "lsp": {
     "basedpyright": { "settings": { "basedpyright.analysis": { "diagnosticMode": "workspace" } } },
     "gopls": { "initialization_options": { "gofumpt": true } },
+    "ruby-lsp": { "settings": { "use_bundler": false } },
     "ty": { "settings": { "diagnosticMode": "workspace" } },
     "yaml-language-server": { "settings": { "yaml": { "format": { "singleQuote": false } } } }
   },
