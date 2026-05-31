@@ -1,8 +1,6 @@
-# -*- mode: gitignore; -*-
-
 /.cache
+.git/
 /.local/state
 /.terminfo
 /Library/Saved\ Application\ State
 /Library/Caches
-.git/
