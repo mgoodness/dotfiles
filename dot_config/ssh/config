@@ -3,7 +3,7 @@
 Match host github.com exec "pwd | string match -e -q \"$HOME/Code/emu.github.com\""
     IdentityFile ~/.config/ssh/git@emu.github.com.pub
 
-Match host github.com !exec "pwd | string match -e -q \"$HOME/Code/emu.github.com\""
+Match host github.com !exec "pwd | string match -e -q \"$HOME/Code/github.com\""
     IdentityFile ~/.config/ssh/git@github.com.pub
 
 Host gitlab.com
