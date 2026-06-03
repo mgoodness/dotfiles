@@ -1,4 +1,8 @@
 [settings]
+env_cache = true
+env_cache_ttl = "1h"
+hook_env.chpwd_only = true
+
 [settings.ruby]
 compile = false
 
