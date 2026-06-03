@@ -31,6 +31,9 @@ set -gx HOMEBREW_BUNDLE_FILE $XDG_CONFIG_HOME/homebrew/Brewfile
 set -gx HOMEBREW_CACHE $XDG_CACHE_HOME/homebrew
 set -gx HOMEBREW_LOGS $XDG_CACHE_HOME/homebrew/logs
 
+# gcloud
+set -gx GCLOUD_SDK_DIR $HOMEBREW_PREFIX/share/google-cloud-sdk
+
 # GNU utilities
 set -gx --path GNU_BINS /usr/local/opt/{coreutils,gnu-{sed,tar}}/libexec/gnubin
 
@@ -52,6 +55,7 @@ set -gx LESSHISTFILE /dev/null
 # Node
 set -gx NODE_REPL_HISTORY /dev/null
 set -gx NPM_CONFIG_CACHE $XDG_CACHE_HOME/npm
+set -gx NPM_CONFIG_LOGS_DIR $XDG_CACHE_HOME/npm/logs
 set -gx NPM_CONFIG_PREFIX ~/.local
 set -gx NPM_CONFIG_USERCONFIG $XDG_CONFIG_HOME/npm/npmrc
 
@@ -103,6 +107,7 @@ set -gxp MANPATH : # defer to $PATH
 if status is-login
     fish_add_path -g --move --path $HOMEBREW_PREFIX/{,s}bin
     fish_add_path -g $KREW_ROOT/bin
+    fish_add_path -g $GCLOUD_SDK_DIR/bin
     fish_add_path -g $HOMEBREW_PREFIX/opt/ruby/bin
     fish_add_path -g $GEM_HOME/bin
     fish_add_path -g $LOCAL_BIN

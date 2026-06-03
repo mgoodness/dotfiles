@@ -52,17 +52,6 @@ function __up_all --description "Update everything"
     end
 end
 
-function __up_apt --description "Update apt packages"
-    if test (id -u) -ne 0 && not command -q sudo
-        fish_log -w "Skipping as sudo is required but not found"
-        return
-    end
-    command -q sudo && set -l apt sudo apt || set -l apt apt
-    $apt update -qqq
-    $apt upgrade -qqq
-    $apt autoremove -qqq
-end
-
 function __up_homebrew --description "Update Homebrew packages"
     brew update -q
     brew bundle -q
@@ -115,12 +104,14 @@ function __up_rustup --description "Update Rust"
     rustup check &| grep -qvz available || rustup update
 end
 
+function __up_skills --description "Update agent skills"
+    npx skills@latest update --global --yes
+end
+
 # Remove any unfound items
 for item in (functions -a | string replace -rf "^__up_(?!all|auto|help)" "")
     set -l cmd $item
     switch $item
-        case apt
-            set cmd apt-get
         case docker
             set cmd docker podman
         case dotfiles
@@ -132,6 +123,8 @@ for item in (functions -a | string replace -rf "^__up_(?!all|auto|help)" "")
             set cmd brew
         case macos
             set cmd softwareupdate
+        case skills
+            set cmd npx
     end
     command -q $cmd || functions -e __up_$item
 end
