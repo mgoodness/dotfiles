@@ -15,6 +15,12 @@
 	trustctime = false	# don't trust ctime for file-change detection; unreliable on network/virtual filesystems
 [credential]
 	helper = osxkeychain
+# [credential "https://github.com"]
+# 	helper = !/opt/homebrew/bin/gh auth git-credential
+# [credential "https://gist.github.com"]
+# 	helper = !/opt/homebrew/bin/gh auth git-credential
+# [credential "https://github.mlbam.net"]
+# 	helper = !/opt/homebrew/bin/gh auth git-credential
 [delta]
 	hyperlinks = true	# make file paths clickable in supported terminals
 	navigate = true		# enable n/N to jump between diff hunks
@@ -28,14 +34,6 @@
 	format = ssh
 [gpg "ssh"]
 	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-[include]
-	path = ~/.config/delta/catppuccin-frappe.gitconfig
-[includeIf "gitdir:~/Code/emu.github.com/"]
-	path = ~/Code/emu.github.com/.gitconfig
-[includeIf "gitdir:~/Code/github.com/"]
-	path = ~/Code/github.com/.gitconfig
-[includeIf "gitdir:~/Code/github.mlbam.net/"]
-	path = ~/Code/github.mlbam.net/.gitconfig
 [init]
 	defaultBranch = main
 [interactive]
@@ -67,3 +65,11 @@
 	useConfigOnly = true
 [web]
 	browser = open
+[include]
+	path = ~/.config/delta/catppuccin-frappe.gitconfig
+[includeIf "gitdir:~/Code/emu.github.com/"]
+	path = ~/Code/emu.github.com/.gitconfig
+[includeIf "gitdir:~/Code/github.com/"]
+	path = ~/Code/github.com/.gitconfig
+[includeIf "gitdir:~/Code/github.mlbam.net/"]
+	path = ~/Code/github.mlbam.net/.gitconfig
