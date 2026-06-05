@@ -28,7 +28,7 @@ brew "gnu-tar"
 brew "go"
 brew "goreleaser"
 brew "grep"
-brew "hashicorp/tap/vault"
+brew "hashicorp/tap/vault", trusted: true
 brew "helm"
 brew "httpie"
 brew "jfrog-cli"
