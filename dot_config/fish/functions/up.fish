@@ -70,7 +70,7 @@ function __up_docker --description "Update Docker images"
 end
 
 function __up_dotfiles --description "Update dotfiles"
-    chezmoi update --apply --exclude=scripts
+    chezmoi update --apply
 end
 
 function __up_fisher --description "Update fish packages"
