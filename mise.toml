@@ -1,0 +1,2 @@
+# [hooks]
+# enter = "gh auth switch --hostname github.com --user mgoodness"
