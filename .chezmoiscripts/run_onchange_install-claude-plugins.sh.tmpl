@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# shellcheck shell=bash
+
+# Claude plugins config hash: {{ .claudePlugins | toJson | sha256sum }}
+
+if [ -n "${CI:-}" ]; then
+    echo "Skipping due to \$CI"
+    exit
+fi
+
+echo "Installing Claude plugins..."
+{{ range .claudePlugins -}}
+claude plugin marketplace add {{ .marketplace }}
+claude plugin install {{ .plugins | join " "}}
+{{ end -}}
+
+if command -v rtk >/dev/null 2>&1; then
+    if ! rtk init --show 2>&1 | grep -q '\[ok\] settings.json'; then
+        echo "Initializing rtk hook..."
+        rtk init -g --auto-patch
+    fi
+fi

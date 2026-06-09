@@ -1,0 +1,26 @@
+{
+  "display": {
+    "showTools": true,
+    "showAgents": true,
+    "showTodos": true,
+    "showDuration": true,
+    "showConfigCounts": true,
+    "showCost": true,
+    "showSpeed": true,
+    "showSessionName": true,
+    "showProject": true,
+    "showTokenBreakdown": true,
+    "showUsage": true,
+    "showSessionTokens": true,
+    "showAdvisor": true,
+    "showSkills": true,
+    "showMcp": true
+  },
+  "gitStatus": {
+    "enabled": true,
+    "showDirty": true,
+    "showAheadBehind": true,
+    "showFileStats": true
+  },
+  "language": "en"
+}

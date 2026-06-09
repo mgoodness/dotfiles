@@ -24,7 +24,7 @@ hooks = [{ id = "gitleaks" }]
 [[repos]]
 repo = "https://github.com/codespell-project/codespell"
 rev = "v2.4.2"
-hooks = [{ id = "codespell", args = ["--ignore-words-list=protols"] }]
+hooks = [{ id = "codespell", args = ["--ignore-words-list=protols,flate"] }]
 
 [[repos]]
 repo = "https://github.com/zizmorcore/zizmor-pre-commit"
