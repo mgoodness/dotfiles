@@ -1,6 +1,7 @@
 // Ref: https://codeberg.org/jsu/dotfiles/src/branch/main/zed/settings.json
 {
   "agent": {
+    "commit_message_instructions": "Use the Conventional Commits format: <type>(<scope>): <description>.",
     "commit_message_model": { "model": "claude-4-5-haiku", "provider": "copilot" },
     "default_model": {
       "effort": "high",
@@ -28,6 +29,7 @@
     "ghostty": true,
     "git-firefly": true,
     "github-actions": true,
+    "golangci-lint": true,
     "helm": true,
     "html": true,
     "ini": true,
