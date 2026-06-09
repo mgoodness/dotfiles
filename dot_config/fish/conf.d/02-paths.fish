@@ -93,10 +93,6 @@ set -gx CARGO_HOME $XDG_DATA_HOME/cargo
 set -gx CARGO_INSTALL_ROOT ~/.local
 set -gx RUSTUP_HOME $XDG_DATA_HOME/rustup
 
-# ssh
-set -gx GIT_SSH_COMMAND "ssh -F $XDG_CONFIG_HOME/ssh/config"
-alias ssh $GIT_SSH_COMMAND
-
 # zsh
 set -gx ZDOTDIR $XDG_CONFIG_HOME/zsh
 
