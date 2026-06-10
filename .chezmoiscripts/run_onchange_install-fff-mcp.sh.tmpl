@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
-{{- $release := output "curl" "-fsSL" "https://api.github.com/repos/dmtrKovalenko/fff.nvim/releases/latest" | fromJson }}
-{{- $version := trimPrefix "v" $release.tag_name }}
-
-# fff-mcp version: {{ $version }}
-
 if [ -n "${CI:-}" ]; then
     echo "Skipping due to $CI"
     exit
 fi
+
+{{- $release := output "curl" "-fsSL" "https://api.github.com/repos/dmtrKovalenko/fff.nvim/releases/latest" | fromJson }}
+{{- $version := trimPrefix "v" $release.tag_name }}
+
+# fff-mcp version: {{ $version }}
 
 _fff_current=$(fff-mcp --version 2>/dev/null | awk '{print $2}')
 if [ "$_fff_current" != "{{ $version }}" ]; then
