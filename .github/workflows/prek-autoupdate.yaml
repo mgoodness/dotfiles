@@ -20,7 +20,7 @@ jobs:
       - run: |
           pipx run prek autoupdate
           pipx run prek autoupdate --config dot_config/prek/global-hooks.toml
-      - uses: peter-evans/create-pull-request@v7.0.8 # zizmor: ignore[unpinned-uses]
+      - uses: peter-evans/create-pull-request@v8.1.1 # zizmor: ignore[unpinned-uses]
         with:
           branch: prek-autoupdate
           commit-message: "chore(prek): autoupdate hook revisions"
