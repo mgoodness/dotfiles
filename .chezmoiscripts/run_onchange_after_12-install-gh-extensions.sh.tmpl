@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
-# gh extensions config hash: {{ .ghExtensions | toJson | sha256sum }}
-
 if [ -n "${CI:-}" ]; then
     echo "Skipping due to \$CI"
     exit
 fi
+
+# gh extensions config hash: {{ .ghExtensions | toJson | sha256sum }}
 
 {{ range .ghExtensions -}}
 gh extension install {{ .id }}

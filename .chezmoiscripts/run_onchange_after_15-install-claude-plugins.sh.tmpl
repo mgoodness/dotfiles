@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
-# Claude plugins config hash: {{ .claudePlugins | toJson | sha256sum }}
-
 if [ -n "${CI:-}" ]; then
     echo "Skipping due to \$CI"
     exit
 fi
+
+# Claude plugins config hash: {{ .claudePlugins | toJson | sha256sum }}
 
 echo "Installing Claude plugins..."
 {{ range .claudePlugins -}}
