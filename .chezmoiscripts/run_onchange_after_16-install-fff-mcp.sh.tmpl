@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
-if [ -n "${CI:-}" ]; then
-    echo "Skipping due to \$CI"
-    exit
-fi
-
-{{- $release := output "curl" "-fsSL" "https://api.github.com/repos/dmtrKovalenko/fff.nvim/releases/latest" | fromJson }}
-{{- $version := trimPrefix "v" $release.tag_name }}
+{{ if env "CI" -}}
+echo "Skipping due to \$CI"
+exit 0
+{{- else -}}
+{{- $tagUrl := output "curl" "-fsSL" "-o" "/dev/null" "-w" "%{url_effective}" "https://github.com/dmtrKovalenko/fff.nvim/releases/latest" }}
+{{- $version := trimPrefix "v" (base $tagUrl) }}
 
 # fff-mcp version: {{ $version }}
 _fff_current=$(fff-mcp --version 2>/dev/null | awk '{print $2}')
@@ -17,3 +16,4 @@ if [ "$_fff_current" != "{{ $version }}" ]; then
 fi
 
 claude mcp get fff >/dev/null 2>&1 || claude mcp add -s user fff -- /Users/Michael.Goodness/.local/bin/fff-mcp
+{{- end }}
