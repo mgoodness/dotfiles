@@ -2,7 +2,7 @@
 # shellcheck shell=bash
 
 if [ -n "${CI:-}" ]; then
-    echo "Skipping due to $CI"
+    echo "Skipping due to \$CI"
     exit
 fi
 
@@ -10,7 +10,6 @@ fi
 {{- $version := trimPrefix "v" $release.tag_name }}
 
 # fff-mcp version: {{ $version }}
-
 _fff_current=$(fff-mcp --version 2>/dev/null | awk '{print $2}')
 if [ "$_fff_current" != "{{ $version }}" ]; then
     echo "Updating fff-mcp (${_fff_current:-not installed} → {{ $version }})..."

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
-# Claude skills config hash: {{ .claudeSkills | toJson | sha256sum }}
-
 if [ -n "${CI:-}" ]; then
     echo "Skipping due to \$CI"
     exit
 fi
+
+# Claude skills config hash: {{ .claudeSkills | toJson | sha256sum }}
 
 {{ range .claudeSkills -}}
 npx skills@latest add {{ .id }} --agent claude-code --global{{ range .skills }} --skill '{{ . }}'{{ end }} --yes

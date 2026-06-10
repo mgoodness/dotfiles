@@ -2,9 +2,7 @@
 # shellcheck shell=bash
 
 # Update macOS preferences
-#
-# References
-# - Inspiration: https://mths.be/macos
+# Ref: https://mths.be/macos
 
 if [ -n "${CI:-}" ]; then
     echo "Skipping due to \$CI"
