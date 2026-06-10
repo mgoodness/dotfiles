@@ -1,14 +1,18 @@
 [[claudePlugins]]
-marketplace = "mksglu/context-mode"
-plugins = ["context-mode@context-mode"]
+marketplace = "claude-plugins-official"
+plugins = ["context7"]
 
 [[claudePlugins]]
 marketplace = "jarrodwatts/claude-hud"
-plugins = ["claude-hud@claude-hud"]
+plugins = ["claude-hud"]
 
 [[claudePlugins]]
 marketplace = "max-sixty/worktrunk"
-plugins = ["worktrunk@worktrunk"]
+plugins = ["worktrunk"]
+
+[[claudePlugins]]
+marketplace = "mksglu/context-mode"
+plugins = ["context-mode"]
 
 [[claudeSkills]]
 id = "mattpocock/skills"

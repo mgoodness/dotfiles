@@ -46,7 +46,7 @@ hooks = [{ id = "zizmor", args = ["--no-progress", "--fix=all"] }]
 repo = "https://github.com/shellcheck-py/shellcheck-py"
 rev = "v0.11.0.1"
 hooks = [
-  { id = "shellcheck", exclude_types = [
+  { id = "shellcheck", exclude = ".*\\.tmpl$", exclude_types = [
     "zsh",
   ] }, # https://github.com/koalaman/shellcheck/issues/809
 ]

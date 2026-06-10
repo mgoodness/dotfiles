@@ -10,8 +10,14 @@ fi
 
 echo "Installing Claude plugins..."
 {{ range .claudePlugins -}}
+{{ if ne .marketplace "claude-plugins-official" -}}
 claude plugin marketplace add {{ .marketplace }}
-claude plugin install {{ .plugins | join " "}}
+{{ end -}}
+
+{{- $stub := .marketplace | splitList "/" | last }}
+{{ range .plugins -}}
+claude plugin install {{ . }}@{{ $stub }}
+{{ end -}}
 {{ end -}}
 
 if command -v rtk >/dev/null 2>&1; then
