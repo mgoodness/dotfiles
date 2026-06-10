@@ -34,6 +34,9 @@
 	format = ssh
 [gpg "ssh"]
 	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+[hook "prek pre-commit"]
+	event = pre-commit
+	command = prek hook-impl --config=~/.config/prek/global-hooks.toml --hook-type=pre-commit --
 [init]
 	defaultBranch = main
 [interactive]
