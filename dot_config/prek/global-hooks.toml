@@ -29,6 +29,34 @@ hooks = [
 ]
 
 [[repos]]
+repo = "meta"
+hooks = [{ id = "check-hooks-apply" }, { id = "check-useless-excludes" }]
+
+[[repos]]
 repo = "https://github.com/betterleaks/betterleaks"
-rev = "v1.2.0"
+rev = "v1.3.1"
 hooks = [{ id = "betterleaks", priority = 0 }]
+
+[[repos]]
+repo = "https://github.com/zizmorcore/zizmor-pre-commit"
+rev = "v1.25.2"
+hooks = [{ id = "zizmor", args = ["--no-progress", "--fix=all"] }]
+
+[[repos]]
+repo = "https://github.com/shellcheck-py/shellcheck-py"
+rev = "v0.11.0.1"
+hooks = [
+  { id = "shellcheck", exclude_types = [
+    "zsh",
+  ] }, # https://github.com/koalaman/shellcheck/issues/809
+]
+
+[[repos]]
+repo = "local"
+
+[[repos.hooks]]
+id = "shfmt"
+name = "shfmt"
+entry = "shfmt --indent=4 --write --keep-padding"
+language = "system"
+types = ["shell"]
