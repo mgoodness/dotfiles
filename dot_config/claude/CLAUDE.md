@@ -1,3 +1,3 @@
 @RTK.md
 
-Use the fff MCP tools for all file search operations instead of default tools.
+For any file search or grep in the current git-indexed directory use fff tools.

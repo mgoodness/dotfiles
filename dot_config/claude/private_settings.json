@@ -29,7 +29,8 @@
   "enabledPlugins": {
     "context-mode@context-mode": true,
     "claude-hud@claude-hud": true,
-    "worktrunk@worktrunk": true
+    "worktrunk@worktrunk": true,
+    "context7@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "claude-hud": {
