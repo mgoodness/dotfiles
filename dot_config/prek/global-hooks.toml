@@ -19,7 +19,7 @@ hooks = [
   { id = "check-toml", priority = 0 },
   { id = "check-vcs-permalinks", priority = 0 },
   { id = "check-xml", priority = 0 },
-  { id = "check-yaml", priority = 0 },
+  { id = "check-yaml", exclude = "/templates/", priority = 0 },
   { id = "destroyed-symlinks", priority = 0 },
   { id = "detect-private-key", priority = 0 },
   { id = "end-of-file-fixer" },
@@ -60,3 +60,4 @@ name = "shfmt"
 entry = "shfmt --indent=4 --write --keep-padding"
 language = "system"
 types = ["shell"]
+exclude = ".*\\.tmpl$"
