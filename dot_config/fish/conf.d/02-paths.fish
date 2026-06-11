@@ -41,6 +41,9 @@ set -gx --path GNU_BINS /usr/local/opt/{coreutils,gnu-{sed,tar}}/libexec/gnubin
 set -gx GOBIN $LOCAL_BIN
 set -gx GOPATH $XDG_DATA_HOME/go
 
+# Jira
+set -gx JIRA_CONFIG_FILE $XDG_CONFIG_HOME/jira/config.yaml
+
 # Krew
 set -gx HOMEBREW_KREW_ROOT $XDG_DATA_HOME/krew
 set -gx KREW_ROOT $XDG_DATA_HOME/krew

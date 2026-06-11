@@ -13,36 +13,48 @@ End-to-end flow: Jira ticket → In Progress → branch → commit draft → PR.
 
 Run all of these at once:
 
-- `atlassianUserInfo` — get `account_id` for assignment
-- `getAccessibleAtlassianResources` — get `cloudId`
+- `jira me` — confirm current user (for context; CLI uses configured auth automatically)
 - `git status` + `git diff --cached --stat` — inspect staged files
 - `git remote -v` — confirm remote for PR
 
-### 2. Find the active sprint + project
+### 2. Find the active sprint + project key
 
-```jql
-assignee = currentUser() AND sprint in openSprints() ORDER BY updated DESC
+```sh
+jira sprint list --board 2093 --state active --plain --columns id,name
 ```
 
-Pull one issue to get `customfield_10180` (sprint array) → extract sprint `id`.
-The project key comes from any returned issue's `fields.project.key`.
+Take the first (current) active sprint → note its `id`.
+
+Get the project key from the configured default or ask the user. If unknown, run:
+
+```sh
+jira project list --plain --columns key,name
+```
+
+and pick the relevant project.
 
 ### 3. Create the Jira ticket
 
-`createJiraIssue` with:
+```sh
+jira issue create \
+  --type Task \
+  --summary "<user-provided title>" \
+  --no-input
+```
 
-- `projectKey` from step 2
-- `issueTypeName`: Task (default; adjust if user specifies)
-- `summary`: user-provided title
-- `assignee_account_id`: from step 1
-- `additional_fields`: `{"customfield_10180": <sprint_id>}` (integer, not object)
+Note the returned key (e.g. `OZZI-2225`).
 
-Note the returned `key` (e.g. `OZZI-2225`).
+Then add it to the active sprint:
+
+```sh
+jira sprint add <sprint-id> <TICKET-KEY>
+```
 
 ### 4. Transition to In Progress
 
-`getTransitionsForJiraIssue` → find the "In Progress" transition id →
-`transitionJiraIssue` with that id.
+```sh
+jira issue move <TICKET-KEY> "In Progress"
+```
 
 ### 5. Create and push the branch
 
@@ -102,23 +114,28 @@ PR body template:
 
 <one-liner>
 
-Resolves [<TICKET-KEY>](<jira-url>/browse/<TICKET-KEY>)
+Resolves [<TICKET-KEY>](https://<your-jira-site>/browse/<TICKET-KEY>)
 
 ## Changes
 
 - `path/to/file` — what it does
 ```
 
-## Key field reference
+## CLI reference
 
-| Field               | Value                                              |
-| ------------------- | -------------------------------------------------- |
-| Sprint custom field | `customfield_10180`                                |
-| Sprint value format | integer (e.g. `11718`), NOT `{"id": 11718}`        |
-| Cloud ID source     | `getAccessibleAtlassianResources` or site hostname |
+| Action              | Command                                                    |
+| ------------------- | ---------------------------------------------------------- |
+| Current user        | `jira me`                                                  |
+| List active sprints | `jira sprint list --board 2093 --state active`             |
+| Create issue        | `jira issue create --type Task --summary "..." --no-input` |
+| Add to sprint       | `jira sprint add <sprint-id> <TICKET-KEY>`                 |
+| Transition issue    | `jira issue move <TICKET-KEY> "In Progress"`               |
+| List projects       | `jira project list --plain --columns key,name`             |
+
+Board ID `2093` is the configured default (Cloud Platform Sprint Board).
 
 ## Edge cases
 
 - **No staged files:** skip commit draft and note it; still create ticket + branch + PR (GitHub requires ≥1 commit ahead of base — make an empty init commit if needed with `--allow-empty`).
-- **Multiple Atlassian resources:** use the one matching the user's site or ask.
-- **User specifies a different project:** use that project key instead of inferring from open sprint.
+- **User specifies a different project:** pass `--project <KEY>` to `jira issue create`.
+- **`jira issue move` status name mismatch:** run `jira issue move <KEY>` without a status arg to list available transitions interactively.
