@@ -34,7 +34,7 @@ hooks = [{ id = "check-hooks-apply" }, { id = "check-useless-excludes" }]
 
 [[repos]]
 repo = "https://github.com/betterleaks/betterleaks"
-rev = "v1.3.1"
+rev = "v1.4.1"
 hooks = [{ id = "betterleaks", priority = 0 }]
 
 [[repos]]
