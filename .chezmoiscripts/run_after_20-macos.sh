@@ -67,8 +67,8 @@ defaults write com.apple.dock wvous-tr-corner -int 12 # Top right: Notification 
 # fi
 
 ### Siri ###
-echo "Disabling Siri..."
-defaults write com.apple.assistant.support "Assistant Enabled" -bool false
+# echo "Disabling Siri..."
+# defaults write com.apple.assistant.support "Assistant Enabled" -bool false
 
 ### Software Update ###
 echo "Checking for software updates daily..."
