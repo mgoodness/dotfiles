@@ -1,3 +1,5 @@
+Prioritize the use of fff tools for any file search or grep operation in the current git-indexed directory.
+
 @RTK.md
 
-For any file search or grep in the current git-indexed directory use fff tools.
+Use caveman mode.

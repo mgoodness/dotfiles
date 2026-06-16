@@ -22,13 +22,14 @@ External resources (`.chezmoiexternal.toml`) fetched from remote archives on 168
 
 Scripts in `.chezmoiscripts/` run alphanumeric order after `chezmoi apply`. `run_after_*` idempotent, guard with condition checks. `run_onchange_*` re-run when watched file changes.
 
-| Script                                  | Does                                                    |
-| --------------------------------------- | ------------------------------------------------------- |
-| `run_after_10-homebrew.sh`              | Installs Homebrew if absent, then `brew bundle install` |
-| `run_after_20-macos.sh`                 | Sets macOS defaults, Dock layout, Touch ID sudo         |
-| `run_after_30-fish.sh`                  | Adds fish to `/etc/shells` and sets it as login shell   |
-| `run_onchange_build-bat-cache.sh`       | Rebuilds bat theme cache after theme changes            |
-| `run_onchange_install-gh-extensions.sh` | Installs `gh-poi` extension                             |
+| Script                                               | Does                                                    |
+| ---------------------------------------------------- | ------------------------------------------------------- |
+| `run_after_10-homebrew.sh`                           | Installs Homebrew if absent, then `brew bundle install` |
+| `run_after_20-macos.sh`                              | Sets macOS defaults, Dock layout, Touch ID sudo         |
+| `run_after_30-fish.sh`                               | Adds fish to `/etc/shells` and sets it as login shell   |
+| `run_onchange_after_15-install-agent-skills.sh.tmpl` | Installs agent skills via `skl`                         |
+| `run_onchange_build-bat-cache.sh`                    | Rebuilds bat theme cache after theme changes            |
+| `run_onchange_install-gh-extensions.sh`              | Installs `gh-poi` extension                             |
 
 ## Architecture
 
@@ -55,7 +56,7 @@ On shell startup, `up --auto` checks for daily updates.
 
 ### Themes
 
-Catppuccin used across bat, eza, ghostty; fetched via `.chezmoiexternal.toml`, not committed. Ghostty and Zed switch light/dark automatically on system appearance.
+Catppuccin used across bat, eza, ghostty, Helix; fetched via `.chezmoiexternal.toml`, not committed. Ghostty, Zed, and Helix switch light/dark automatically on system appearance.
 
 ### Secrets / signing
 
@@ -63,4 +64,4 @@ All SSH signing through 1Password (`op-ssh-sign`). SSH agent socket: `~/Library/
 
 ## Commit conventions
 
-Follows [Conventional Commits](https://www.conventionalcommits.org/). Template at `dot_config/git/commit`. Scopes: `fish`, `nvim`, `git`, `homebrew`, `macos`, `ghostty`, `zed`, `bat`.
+Follows [Conventional Commits](https://www.conventionalcommits.org/). Template at `dot_config/git/commit`. Scopes: `fish`, `git`, `homebrew`, `macos`, `ghostty`, `zed`, `helix`, `skills`.
