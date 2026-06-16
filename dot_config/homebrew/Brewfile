@@ -31,7 +31,7 @@ brew "gnu-tar"
 brew "go"
 brew "goreleaser"
 brew "grep"
-brew "hashicorp/tap/vault"
+brew "hashicorp/tap/vault", trusted: true
 brew "helix", args: ["HEAD"]
 brew "helm"
 brew "httpie"
