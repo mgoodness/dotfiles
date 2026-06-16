@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# shellcheck shell=bash
+
+if [ -n "${CI:-}" ]; then
+    echo "Skipping due to \$CI"
+    exit
+fi
+
+if ! command -v skl &>/dev/null; then
+    echo "Skipping: skl not found"
+    exit
+fi
+
+# Agent skills config hash: {{ .agentSkills | toJson | sha256sum }}
+
+{{ range .agentSkills -}}
+{{ $id := .id -}}
+{{ range .skills -}}
+skl add {{ $id }}/{{ . }} --global --yes
+{{ end -}}
+{{ end -}}

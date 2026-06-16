@@ -87,6 +87,8 @@ cask "rectangle"
 cask "slack"
 cask "zed@preview"
 
+go "github.com/alexastrum/skl"
+
 # krew "config-cleanup"
 # krew "get-all"
 # krew "support-bundle"

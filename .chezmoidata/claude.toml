@@ -14,7 +14,7 @@ plugins = ["worktrunk"]
 marketplace = "mksglu/context-mode"
 plugins = ["context-mode"]
 
-[[claudeSkills]]
+[[agentSkills]]
 id = "mattpocock/skills"
 skills = [
   "caveman",
