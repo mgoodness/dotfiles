@@ -7,7 +7,7 @@
 # Specify desired highlighting theme (e.g. "TwoDark"). Run `bat --list-themes`
 # for a list of all available themes
 --theme=auto:system
---theme-dark="Catppuccin Mocha"
+--theme-dark="Catppuccin Frappe"
 --theme-light="Catppuccin Latte"
 
 # Let pager handle text wrapping to unbreak terminal search
