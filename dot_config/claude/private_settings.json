@@ -52,5 +52,7 @@
       }
     }
   },
-  "theme": "auto"
+  "theme": "auto",
+  "agentPushNotifEnabled": true,
+  "inputNeededNotifEnabled": true
 }

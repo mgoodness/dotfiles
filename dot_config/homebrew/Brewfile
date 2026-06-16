@@ -5,6 +5,7 @@
 tap "beeftornado/rmtree", trusted: true
 tap "hashicorp/tap", trusted: true
 tap "homebrew/core", trusted: true
+tap "muxy-app/tap"
 
 brew "argocd"
 brew "bash"
@@ -84,6 +85,7 @@ cask "flutter"
 cask "font-fira-code-nerd-font"
 cask "font-fira-code"
 cask "gcloud-cli"
+cask "muxy-app/tap/muxy", trusted: true
 cask "rectangle"
 cask "slack"
 cask "zed@preview"
