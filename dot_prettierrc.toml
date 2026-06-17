@@ -1,11 +1,11 @@
 # Ref: https://codeberg.org/jsu/dotfiles/src/branch/main/.prettierrc.toml
 
+objectWrap = "collapse"
 printWidth = 120
-tabWidth = 4
+proseWrap = "never"
 semi = false
 singleQuote = true
-objectWrap = "collapse"
-proseWrap = "never"
+tabWidth = 4
 
 # https://github.com/prettier/prettier/issues/15956
 [[overrides]]

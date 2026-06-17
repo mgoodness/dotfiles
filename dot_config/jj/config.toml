@@ -3,8 +3,8 @@
 "$schema" = "https://jj-vcs.dev/latest/config-schema.json"
 
 [user]
-name = "Michael Goodness"
 email = "mike@opsgoodness.net"
+name = "Michael Goodness"
 
 [aliases]
 aliases = ["config", "list", "aliases"]

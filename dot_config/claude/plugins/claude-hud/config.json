@@ -1,25 +1,25 @@
 {
   "display": {
-    "showTools": true,
+    "showAdvisor": true,
     "showAgents": true,
-    "showTodos": true,
-    "showDuration": true,
     "showConfigCounts": true,
     "showCost": true,
-    "showSpeed": true,
-    "showSessionName": true,
+    "showDuration": true,
+    "showMcp": true,
     "showProject": true,
-    "showTokenBreakdown": true,
-    "showUsage": true,
+    "showSessionName": true,
     "showSessionTokens": true,
-    "showAdvisor": true,
     "showSkills": true,
-    "showMcp": true
+    "showSpeed": true,
+    "showTodos": true,
+    "showTokenBreakdown": true,
+    "showTools": true,
+    "showUsage": true
   },
   "gitStatus": {
     "enabled": true,
-    "showDirty": true,
     "showAheadBehind": true,
+    "showDirty": true,
     "showFileStats": true
   },
   "language": "en"
