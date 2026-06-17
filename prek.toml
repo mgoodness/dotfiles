@@ -37,7 +37,7 @@ name = "sort-json"
 types = ["json"]
 
 [[repos.hooks]]
-entry = "yq --inplace 'sort_keys(..)'"
+entry = "bash -c 'for f in \"$@\"; do yq --inplace \"sort_keys(..)\" \"$f\"; done' --"
 id = "sort-yaml"
 language = "system"
 name = "sort-yaml"
