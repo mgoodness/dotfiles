@@ -65,3 +65,17 @@ All SSH signing through 1Password (`op-ssh-sign`). SSH agent socket: `~/Library/
 ## Commit conventions
 
 Follows [Conventional Commits](https://www.conventionalcommits.org/). Template at `dot_config/git/commit`. Scopes: `fish`, `git`, `homebrew`, `macos`, `ghostty`, `zed`, `helix`, `skills`.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live as GitHub issues on `mgoodness/dotfiles` (via the `gh` CLI). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Canonical five-role vocabulary, label strings unchanged. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.

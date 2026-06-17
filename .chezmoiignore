@@ -1,3 +1,5 @@
 mise.toml
 prek.toml
-CLAUDE.md
+AGENTS.md
+CONTEXT.md
+docs/**
