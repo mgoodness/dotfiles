@@ -27,7 +27,7 @@ A split region of a Worktree window holding a stack of Tabs (one visible at a ti
 One terminal/command within a Pane's stack. Background Tabs keep running while hidden, so long-lived processes (dev server, watch) live as Tabs.
 
 **Band**:
-The full-width bottom Pane in our Layouts, holding the `shell`/`editor`/`watch` Tab stack beneath the full-width agent Pane.
+The full-width bottom Pane in our Layouts, holding the `shell`/`watch` Tab stack beneath the upper working Pane. The editor is a dedicated Tab in the upper Pane (alongside the Agent), never in the Band. Muxy layouts cannot set split ratios (equal split only), so the upper/lower ~80/20 sizing is a one-time manual drag that Muxy then persists per Worktree.
 _Avoid_: footer, drawer.
 
 **Agent**:
