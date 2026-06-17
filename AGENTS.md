@@ -46,7 +46,7 @@ Repos organized by git host under `~/Code/`:
 
 Each directory has `.gitconfig` overriding identity and signing key. Global git config at `dot_config/git/config` uses `includeIf "gitdir/i:~/Code/{host}/"` to load automatically.
 
-`gh repo clone` (via custom `gh.fish` function) places repos at `~/Code/{host}/{user}/{repo}` and registers the clone as a Muxy project.
+`gh repo clone` (via custom `gh.fish` function) places repos at `~/Code/{host}/{user}/{repo}`, registers the clone as a Muxy project, and symlinks the canonical layouts into its root worktree (run `mise install` yourself for clone env setup).
 
 ### Muxy + worktrunk
 
@@ -54,7 +54,7 @@ Parallel worktree development with [Muxy](https://muxy.app) (terminal/UI) and [w
 
 - **Worktrees**: worktrunk owns create/teardown. The sibling path `repo.branch` keeps each worktree under `~/Code/{host}/`, so per-host identity and signing still apply (ADR-0002). User config: `dot_config/worktrunk/config.toml`.
 - **Hooks** (fire on `wt switch --create`): `pre-start` preps env (mise → direnv fallback) and symlinks the canonical layouts into the worktree; `post-start` registers and focuses the worktree in Muxy.
-- **Layouts**: `agent` / `dev` / `infra` live at `dot_config/muxy/layouts/` → `~/.config/muxy/layouts/`, symlinked into each worktree's `.muxy/layouts/` and global-ignored — never committed (ADR-0003).
+- **Layouts**: `agent` / `dev` / `infra` live at `dot_config/muxy/layouts/` → `~/.config/muxy/layouts/`, global-ignored — never committed (ADR-0003). Symlinked into a worktree's `.muxy/layouts/` by the `pre-start` hook (new worktrees) and by `gh.fish` (a clone's root). Never auto-applied — pick once from the top-bar picker and Muxy persists it.
 - **Workspaces**: `Personal` / `MLB` sidebar filters, assigned manually (no Muxy CLI).
 - **Shell integration**: installed by `run_once_after_31-worktrunk-shell.sh` (`functions/wt.fish`, unmanaged by chezmoi).
 

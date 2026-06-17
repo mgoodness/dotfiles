@@ -23,8 +23,12 @@ function gh --wraps=gh
     command gh $argv
     set --local gh_status $status
 
-    # Register a freshly cloned repo with Muxy (and focus it)
+    # Register a freshly cloned repo with Muxy, symlink the canonical layouts into
+    # its root worktree, and focus it. Env prep is manual for clones — run
+    # `mise install` when you start work (the worktrunk hook handles worktrees).
     if set --query repo_dir[1]; and test $gh_status -eq 0
+        mkdir -p $repo_dir/.muxy
+        ln -sfn ~/.config/muxy/layouts $repo_dir/.muxy/layouts
         muxy $repo_dir
     end
 

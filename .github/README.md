@@ -38,8 +38,11 @@ Two one-time steps Muxy can't script:
 - Enable **Settings → General → Auto-expand worktrees on project switch**.
 - Create `Personal` / `MLB` sidebar workspaces and assign projects.
 
-Day-to-day: `gh repo clone …` registers the repo as a Muxy project; `wt switch --create
-<branch>` spins up an isolated worktree with its layout (pick one once; Muxy persists it).
+Day-to-day: `gh repo clone …` registers the repo as a Muxy project and symlinks the
+layouts into its root worktree (run `mise install` yourself to set up env). `wt switch
+--create <branch>` spins up an isolated worktree with env prep and layouts done for you.
+Either way the layout picker is never automatic — pick one from the top bar once and Muxy
+persists it.
 
 ## Acknowledgements
 

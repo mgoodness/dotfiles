@@ -1,6 +1,6 @@
 # Layouts are global-ignored, committed opt-in
 
-Muxy Layout files (`.muxy/layouts/`) are excluded globally through git's `core.excludesFile` rather than committed per-repo — even though Muxy's own design expects them checked in alongside the project. The canonical set lives in chezmoi at `~/.config/muxy/layouts/` and is symlinked into each Worktree's `.muxy/layouts/` by the worktrunk post-start hook.
+Muxy Layout files (`.muxy/layouts/`) are excluded globally through git's `core.excludesFile` rather than committed per-repo — even though Muxy's own design expects them checked in alongside the project. The canonical set lives in chezmoi at `~/.config/muxy/layouts/` and is symlinked into each Worktree's `.muxy/layouts/` by the worktrunk `pre-start` hook (new worktrees) and by `gh.fish` (a freshly cloned repo's root worktree).
 
 This keeps Muxy-specific files out of shared corporate repos by default (no PR noise for teammates who don't use Muxy) while remaining fully reproducible from dotfiles. Sharing a Layout with a team is a deliberate `git add -f`.
 
