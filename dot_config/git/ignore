@@ -36,3 +36,7 @@ Temporary Items
 # End of https://www.toptal.com/developers/gitignore/api/macos
 
 **/.claude/settings.local.json
+
+# Muxy per-worktree layouts — canonical set lives in ~/.config/muxy/layouts and is
+# symlinked into each worktree by the worktrunk hook (ADR-0003); never committed.
+.muxy/
