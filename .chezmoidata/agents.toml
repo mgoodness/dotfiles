@@ -15,6 +15,9 @@ marketplace = "mksglu/context-mode"
 plugins = ["context-mode"]
 
 [[agentSkills]]
+id = "cicdteam/google-go-style"
+
+[[agentSkills]]
 id = "mattpocock/skills"
 skills = [
   "caveman",
@@ -32,3 +35,6 @@ skills = [
   "write-a-skill",
   "zoom-out",
 ]
+
+[[agentSkills]]
+id = "muxy-app/muxy"
