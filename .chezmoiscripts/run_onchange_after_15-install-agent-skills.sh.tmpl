@@ -11,15 +11,16 @@ if ! command -v skl &>/dev/null; then
     exit
 fi
 
+#
 # Agent skills config hash: {{ .agentSkills | toJson | sha256sum }}
 
-# {{ range .agentSkills -}}
-# {{ $id := .id -}}
-# {{ if index . "skills" -}}
-# {{ range .skills -}}
-# skl add {{ $id }}/{{ . }} --global --yes
-# {{ end -}}
-# {{ else -}}
-# skl add {{ $id }} --global --yes
-# {{ end -}}
-# {{ end -}}
+{{ range .agentSkills -}}
+{{ $id := .id -}}
+{{ if index . "skills" -}}
+{{ range .skills -}}
+skl add {{ $id }}/{{ . }} --agent claude-code,universal --global --yes
+{{ end -}}
+{{ else -}}
+skl add {{ $id }} --agent claude-code,universal --global --yes
+{{ end -}}
+{{ end -}}

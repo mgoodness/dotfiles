@@ -108,6 +108,11 @@ end
 
 function __up_skills --description "Update agent skills"
     skl update --global --yes &>/dev/null
+    mkdir -p ~/.config/claude/skills
+    for skill in ~/.config/agents/skills/*/
+        set name (basename $skill)
+        ln -sfn ~/.config/agents/skills/$name ~/.config/claude/skills/$name
+    end
 end
 
 # Remove any unfound items
