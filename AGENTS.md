@@ -57,6 +57,7 @@ Parallel worktree development with [Muxy](https://muxy.app) (terminal/UI) and [w
 - **Layouts**: `agent` / `dev` / `infra` live at `dot_config/muxy/layouts/` → `~/.config/muxy/layouts/`, global-ignored — never committed (ADR-0003). Symlinked into a worktree's `.muxy/layouts/` by the `pre-start` hook (new worktrees) and by `gh.fish` (a clone's root). Never auto-applied — pick once from the top-bar picker and Muxy persists it.
 - **Workspaces**: `Personal` / `MLB` sidebar filters, assigned manually (no Muxy CLI).
 - **Shell integration**: installed by `run_once_after_31-worktrunk-shell.sh` (`functions/wt.fish`, unmanaged by chezmoi).
+- **Retrofit**: `muxy-retrofit` backfills the layout symlink into every existing Muxy worktree (skips `$HOME` and non-git dirs) — run it for projects that predate this wiring.
 
 Design rationale lives in `CONTEXT.md` (glossary) and `docs/adr/` (ADRs 0001–0004).
 
@@ -65,7 +66,7 @@ Design rationale lives in `CONTEXT.md` (glossary) and `docs/adr/` (ADRs 0001–0
 - `dot_config/fish/config.fish` — environment variables, tool initialization
 - `dot_config/fish/conf.d/abbr.fish` — abbreviations for chezmoi, k8s, git, terraform, docker
 - `dot_config/fish/fish_plugins` — Fisher plugin list (source of truth; run `fisher update` to sync)
-- `dot_config/fish/functions/` — custom functions (`gh`, `gconfig`, `new-gke`, `k8s-context`, etc.)
+- `dot_config/fish/functions/` — custom functions (`gh`, `gconfig`, `new-gke`, `k8s-context`, `muxy-retrofit`, etc.)
 
 On shell startup, `up --auto` checks for daily updates.
 
