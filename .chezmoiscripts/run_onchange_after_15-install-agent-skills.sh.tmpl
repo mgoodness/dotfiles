@@ -17,10 +17,10 @@ fi
 {{ range .agentSkills -}}
 {{ $id := .id -}}
 {{ if index . "skills" -}}
-{{ range .skills -}}
-skl add {{ $id }}/{{ . }} --agent claude-code,universal --global --yes
-{{ end -}}
+# skl add {{ $id }} --global {{ range .skills }} --skill {{ . }}{{ end }} --yes
+npx skills add {{ $id }} --global {{ range .skills }} --skill {{ . }}{{ end }} --yes
 {{ else -}}
-skl add {{ $id }} --agent claude-code,universal --global --yes
+# skl add {{ $id }} --global --yes
+npx skills add {{ $id }} --global --yes
 {{ end -}}
 {{ end -}}
