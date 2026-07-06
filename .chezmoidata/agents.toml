@@ -10,10 +10,6 @@ plugins = ["claude-hud"]
 marketplace = "max-sixty/worktrunk"
 plugins = ["worktrunk"]
 
-[[claudePlugins]]
-marketplace = "mksglu/context-mode"
-plugins = ["context-mode"]
-
 [[agentSkills]]
 id = "cicdteam/google-go-style"
 
@@ -21,6 +17,7 @@ id = "cicdteam/google-go-style"
 id = "mattpocock/skills"
 skills = [
   "ask-matt",
+  "code-review",
   "codebase-design",
   "diagnosing-bugs",
   "domain-modeling",
@@ -28,8 +25,10 @@ skills = [
   "grill-with-docs",
   "grilling",
   "handoff",
+  "implement",
   "improve-codebase-architecture",
   "prototype",
+  "research",
   "setup-matt-pocock-skills",
   "tdd",
   "teach",
