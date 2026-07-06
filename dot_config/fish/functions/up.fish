@@ -99,7 +99,7 @@ function __up_mas --description "Update macOS apps"
 end
 
 function __up_macos --description "Update macOS"
-    softwareupdate --list &| grep -q "No new" || softwareupdate --install --all
+    softwareupdate --list &| grep -q "No new" || op read --account mlb.1password.com "op://Employee/Okta/password" | softwareupdate --all --install --stdinpass
 end
 
 function __up_rustup --description "Update Rust"
