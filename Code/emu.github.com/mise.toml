@@ -1,5 +1,7 @@
-# [hooks]
-# enter = "gh auth switch --hostname github.com --user Michael-Goodness_mlb"
+[env]
+GH_HOST = "github.com"
+GH_TOKEN = { value = "{{ exec(command='op read --account mlb.1password.com \"op://Employee/EMU GH CLI PAT/credential\"', cache_duration='8h', cache_key='emu-gh-token') }}" }
 
 [tools]
 terraform = "latest"
+terraform-docs = "latest"

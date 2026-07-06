@@ -1,2 +1,3 @@
-# [hooks]
-# enter = "gh auth switch --hostname github.com --user mgoodness"
+[env]
+GH_HOST = "github.com"
+GH_TOKEN = { value = "{{ exec(command='op read --account my.1password.com \"op://Private/GH CLI PAT/credential\"'), cache_duration='8h', cache_key='personal-gh-token' }}" }

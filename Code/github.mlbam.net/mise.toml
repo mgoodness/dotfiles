@@ -1,0 +1,3 @@
+[env]
+GH_HOST = "github.mlbam.net"
+GH_TOKEN = { value = "{{ exec(command='op read --account mlb.1password.com \"op://Employee/MLBAM GH CLI PAT/credential\"', cache_duration='8h', cache_key='mlbam-gh-token') }}" }
