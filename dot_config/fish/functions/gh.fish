@@ -1,5 +1,5 @@
 function gh --wraps=gh
-    set GH_HOST
+    set --function clone_host # only set for mlb- clones; overrides GH_HOST for this call only
     set --function repo_dir # empty unless this is a clone; gates the Muxy register below
     if test \( "$argv[1]" = repo -a "$argv[2]" = clone \) -a -n "$argv[3]"
         switch (string split / "$argv[3]" | count)
@@ -7,8 +7,8 @@ function gh --wraps=gh
                 set repo_dir "$GIT_WORKSPACE/github.com/mgoodness/$argv[3]"
             case 2
                 if test ( string sub -l 4 "$argv[3]" ) = mlb-
-                    set GH_HOST "emu.github.com"
-                    set repo_dir "$GIT_WORKSPACE/$GH_HOST/$argv[3]"
+                    set clone_host "emu.github.com"
+                    set repo_dir "$GIT_WORKSPACE/$clone_host/$argv[3]"
                 else
                     set repo_dir "$GIT_WORKSPACE/github.com/$argv[3]"
                 end
@@ -20,7 +20,11 @@ function gh --wraps=gh
         cd $repo_dir/..
     end
 
-    command gh $argv
+    if set --query clone_host[1]
+        GH_HOST=$clone_host command gh $argv
+    else
+        command gh $argv
+    end
     set --local gh_status $status
 
     # Register a freshly cloned repo with Muxy, symlink the canonical layouts into
