@@ -1,6 +1,6 @@
 [env]
 GH_HOST = "github.com"
-GH_TOKEN = { value = "{{ exec(command='op read --account mlb.1password.com \"op://Employee/EMU GH CLI PAT/credential\"', cache_duration='8h', cache_key='emu-gh-token') }}" }
+GH_TOKEN = { value = "{{ exec(cache_duration='1d', cache_key='emu-gh-token', command='op read --account mlb.1password.com \"op://Employee/EMU GH CLI PAT/credential\"') }}" }
 
 [tools]
 terraform = "latest"
