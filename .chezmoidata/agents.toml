@@ -42,6 +42,3 @@ skills = [
   "wayfinder",
   "writing-great-skills",
 ]
-
-[[agentSkills]]
-id = "muxy-app/muxy"
