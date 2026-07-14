@@ -20,18 +20,6 @@
     }
   },
   "hooks": {
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "command": "'/Applications/Muxy.app/Contents/Resources/Muxy_Muxy.bundle/muxy-claude-hook.sh' notification # muxy-notification-hook",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": ""
-      }
-    ],
     "PreToolUse": [
       {
         "hooks": [
@@ -69,40 +57,6 @@
           }
         ],
         "matcher": "Glob"
-      },
-      {
-        "hooks": [
-          {
-            "command": "'/Applications/Muxy.app/Contents/Resources/Muxy_Muxy.bundle/muxy-claude-hook.sh' pre-tool-use # muxy-notification-hook",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": ""
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "'/Applications/Muxy.app/Contents/Resources/Muxy_Muxy.bundle/muxy-claude-hook.sh' stop # muxy-notification-hook",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": ""
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "command": "'/Applications/Muxy.app/Contents/Resources/Muxy_Muxy.bundle/muxy-claude-hook.sh' user-prompt-submit # muxy-notification-hook",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": ""
       }
     ]
   },
