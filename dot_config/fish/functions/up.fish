@@ -53,7 +53,7 @@ function __up_all --description "Update everything"
 end
 
 function __up_homebrew --description "Update Homebrew packages"
-    chezmoi apply $HOMEBREW_BUNDLE_FILE
+    chezmoi apply --force $HOMEBREW_BUNDLE_FILE
 
     brew update -q
     brew bundle -q
@@ -62,8 +62,11 @@ function __up_homebrew --description "Update Homebrew packages"
     brew cleanup -q
     brew doctor -q
 
-    brew bundle dump --force && sort-brewfile -i
-    chezmoi status $HOMEBREW_BUNDLE_FILE
+    set -l actual (mktemp)
+    brew bundle dump --force --file=$actual
+    sort-brewfile -i $actual
+    delta $HOMEBREW_BUNDLE_FILE $actual
+    rm $actual
 end
 
 function __up_docker --description "Update Docker images"
