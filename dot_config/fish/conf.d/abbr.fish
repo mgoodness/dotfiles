@@ -64,11 +64,11 @@ _alias watch viddy
 
 if command -q eza
     set -g TREE_IGNORE "cache|log|logs"
-    alias la "eza --all --git --group-directories-first --header --icons --long"
-    alias ll "eza --git --group-directories-first --header --icons --long"
-    alias ls "eza --git --group-directories-first --icons"
-    alias lt "eza --group-directories-first --icons --ignore-glob=\"$TREE_IGNORE\" --level=2 --tree"
-    alias tree "eza --group-directories-first --icons --ignore-glob=\"$TREE_IGNORE\" --tree"
+    alias la "eza --all --git --group-directories-first --header --long"
+    alias ll "eza --git --group-directories-first --header --long"
+    alias ls "eza --git --group-directories-first"
+    alias lt "eza --group-directories-first --ignore-glob=\"$TREE_IGNORE\" --level=2 --tree"
+    alias tree "eza --group-directories-first --ignore-glob=\"$TREE_IGNORE\" --tree"
 end
 
 alias less "less --force --no-init --hilite-search --ignore-case --SILENT --status-column --underline-special"
