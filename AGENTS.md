@@ -46,27 +46,25 @@ Repos organized by git host under `~/Code/`:
 
 Each directory has `.gitconfig` overriding identity and signing key. Global git config at `dot_config/git/config` uses `includeIf "gitdir/i:~/Code/{host}/"` to load automatically.
 
-`gh repo clone` (via custom `gh.fish` function) places repos at `~/Code/{host}/{user}/{repo}`, registers the clone as a Muxy project, and symlinks the canonical layouts into its root worktree (run `mise install` yourself for clone env setup).
+`gh repo clone` (via custom `gh.fish` function) places repos at `~/Code/{host}/{user}/{repo}` and opens the clone as a focused cmux workspace (run `mise install` yourself for clone env setup).
 
-### Muxy + worktrunk
+### cmux + worktrunk
 
-Parallel worktree development with [Muxy](https://muxy.app) (terminal/UI) and [worktrunk](https://worktrunk.dev) (`wt`, worktree lifecycle).
+Parallel worktree development with [cmux](https://cmux.com) (terminal/UI) and [worktrunk](https://worktrunk.dev) (`wt`, worktree lifecycle).
 
 - **Worktrees**: worktrunk owns create/teardown. The sibling path `repo.branch` keeps each worktree under `~/Code/{host}/`, so per-host identity and signing still apply (ADR-0002). User config: `dot_config/worktrunk/config.toml`.
-- **Hooks** (fire on `wt switch --create`): `pre-start` preps env (mise → direnv fallback) and symlinks the canonical layouts into the worktree; `post-start` registers and focuses the worktree in Muxy.
-- **Layouts**: `agent` / `dev` / `infra` live at `dot_config/muxy/layouts/` → `~/.config/muxy/layouts/`, global-ignored — never committed (ADR-0003). Symlinked into a worktree's `.muxy/layouts/` by the `pre-start` hook (new worktrees) and by `gh.fish` (a clone's root). Never auto-applied — pick once from the top-bar picker and Muxy persists it.
-- **Workspaces**: `Personal` / `MLB` sidebar filters, assigned manually (no Muxy CLI).
+- **Hooks** (fire on `wt switch --create`): `pre-start` preps env (mise → direnv fallback); `post-start` opens a focused cmux workspace at the worktree.
+- **Workspaces**: `Personal` / `MLB` cmux sidebar groups (`cmux workspace-group`), assigned manually.
 - **Shell integration**: installed by `run_once_after_31-worktrunk-shell.sh` (`functions/wt.fish`, unmanaged by chezmoi).
-- **Retrofit**: `muxy-retrofit` backfills the layout symlink into every existing Muxy worktree (skips `$HOME` and non-git dirs) — run it for projects that predate this wiring.
 
-Design rationale lives in `CONTEXT.md` (glossary) and `docs/adr/` (ADRs 0001–0004).
+Design rationale lives in `CONTEXT.md` (glossary) and `docs/adr/` (ADRs 0001, 0002, 0004).
 
 ### Fish shell
 
 - `dot_config/fish/config.fish` — environment variables, tool initialization
 - `dot_config/fish/conf.d/abbr.fish` — abbreviations for chezmoi, k8s, git, terraform, docker
 - `dot_config/fish/fish_plugins` — Fisher plugin list (source of truth; run `fisher update` to sync)
-- `dot_config/fish/functions/` — custom functions (`gh`, `gconfig`, `new-gke`, `k8s-context`, `muxy-retrofit`, etc.)
+- `dot_config/fish/functions/` — custom functions (`gh`, `gconfig`, `new-gke`, `k8s-context`, etc.)
 
 On shell startup, `up --auto` checks for daily updates.
 
@@ -80,7 +78,7 @@ All SSH signing through 1Password (`op-ssh-sign`). SSH agent socket: `~/Library/
 
 ## Commit conventions
 
-Follows [Conventional Commits](https://www.conventionalcommits.org/). Template at `dot_config/git/commit`. Scopes: `fish`, `git`, `homebrew`, `macos`, `ghostty`, `zed`, `helix`, `skills`, `muxy`.
+Follows [Conventional Commits](https://www.conventionalcommits.org/). Template at `dot_config/git/commit`. Scopes: `fish`, `git`, `homebrew`, `macos`, `ghostty`, `zed`, `helix`, `skills`, `cmux`.
 
 ## Agent skills
 

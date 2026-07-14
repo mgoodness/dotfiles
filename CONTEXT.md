@@ -1,35 +1,32 @@
-# Muxy Workflow
+# cmux Workflow
 
-The vocabulary for the Muxy + git-worktree development workflow this repo configures (layouts, the worktree lifecycle, project/workspace organization). Glossary only — mechanics live in `docs/adr/`.
+The vocabulary for the cmux + git-worktree development workflow this repo configures (the worktree lifecycle, workspace-group organization). Glossary only — mechanics live in `docs/adr/`.
 
 ## Language
 
-**Project**:
-A directory plus Muxy metadata (tabs, splits, worktrees, last-used IDE), registered in Muxy. Registered automatically on clone via `gh.fish`.
-_Avoid_: repo (a Project is a Muxy concept and need not be a git repo).
-
 **Workspace**:
-A named filter over the Project sidebar. Exactly two exist: `Personal` and `MLB`. Membership is assigned by hand; it moves nothing on disk.
-_Avoid_: group, folder, layout.
+cmux's tab-like entity for one worktree — carries its own cwd, panes, and surfaces. Opened automatically by `gh.fish` (fresh clone) and the worktrunk `post-start` hook (new worktree).
+_Avoid_: project, worktree (the git object is still a worktree; the cmux tab representing it is a Workspace), tab (that's one level deeper — see Surface).
+
+**Workspace group**:
+A named grouping of Workspaces in the cmux sidebar (`cmux workspace-group`). Exactly two exist: `Personal` and `MLB`. Membership is assigned by hand; it moves nothing on disk.
+_Avoid_: workspace (see above — cmux overloads this word for two different things), group, folder, layout.
 
 **Worktree**:
-A git worktree attached to a Project, each with its own tabs, splits, and Muxy-persisted state. The primary Worktree is the Project root; additional ones are siblings named `repo.branch`.
+A git worktree attached to a Workspace. The primary Worktree is the repo root; additional ones are siblings named `repo.branch`.
 _Avoid_: branch checkout, clone.
 
-**Layout**:
-A declarative `.muxy/layouts/*.yaml` tree of Panes/Tabs applied to a Worktree on demand via the picker. The canonical set is `agent`, `dev`, `infra`.
-_Avoid_: workspace, template, profile.
-
 **Pane**:
-A split region of a Worktree window holding a stack of Tabs (one visible at a time). Panes nest as a binary tree of horizontal (columns) / vertical (rows) splits.
+A split region of a Workspace window holding a stack of Surfaces (one visible at a time). Panes nest as a binary tree of horizontal (columns) / vertical (rows) splits.
 
-**Tab**:
-One terminal/command within a Pane's stack. Background Tabs keep running while hidden, so long-lived processes (dev server, watch) live as Tabs.
+**Surface**:
+One terminal/browser/agent-session within a Pane's stack. Background Surfaces keep running while hidden, so long-lived processes (dev server, watch) live as Surfaces.
+_Avoid_: tab (that's the UI chrome for a Surface, not the concept), pane (one level up).
 
 **Band**:
-The full-width bottom Pane in our Layouts, holding the `shell`/`watch` Tab stack beneath the upper working Pane. The editor is a dedicated Tab in the upper Pane (alongside the Agent), never in the Band. Muxy layouts cannot set split ratios (equal split only), so the upper/lower ~80/20 sizing is a one-time manual drag that Muxy then persists per Worktree.
+The full-width bottom Pane holding the `shell`/`watch` Surface stack beneath the upper working Pane. The editor is a dedicated Surface in the upper Pane (alongside the Agent), never in the Band. Nothing provisions this automatically — the upper/lower ~80/20 sizing is a one-time manual drag per Workspace.
 _Avoid_: footer, drawer.
 
 **Agent**:
-An AI CLI (e.g. Claude Code) running in a Pane. One Agent per Worktree — parallel Agents get separate Worktrees, never shared.
-_Avoid_: assistant (Muxy's "AI Assistant" is only commit/PR text generation, a different thing).
+An AI CLI (e.g. Claude Code) running in a Surface. One Agent per Workspace — parallel Agents get separate Workspaces (one per worktree), never shared.
+_Avoid_: assistant.
