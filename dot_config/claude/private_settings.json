@@ -24,10 +24,6 @@
       {
         "hooks": [
           {
-            "command": "rtk hook claude",
-            "type": "command"
-          },
-          {
             "command": "git rev-parse --is-inside-work-tree >/dev/null 2>&1 && echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"Reminder: prefer mcp__fff__grep / mcp__fff__multi_grep over shell grep in this git-indexed directory (see CLAUDE.md).\"}}' || true",
             "if": "Bash(grep *)",
             "type": "command"
