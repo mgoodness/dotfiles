@@ -89,7 +89,7 @@ cask "font-fira-code"
 cask "gcloud-cli"
 cask "rectangle"
 cask "slack"
-cask "soren-starck/tap/sessionwatcher"
+cask "soren-starck/tap/sessionwatcher", trusted: true
 cask "zed@preview"
 
 go "github.com/alexastrum/skl"
