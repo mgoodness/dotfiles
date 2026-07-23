@@ -1,0 +1,11 @@
+[ui]
+agent_panel_sort = "spaces"
+
+# Catppuccin Frappe (dark) / Latte (light), auto-switching with system
+# appearance — same pairing as bat (dot_config/bat/config), Helix
+# (dot_config/helix/config.toml), and Ghostty (dot_config/ghostty/config).
+[theme]
+auto_switch = true
+dark_name = "catppuccin"
+light_name = "catppuccin-latte"
+name = "catppuccin"
