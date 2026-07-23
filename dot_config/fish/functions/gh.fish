@@ -1,6 +1,6 @@
 function gh --wraps=gh
     set --function clone_host # only set for mlb- clones; overrides GH_HOST for this call only
-    set --function repo_dir # empty unless this is a clone; gates the cmux register below
+    set --function repo_dir # empty unless this is a clone; gates the herdr register below
     if test \( "$argv[1]" = repo -a "$argv[2]" = clone \) -a -n "$argv[3]"
         switch (string split / "$argv[3]" | count)
             case 1
@@ -27,11 +27,11 @@ function gh --wraps=gh
     end
     set --local gh_status $status
 
-    # Open a freshly cloned repo as a focused cmux workspace. Env prep is manual
+    # Open a freshly cloned repo as a focused herdr workspace. Env prep is manual
     # for clones — run `mise install` when you start work (the worktrunk hook
     # handles worktrees).
     if set --query repo_dir[1]; and test $gh_status -eq 0
-        cmux $repo_dir
+        herdr workspace create --cwd $repo_dir --focus
     end
 
     return $gh_status
