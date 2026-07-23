@@ -87,6 +87,7 @@ cask "flutter"
 cask "font-fira-code-nerd-font"
 cask "font-fira-code"
 cask "gcloud-cli"
+cask "ghostty"
 cask "rectangle"
 cask "slack"
 cask "soren-starck/tap/sessionwatcher", trusted: true
