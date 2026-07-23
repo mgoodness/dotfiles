@@ -14,9 +14,6 @@ plugins = ["worktrunk"]
 id = "spf13/go-skills"
 
 [[agentSkills]]
-id = "manaflow-ai/cmux"
-
-[[agentSkills]]
 id = "mattpocock/skills"
 skills = [
   "ask-matt",
