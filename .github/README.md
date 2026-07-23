@@ -20,23 +20,26 @@ Otherwise:
 sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply mgoodness
 ```
 
-## cmux + worktrunk
+## herdr + worktrunk
 
-Parallel git-worktree development with [cmux](https://cmux.com) (terminal + UI) and
-[worktrunk](https://worktrunk.dev) (`wt`, worktree lifecycle). A fresh
-`chezmoi init --apply` wires it up:
+Parallel git-worktree development with [herdr](https://herdr.dev) (terminal workspace
+manager, run inside Ghostty) and [worktrunk](https://worktrunk.dev) (`wt`, worktree
+lifecycle). A fresh `chezmoi init --apply` wires up the worktrunk half:
 
-1. Homebrew installs `worktrunk`, `mise`, and the cmux cask.
-2. `run_once_after_31-worktrunk-shell.sh` installs worktrunk's fish shell integration.
-3. `~/.config/worktrunk/config.toml` hooks fire on `wt switch --create <branch>`: prep
-   env (mise → direnv), then open a focused cmux workspace at the new worktree.
+1. Homebrew installs `worktrunk`, `mise`, and the `ghostty` cask (the legacy `cmux`
+   cask still installs alongside, for now).
+2. `run_once_after_17-install-herdr.sh` installs herdr via its own installer — not
+   Homebrew, so `herdr update --handoff` (in-place session updates) keeps working.
+3. `run_once_after_31-worktrunk-shell.sh` installs worktrunk's fish shell integration.
+4. `~/.config/worktrunk/config.toml` hooks fire on `wt switch --create <branch>`: prep
+   env (mise → direnv), then open a focused herdr workspace at the new worktree.
 
-One one-time step cmux can't script: create the `Personal` / `MLB` sidebar workspace
-groups (`cmux workspace-group create`) and assign projects to them.
+Workspaces are labeled `Personal` / `MLB` by convention only — herdr has no
+group/folder primitive to enforce this the way cmux's sidebar groups did.
 
-Day-to-day: `gh repo clone …` opens the repo as a focused cmux workspace (run `mise
+Day-to-day: `gh repo clone …` opens the repo as a focused herdr workspace (run `mise
 install` yourself to set up env). `wt switch --create <branch>` spins up an isolated
-worktree with env prep and a focused cmux workspace, done for you.
+worktree with env prep and a focused herdr workspace, done for you.
 
 ## Acknowledgements
 

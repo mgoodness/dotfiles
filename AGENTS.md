@@ -30,6 +30,7 @@ Scripts in `.chezmoiscripts/` run in alphanumeric order after `chezmoi apply`. `
 | `run_onchange_after_15-install-agent-skills.sh.tmpl`   | Installs agent skills via `skl`                           |
 | `run_onchange_after_15-install-claude-plugins.sh.tmpl` | Installs Claude Code plugins                              |
 | `run_once_after_16-register-fff-mcp.sh`                | Registers the `fff` MCP server (brew installs the binary) |
+| `run_after_17-herdr-setup.sh.tmpl`                     | herdr: binary, launchd service, integration, plugins      |
 | `run_onchange_after_20-macos.sh`                       | Sets macOS defaults, Dock layout, Touch ID sudo           |
 | `run_after_30-fish.sh`                                 | Adds fish to `/etc/shells` and sets it as login shell     |
 | `run_once_after_31-worktrunk-shell.sh`                 | Installs worktrunk's fish shell integration               |
@@ -46,15 +47,17 @@ Repos organized by git host under `~/Code/`:
 
 Each directory has `.gitconfig` overriding identity and signing key. Global git config at `dot_config/git/config` uses `includeIf "gitdir/i:~/Code/{host}/"` to load automatically.
 
-`gh repo clone` (via custom `gh.fish` function) places repos at `~/Code/{host}/{user}/{repo}` and opens the clone as a focused cmux workspace (run `mise install` yourself for clone env setup).
+`gh repo clone` (via custom `gh.fish` function) places repos at `~/Code/{host}/{user}/{repo}` and opens the clone as a focused herdr workspace (run `mise install` yourself for clone env setup).
 
-### cmux + worktrunk
+### herdr + worktrunk
 
-Parallel worktree development with [cmux](https://cmux.com) (terminal/UI) and [worktrunk](https://worktrunk.dev) (`wt`, worktree lifecycle).
+Parallel worktree development with [herdr](https://herdr.dev) (terminal workspace manager, run inside Ghostty) and [worktrunk](https://worktrunk.dev) (`wt`, worktree lifecycle).
+
+> Ghostty installs via Homebrew (`cask "ghostty"`); herdr installs via its own installer (`run_once_after_17-install-herdr.sh`, not Homebrew — the curl-installed binary is what supports `herdr update --handoff`). The legacy `cmux` cask stays installed alongside both for now — scheduled for removal once the transition is done, not yet.
 
 - **Worktrees**: worktrunk owns create/teardown. The sibling path `repo.branch` keeps each worktree under `~/Code/{host}/`, so per-host identity and signing still apply (ADR-0002). User config: `dot_config/worktrunk/config.toml`.
-- **Hooks** (fire on `wt switch --create`): `pre-start` preps env (mise → direnv fallback); `post-start` opens a focused cmux workspace at the worktree.
-- **Workspaces**: `Personal` / `MLB` cmux sidebar groups (`cmux workspace-group`), assigned manually.
+- **Hooks** (fire on `wt switch --create`): `pre-start` preps env (mise → direnv fallback); `post-start` opens a focused herdr workspace at the worktree.
+- **Workspaces**: labeled `Personal` / `MLB` by convention only — herdr has no group/folder primitive to enforce this; see `CONTEXT.md`.
 - **Shell integration**: installed by `run_once_after_31-worktrunk-shell.sh` (`functions/wt.fish`, unmanaged by chezmoi).
 
 Design rationale lives in `CONTEXT.md` (glossary) and `docs/adr/` (ADRs 0001, 0002, 0004).
@@ -70,7 +73,7 @@ On shell startup, `up --auto` checks for daily updates.
 
 ### Themes
 
-Catppuccin used across bat, eza, ghostty, Helix; fetched via `.chezmoiexternal.toml`, not committed. Ghostty, Zed, and Helix switch light/dark automatically on system appearance.
+Catppuccin used across bat, eza, ghostty, Helix, herdr; the first four fetched via `.chezmoiexternal.toml`, not committed — herdr's is built in (`dot_config/herdr/config.toml`), no external fetch needed. Ghostty, Zed, Helix, and herdr switch light/dark automatically on system appearance. herdr only ships one dark Catppuccin variant (`catppuccin`, not flavor-named) vs. the Frappe used elsewhere — closest built-in match, not a guaranteed pixel-exact one.
 
 ### Secrets / signing
 
@@ -78,7 +81,7 @@ All SSH signing through 1Password (`op-ssh-sign`). SSH agent socket: `~/Library/
 
 ## Commit conventions
 
-Follows [Conventional Commits](https://www.conventionalcommits.org/). Template at `dot_config/git/commit`. Scopes: `fish`, `git`, `homebrew`, `macos`, `ghostty`, `zed`, `helix`, `skills`, `cmux`.
+Follows [Conventional Commits](https://www.conventionalcommits.org/). Template at `dot_config/git/commit`. Scopes: `fish`, `git`, `homebrew`, `macos`, `ghostty`, `zed`, `helix`, `skills`, `cmux`, `herdr`.
 
 ## Agent skills
 
