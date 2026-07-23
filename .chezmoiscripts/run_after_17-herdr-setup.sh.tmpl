@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# shellcheck shell=bash
+
+# Everything herdr needs: install the binary, load its background service,
+# then configure application-level extras (Claude Code session-identity
+# integration, plugins declared in .chezmoidata/agents.toml's herdrPlugins
+# list). Runs every apply — every step below guards itself before acting, so
+# this fully self-heals (including the binary: unlike a run_once script, a
+# manually-deleted ~/.local/bin/herdr gets reinstalled on the next apply
+# instead of chezmoi silently believing that step already succeeded).
+
+if [ -n "${CI:-}" ]; then
+    echo "Skipping due to \$CI"
+    exit
+fi
+
+export PATH="$HOME/.local/bin:$PATH"
+
+# 1. Binary — install via herdr's official installer, not Homebrew, since the
+# curl-installed binary is what supports `herdr update --handoff` for
+# in-place session updates.
+if ! command -v herdr >/dev/null 2>&1; then
+    echo "Installing herdr..."
+    curl -fsSL https://herdr.dev/install.sh | sh
+fi
+
+if ! command -v herdr >/dev/null 2>&1; then
+    echo "Skipping herdr service/extras: herdr install failed or not on PATH"
+    exit
+fi
+
+# 2. Service — launchd agent (Library/LaunchAgents/dev.herdr.server.plist.tmpl)
+# with keep_alive: true, mirrored from herdr's own Homebrew formula's `service
+# do` block (`brew cat herdr`) — authoritative since herdr's maintainers wrote
+# it, and confirms keep_alive doesn't fight `herdr update --handoff`.
+PLIST="$HOME/Library/LaunchAgents/dev.herdr.server.plist"
+if [ -f "$PLIST" ]; then
+    mkdir -p "$HOME/Library/Logs/herdr"
+    GUI_DOMAIN="gui/$(id -u)"
+    if ! launchctl print "$GUI_DOMAIN/dev.herdr.server" >/dev/null 2>&1; then
+        echo "Loading herdr background service..."
+        launchctl bootstrap "$GUI_DOMAIN" "$PLIST"
+    fi
+else
+    echo "Skipping herdr service: $PLIST not found"
+fi
+
+# 3. Extras — Claude Code integration + declared plugins. Both `herdr
+# integration install` and `herdr plugin install` are safe to re-run on
+# something already installed (verified: no error, no duplication).
+if ! herdr integration status 2>/dev/null | grep -q "^claude: current"; then
+    echo "Installing herdr claude integration..."
+    herdr integration install claude
+fi
+
+installed_plugins="$(herdr plugin list --json 2>/dev/null)"
+
+{{ range .herdrPlugins -}}
+if ! jq -e --arg id "{{ .id }}" '.result.plugins | any((.source.owner + "/" + .source.repo) == $id)' <<<"$installed_plugins" >/dev/null 2>&1; then
+    echo "Installing herdr plugin {{ .id }}..."
+    herdr plugin install {{ .id }} --yes
+fi
+{{ end -}}

@@ -42,3 +42,10 @@ skills = [
   "wayfinder",
   "writing-great-skills",
 ]
+
+[[agentSkills]]
+id = "ogulcancelik/herdr"
+skills = ["herdr"]
+
+[[herdrPlugins]]
+id = "devashish2203/herdr-worktrunk"
