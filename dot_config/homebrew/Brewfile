@@ -29,7 +29,6 @@ brew "git-delta"
 brew "git"
 brew "gnu-sed"
 brew "gnu-tar"
-brew "go"
 brew "goreleaser"
 brew "grep"
 brew "hashicorp/tap/vault", trusted: true

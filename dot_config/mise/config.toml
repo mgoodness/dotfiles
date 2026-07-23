@@ -7,4 +7,5 @@ hook_env.chpwd_only = true
 compile = false
 
 [tools]
+go = "1.26.5"
 # ruby = "latest"
