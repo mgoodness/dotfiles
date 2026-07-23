@@ -10,6 +10,35 @@ worktree-path = "{{ repo_path }}/../{{ repo }}.{{ branch | sanitize }}"
 [pre-start]
 env = 'cd "{{ worktree_path }}" && if [ -f mise.toml ] || [ -f .mise.toml ] || [ -f .config/mise/config.toml ] || [ -f .tool-versions ]; then mise trust && mise install; elif [ -f .envrc ]; then direnv allow; fi'
 
-# Background: open a focused cmux workspace at the new worktree (Q5).
+# Background: open a focused herdr workspace at the new worktree (Q5), and pull
+# in an agent-context branch's files when the repo has one — no-op elsewhere.
+# Kept in global config (not repo-tracked) so it never shows up in a PR diff,
+# and doesn't hit the chicken-and-egg problem of needing the hook file itself
+# to arrive via the merge it triggers.
+#
+# `--path` alone is enough for herdr to nest this under the right parent —
+# it reads repo identity off the worktree's own git metadata (verified: no
+# --workspace/--cwd hint needed), which matters here since a hook only ever
+# knows the worktree path, not which workspace triggered it.
+#
+# Uses checkout + restore --staged (per the agent-context-branch skill), NOT
+# git merge: a merge makes agent-context's commits real ancestors of the
+# branch (so they'd ride along into any future PR), and git's merge silently
+# drops any file that's unchanged on the agent-context side but was deleted
+# from main after the two branches' common ancestor — no conflict is raised,
+# it just vanishes. checkout + restore --staged avoids both: it copies
+# whatever files currently exist on agent-context, generically, without
+# creating any merge relationship.
 [post-start]
-cmux = 'cmux new-workspace --cwd "{{ worktree_path }}" --name "{{ branch }}"'
+context = 'if git show-ref --verify --quiet refs/heads/agent-context || git show-ref --verify --quiet refs/remotes/origin/agent-context; then git ls-tree -r -z --name-only agent-context | xargs -0 git checkout agent-context --; git ls-tree -r -z --name-only agent-context | xargs -0 git restore --staged; fi'
+herdr = 'herdr worktree open --path "{{ worktree_path }}" --label "{{ branch }}" --focus'
+
+# submersion: init submodules/deps/codegen after the context checkout above.
+[[projects."github.com/mgoodness/submersion".post-start]]
+submodules = "git submodule update --init --recursive"
+
+[[projects."github.com/mgoodness/submersion".post-start]]
+deps = "flutter pub get"
+
+[[projects."github.com/mgoodness/submersion".post-start]]
+codegen = "dart run build_runner build --delete-conflicting-outputs"
