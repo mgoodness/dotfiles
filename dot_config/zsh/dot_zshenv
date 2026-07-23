@@ -1,3 +1,8 @@
+# mise shims: unconditional (before the interactive short-circuit below) so
+# non-interactive shells -- e.g. tool-invoked `zsh -c "..."` -- resolve
+# mise-managed tool versions (flutter, dart, etc.) without needing `mise exec --`.
+export PATH="$HOME/.local/share/mise/shims:$PATH"
+
 # Bootstraps zsh4humans: https://github.com/romkatv/zsh4humans/tree/v5#readme
 if [ -n "${ZSH_VERSION-}" ]; then
     : ${ZDOTDIR:=~}
