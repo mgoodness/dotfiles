@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# shellcheck shell=bash
+
+if [ -n "${CI:-}" ]; then
+    echo "Skipping due to \$CI"
+    exit
+fi
+
+if ! command -v skl &>/dev/null; then
+    echo "Skipping: skl not found"
+    exit
+fi
+
+#
+# Homegrown skills content hash: {{ output "sh" "-c" "find dot_agents/skills -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum" }}
+
+{{ range glob (joinPath .chezmoi.sourceDir "dot_agents/skills/*") -}}
+skl add {{ . | quote }} --global --yes -a claude-code
+{{ end -}}
