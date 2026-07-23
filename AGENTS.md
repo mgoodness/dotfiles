@@ -53,7 +53,7 @@ Each directory has `.gitconfig` overriding identity and signing key. Global git 
 
 Parallel worktree development with [herdr](https://herdr.dev) (terminal workspace manager, run inside Ghostty) and [worktrunk](https://worktrunk.dev) (`wt`, worktree lifecycle).
 
-> Ghostty installs via Homebrew (`cask "ghostty"`); herdr installs via its own installer (`run_once_after_17-install-herdr.sh`, not Homebrew — the curl-installed binary is what supports `herdr update --handoff`). The legacy `cmux` cask stays installed alongside both for now — scheduled for removal once the transition is done, not yet.
+> Ghostty installs via Homebrew (`cask "ghostty"`); herdr installs via its own installer (`run_after_17-herdr-setup.sh.tmpl`, not Homebrew — the curl-installed binary is what supports `herdr update --handoff`).
 
 - **Worktrees**: worktrunk owns create/teardown. The sibling path `repo.branch` keeps each worktree under `~/Code/{host}/`, so per-host identity and signing still apply (ADR-0002). User config: `dot_config/worktrunk/config.toml`.
 - **Hooks** (fire on `wt switch --create`): `pre-start` preps env (mise → direnv fallback); `post-start` opens a focused herdr workspace at the worktree.
@@ -81,7 +81,7 @@ All SSH signing through 1Password (`op-ssh-sign`). SSH agent socket: `~/Library/
 
 ## Commit conventions
 
-Follows [Conventional Commits](https://www.conventionalcommits.org/). Template at `dot_config/git/commit`. Scopes: `fish`, `git`, `homebrew`, `macos`, `ghostty`, `zed`, `helix`, `skills`, `cmux`, `herdr`.
+Follows [Conventional Commits](https://www.conventionalcommits.org/). Template at `dot_config/git/commit`. Scopes: `fish`, `git`, `homebrew`, `macos`, `ghostty`, `zed`, `helix`, `skills`, `herdr`, `mise`.
 
 ## Agent skills
 
