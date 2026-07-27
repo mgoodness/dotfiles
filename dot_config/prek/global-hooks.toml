@@ -40,7 +40,7 @@ rev = "v1.6.1"
 [[repos]]
 hooks = [{ id = "zizmor", args = ["--no-progress", "--fix=all"] }]
 repo = "https://github.com/zizmorcore/zizmor-pre-commit"
-rev = "v1.26.1"
+rev = "v1.27.0"
 
 [[repos]]
 hooks = [
