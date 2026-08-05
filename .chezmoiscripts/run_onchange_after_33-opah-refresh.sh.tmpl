@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# shellcheck shell=bash
+
+if [ -n "${CI:-}" ]; then
+    echo "Skipping due to \$CI"
+    exit
+fi
+
+# secrets.yaml hash: {{ include "dot_config/fish/secrets.yaml" | sha256sum }}
+
+fish=$(command -v fish || true)
+if ! [ -x "$fish" ]; then
+    echo "Skipping due to missing fish"
+    exit
+fi
+
+echo "Refreshing opah secrets..."
+"$fish" -c "opah refresh"
