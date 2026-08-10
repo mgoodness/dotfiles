@@ -35,12 +35,12 @@ repo = "meta"
 [[repos]]
 hooks = [{ id = "betterleaks", priority = 0 }]
 repo = "https://github.com/betterleaks/betterleaks"
-rev = "v1.7.0"
+rev = "v1.7.3"
 
 [[repos]]
 hooks = [{ id = "zizmor", args = ["--no-progress", "--fix=all"] }]
 repo = "https://github.com/zizmorcore/zizmor-pre-commit"
-rev = "v1.28.0"
+rev = "v1.29.0"
 
 [[repos]]
 hooks = [
