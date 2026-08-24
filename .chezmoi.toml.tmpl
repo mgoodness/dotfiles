@@ -1,5 +1,5 @@
-{{ $mlb := promptBoolOnce . "mlb" "MLB role (work identity, tools, secrets)" -}}
-{{ $personal := promptBoolOnce . "personal" "Personal role (personal identity, tools, secrets)" -}}
+{{ $mlb := promptBoolOnce . "mlb" "MLB role (work identity, tools, secrets)" true -}}
+{{ $personal := promptBoolOnce . "personal" "Personal role (personal identity, tools, secrets)" true -}}
 
 [data]
     mlb = {{ $mlb }}
