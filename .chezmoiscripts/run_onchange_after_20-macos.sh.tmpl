@@ -28,7 +28,9 @@ dockutil --no-restart --remove all
 dockutil --no-restart --add /System/Applications/Calendar.app
 dockutil --no-restart --add /System/Applications/Mail.app
 dockutil --no-restart --add /System/Applications/Messages.app
+{{ if .mlb -}}
 dockutil --no-restart --add /Applications/Slack.app
+{{ end -}}
 dockutil --no-restart --add /System/Applications/Music.app
 dockutil --no-restart --add /System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app
 dockutil --no-restart --add /Applications/Ghostty.app
