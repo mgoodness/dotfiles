@@ -1,8 +1,10 @@
-# herdr Workflow
+# Dotfiles Repo Conventions
 
-The vocabulary for the herdr + git-worktree development workflow this repo configures (the worktree lifecycle, workspace organization). Glossary only — mechanics live in `docs/adr/`.
+Vocabulary for concepts specific to how this repo organizes development workflow (herdr) and machine provisioning (chezmoi). Glossary only — mechanics live in `docs/adr/`.
 
 ## Language
+
+### herdr Workflow
 
 **Workspace**:
 herdr's top-level entity for one worktree (or a fresh clone) — carries its own cwd, tabs, and panes. Opened automatically by `gh.fish` (fresh clone) and the worktrunk `post-start` hook (new worktree). Worktree-backed workspaces nest automatically under any other open workspace on the same repo (matched by `repo_key`, read off the worktree's own git metadata) — no manual grouping step.
@@ -11,6 +13,7 @@ _Avoid_: project, worktree (the git object is still a worktree; the herdr entity
 **Workspace label** (informal):
 `Personal` / `MLB` as a naming convention only, not an enforced hierarchy — herdr has no group/folder primitive the way cmux's `workspace-group` was. Organize by eye or by label text; nothing on disk or in herdr's API tracks membership.
 _Avoid_: workspace group (that implied CLI-enforced membership; there isn't one).
+_See also_: **Chezmoi role**, which intentionally reuses this same `MLB` / `Personal` vocabulary.
 
 **Worktree**:
 A git worktree attached to a Workspace. The primary Worktree is the repo root; additional ones are siblings named `repo.branch`.
@@ -27,3 +30,9 @@ _Avoid_: surface (cmux-specific term, no herdr equivalent).
 **Agent**:
 An AI CLI (e.g. Claude Code) running in a Pane, natively tracked by herdr — `agent` and `agent_status` (`idle` / `working` / `blocked` / `done` / `unknown`) are reported directly per Pane, not inferred from screen text. One Agent per Workspace — parallel Agents get separate Workspaces (one per worktree), never shared.
 _Avoid_: assistant.
+
+### Chezmoi Machine Roles
+
+**Chezmoi role**:
+One or both of two independent boolean data flags — `mlb` and `personal` — prompted once at `chezmoi init` and persisted in that machine's own `~/.config/chezmoi/chezmoi.toml`. Not mutually exclusive: a machine can carry both roles (e.g. a company-owned machine also used for personal work). Templates and `.chezmoiignore` read these flags to decide which machine-specific Homebrew packages, secrets, git identity, and macOS defaults apply.
+_Avoid_: profile, machine type, environment (chezmoi already uses "data" for the underlying mechanism — "role" names this repo's specific two flags, not chezmoi's general templating data).
