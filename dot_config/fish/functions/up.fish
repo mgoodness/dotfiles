@@ -67,11 +67,17 @@ function __up_homebrew --description "Update Homebrew packages"
     brew cleanup -q
     brew doctor -q
 
+    # Sort the merged input the same way as the dump below, so delta only
+    # shows real package differences instead of comment/grouping noise.
+    set -l expected (mktemp)
+    sort-brewfile $HOMEBREW_BUNDLE_FILE >$expected
+
     set -l actual (mktemp)
     brew bundle dump --force --file=$actual
     sort-brewfile -i $actual
-    delta $HOMEBREW_BUNDLE_FILE $actual
-    rm $HOMEBREW_BUNDLE_FILE $actual
+
+    delta $expected $actual
+    rm $HOMEBREW_BUNDLE_FILE $expected $actual
 end
 
 function __up_docker --description "Update Docker images"
