@@ -4,7 +4,6 @@
 
 mas "GarageBand", id: 682658836
 mas "iMovie", id: 408981434
-mas "Magnet", id: 441258766
 mas "Submersion", id: 6757456915
 
 # rubocop:enable Style/FrozenStringLiteralComment
