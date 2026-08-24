@@ -9,10 +9,14 @@ fi
 # Claude plugins config hash: {{ .claudePlugins | toJson | sha256sum }}
 
 echo "Installing Claude plugins..."
+claude plugin marketplace add anthropics/claude-plugins-official
+
 {{ range .claudePlugins -}}
 {{ if ne .marketplace "claude-plugins-official" -}}
 claude plugin marketplace add {{ .marketplace }}
 {{ end -}}
+
+claude plugin marketplace update
 
 {{- $stub := .marketplace | splitList "/" | last }}
 {{ range .plugins -}}
