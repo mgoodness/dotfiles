@@ -43,6 +43,11 @@ repo = "https://github.com/zizmorcore/zizmor-pre-commit"
 rev = "v1.29.0"
 
 [[repos]]
+hooks = [{ id = "actionlint" }]
+repo = "https://github.com/rhysd/actionlint"
+rev = "v1.7.12"
+
+[[repos]]
 hooks = [
   { id = "shellcheck", exclude = ".*\\.tmpl$", exclude_types = [
     "zsh",
