@@ -53,7 +53,12 @@ function __up_all --description "Update everything"
 end
 
 function __up_homebrew --description "Update Homebrew packages"
-    chezmoi apply --force $HOMEBREW_BUNDLE_FILE
+    chezmoi apply --force ~/.config/homebrew
+
+    # Brewfile is split shared/mlb/personal (gated per machine role); combine
+    # whichever exist on this machine into one bundle for brew to operate on.
+    set -lx HOMEBREW_BUNDLE_FILE (mktemp)
+    cat ~/.config/homebrew/Brewfile ~/.config/homebrew/Brewfile.mlb ~/.config/homebrew/Brewfile.personal 2>/dev/null >$HOMEBREW_BUNDLE_FILE
 
     brew update -q
     brew bundle -q
@@ -66,7 +71,7 @@ function __up_homebrew --description "Update Homebrew packages"
     brew bundle dump --force --file=$actual
     sort-brewfile -i $actual
     delta $HOMEBREW_BUNDLE_FILE $actual
-    rm $actual
+    rm $HOMEBREW_BUNDLE_FILE $actual
 end
 
 function __up_docker --description "Update Docker images"
@@ -102,7 +107,16 @@ function __up_mas --description "Update macOS apps"
 end
 
 function __up_macos --description "Update macOS"
-    softwareupdate --list &| grep -q "No new" || op read --account mlb.1password.com "op://Employee/Okta/password" | softwareupdate --all --install --stdinpass
+    softwareupdate --list &| grep -q "No new" && return
+
+    # secrets.mlb.yaml only exists on mlb-role machines; elsewhere there's no
+    # Employee 1Password account to read Okta's password from, so fall back
+    # to an interactive admin-password prompt.
+    if test -f ~/.config/fish/secrets.mlb.yaml
+        op read --account mlb.1password.com "op://Employee/Okta/password" | softwareupdate --all --install --stdinpass
+    else
+        softwareupdate --all --install
+    end
 end
 
 function __up_rustup --description "Update Rust"
