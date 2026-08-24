@@ -5,7 +5,7 @@ jobs:
   bootstrap:
     runs-on: macos-latest
     steps:
-      - run: sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply --branch=${GITHUB_REF_NAME} --no-tty --promptBool mlb=true --promptBool personal=true mgoodness
+      - run: sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply --branch=${GITHUB_REF_NAME} --no-tty --override-data '{"mlb":true,"personal":true}' mgoodness
 name: CI
 on:
   push:
