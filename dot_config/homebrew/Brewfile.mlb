@@ -1,0 +1,26 @@
+# rubocop:disable Style/FrozenStringLiteralComment
+# rubocop:disable Style/NumericLiterals
+# rubocop:disable Style/StringLiterals
+
+tap "hashicorp/tap", trusted: true
+
+brew "argocd"
+brew "hashicorp/tap/vault", trusted: true
+brew "helm"
+brew "jfrog-cli"
+brew "jira-cli"
+brew "krew"
+brew "ksops"
+brew "kubernetes-cli"
+brew "kustomize"
+
+cask "akuity"
+cask "gcloud-cli"
+cask "slack"
+
+mas "Okta Extension App", id: 1439967473
+mas "Okta Verify", id: 490179405
+
+# rubocop:enable Style/FrozenStringLiteralComment
+# rubocop:enable Style/NumericLiterals
+# rubocop:enable Style/StringLiterals

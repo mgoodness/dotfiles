@@ -4,11 +4,9 @@
 
 tap "beeftornado/rmtree", trusted: true
 tap "dmtrkovalenko/fff", trusted: true
-tap "hashicorp/tap", trusted: true
 tap "homebrew/core", trusted: true
 tap "soren-starck/tap", trusted: true
 
-brew "argocd"
 brew "bash"
 brew "bat"
 brew "bun"
@@ -31,19 +29,10 @@ brew "gnu-sed"
 brew "gnu-tar"
 brew "goreleaser"
 brew "grep"
-brew "hashicorp/tap/vault", trusted: true
 brew "helix", args: ["HEAD"]
-brew "helm"
 brew "httpie"
-brew "jfrog-cli"
-brew "jira-cli"
 brew "jq"
 brew "just"
-brew "krew"
-brew "ksops"
-brew "kubernetes-cli"
-brew "kustomize"
-brew "lazygit"
 brew "less"
 brew "mas"
 # brew "mergiraf"
@@ -59,7 +48,6 @@ brew "ripgrep"
 brew "ruby"
 brew "sd"
 brew "shfmt"
-brew "sops"
 brew "sponge"
 brew "taplo"
 brew "trash"
@@ -74,18 +62,14 @@ brew "zoxide"
 
 cask "1password-cli@beta"
 cask "1password@beta"
-cask "akuity"
 cask "betterdisplay"
 cask "caffeine"
 cask "claude-code@latest"
 cask "claude"
-cask "discord"
 cask "font-fira-code-nerd-font"
 cask "font-fira-code"
-cask "gcloud-cli"
 cask "ghostty"
 cask "rectangle"
-cask "slack"
 cask "soren-starck/tap/sessionwatcher", trusted: true
 cask "zed@preview"
 
@@ -96,19 +80,6 @@ go "github.com/alexastrum/skl"
 # krew "support-bundle"
 
 # mas "1Password for Safari", id: 1569813296
-mas "AdBlock", id: 1402042596
-mas "Developer", id: 640199958
-mas "GarageBand", id: 682658836
-mas "iMovie", id: 408981434
-mas "Keynote", id: 409183694
-mas "Magnet", id: 441258766
-mas "Numbers", id: 409203825
-mas "Okta Extension App", id: 1439967473
-mas "Okta Verify", id: 490179405
-mas "Pages", id: 409201541
-mas "Submersion", id: 6757456915
-mas "TestFlight", id: 899247664
-mas "Xcode", id: 497799835
 
 # rubocop:enable Style/FrozenStringLiteralComment
 # rubocop:enable Style/NumericLiterals
