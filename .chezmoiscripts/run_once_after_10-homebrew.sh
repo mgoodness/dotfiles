@@ -15,7 +15,11 @@ if ! command -v brew >/dev/null 2>&1; then
 fi
 
 echo "Installing Homebrew packages..."
-export HOMEBREW_BUNDLE_FILE=~/.config/homebrew/Brewfile
+BUNDLE_FILE="$(mktemp)"
+trap 'rm -f "$BUNDLE_FILE"' EXIT
+cat ~/.config/homebrew/Brewfile ~/.config/homebrew/Brewfile.mlb ~/.config/homebrew/Brewfile.personal 2>/dev/null >"$BUNDLE_FILE"
+
+export HOMEBREW_BUNDLE_FILE="$BUNDLE_FILE"
 if ! brew bundle check &>/dev/null; then
     brew bundle install
 fi

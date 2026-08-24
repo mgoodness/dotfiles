@@ -1,17 +1,13 @@
-name: CI
-
-on:
-  push:
-    paths-ignore: ["**.md"]
-
 concurrency:
-  group: ci-${{ github.ref }}
   cancel-in-progress: true
-
-permissions: {}
-
+  group: ci-${{ github.ref }}
 jobs:
   bootstrap:
     runs-on: macos-latest
     steps:
-      - run: sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply --branch=${GITHUB_REF_NAME} mgoodness
+      - run: sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply --branch=${GITHUB_REF_NAME} --no-tty --promptDefaults mgoodness
+name: CI
+on:
+  push:
+    paths-ignore: ["**.md"]
+permissions: {}

@@ -1,0 +1,13 @@
+{{ $mlb := promptBoolOnce . "mlb" "MLB role (work identity, tools, secrets)" true -}}
+{{ $personal := promptBoolOnce . "personal" "Personal role (personal identity, tools, secrets)" true -}}
+
+[data]
+    mlb = {{ $mlb }}
+    personal = {{ $personal }}
+
+[diff]
+    exclude = ["scripts"]
+    pager = "delta --line-numbers"
+
+[status]
+    exclude = ["scripts"]

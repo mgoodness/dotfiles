@@ -1,0 +1,11 @@
+# rubocop:disable Style/FrozenStringLiteralComment
+# rubocop:disable Style/NumericLiterals
+# rubocop:disable Style/StringLiterals
+
+mas "GarageBand", id: 682658836
+mas "iMovie", id: 408981434
+mas "Submersion", id: 6757456915
+
+# rubocop:enable Style/FrozenStringLiteralComment
+# rubocop:enable Style/NumericLiterals
+# rubocop:enable Style/StringLiterals
