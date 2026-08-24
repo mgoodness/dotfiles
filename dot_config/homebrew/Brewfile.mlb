@@ -16,6 +16,7 @@ brew "ksops"
 brew "kubernetes-cli"
 brew "kustomize"
 brew "podman"
+brew "sops"
 
 cask "akuity"
 cask "gcloud-cli"

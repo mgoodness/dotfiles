@@ -29,6 +29,7 @@ brew "helix", args: ["HEAD"]
 brew "httpie"
 brew "jq"
 brew "just"
+brew "lazygit"
 brew "less"
 brew "mas"
 # brew "mergiraf"
