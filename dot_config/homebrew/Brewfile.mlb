@@ -5,6 +5,8 @@
 tap "hashicorp/tap", trusted: true
 
 brew "argocd"
+brew "delve"
+brew "goreleaser"
 brew "hashicorp/tap/vault", trusted: true
 brew "helm"
 brew "jfrog-cli"
@@ -13,6 +15,7 @@ brew "krew"
 brew "ksops"
 brew "kubernetes-cli"
 brew "kustomize"
+brew "podman"
 
 cask "akuity"
 cask "gcloud-cli"
