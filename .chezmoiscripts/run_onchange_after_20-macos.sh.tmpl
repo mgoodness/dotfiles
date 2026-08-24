@@ -24,13 +24,12 @@ defaults write com.apple.dock show-recents -bool false       # Hide recent apps
 defaults write com.apple.dock minimize-to-application -int 1 # Minimize apps into itself
 defaults write com.apple.dock magnification -int 1           # Enable magnification
 defaults write com.apple.dock largesize -int 80
+{{ if .mlb -}}
 dockutil --no-restart --remove all
 dockutil --no-restart --add /System/Applications/Calendar.app
 dockutil --no-restart --add /System/Applications/Mail.app
 dockutil --no-restart --add /System/Applications/Messages.app
-{{ if .mlb -}}
 dockutil --no-restart --add /Applications/Slack.app
-{{ end -}}
 dockutil --no-restart --add /System/Applications/Music.app
 dockutil --no-restart --add /System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app
 dockutil --no-restart --add /Applications/Ghostty.app
@@ -41,6 +40,7 @@ dockutil --no-restart --add /System/Applications/Reminders.app
 dockutil --no-restart --add /System/Applications/System\ Settings.app
 dockutil --no-restart --add ~/Documents --sort name --display folder --view list
 dockutil --no-restart --add ~/Downloads --sort dateadded --display folder --view fan
+{{ end -}}
 
 ### Finder ###
 echo "Updating Finder settings..."
