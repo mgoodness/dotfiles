@@ -30,7 +30,6 @@ types = ["text"]
 
 [[repos.hooks]]
 entry = "bash -c 'for f in \"$@\"; do jq --sort-keys . \"$f\" | sponge \"$f\"; done' --"
-exclude = "^dot_config/zed/"
 id = "sort-json"
 language = "system"
 name = "sort-json"

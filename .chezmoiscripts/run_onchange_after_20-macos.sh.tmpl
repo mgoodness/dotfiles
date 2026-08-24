@@ -34,7 +34,6 @@ dockutil --no-restart --add /System/Applications/Music.app
 dockutil --no-restart --add /System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app
 dockutil --no-restart --add /Applications/Ghostty.app
 dockutil --no-restart --add /Applications/Claude.app
-dockutil --no-restart --add /Applications/Zed\ Preview.app
 dockutil --no-restart --add /System/Applications/Notes.app
 dockutil --no-restart --add /System/Applications/Reminders.app
 dockutil --no-restart --add /System/Applications/System\ Settings.app
@@ -51,9 +50,6 @@ defaults write com.apple.finder _FXSortFoldersFirst -int 1                 # Sor
 defaults write com.apple.finder QLEnableTextSelection -bool true           # Enable copy from quicklook
 defaults write com.apple.finder WarnOnEmptyTrash -bool false               # Don't warn when emptying trash
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false # Don't warn when changing an extension
-# for ext in public.{data,json,plain-text,python-script,shell-script,source-code,text,unix-executable} .fish .go .java .{j,t}s{,x} .json .md .log .py .rb .txt .toml .y{,a}ml; do
-#     duti -s dev.zed.Zed "$ext" all # Set Zed as default app for code
-# done
 
 ### Mission Control ###
 echo "Updating Mission Control settings..."

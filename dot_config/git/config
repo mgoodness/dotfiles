@@ -9,7 +9,6 @@
 	gpgSign = true
 [core]
 	autocrlf = input	# normalize line endings on commit (but not checkout)
-	editor = "zed-preview --wait"
 	excludesFile = ~/.config/git/ignore
 	pager = command -v delta >/dev/null 2>&1 && delta || ${PAGER:-less}
 	trustctime = false	# don't trust ctime for file-change detection; unreliable on network/virtual filesystems

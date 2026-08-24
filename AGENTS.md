@@ -73,7 +73,7 @@ On shell startup, `up --auto` checks for daily updates.
 
 ### Themes
 
-Catppuccin used across bat, eza, ghostty, Helix, herdr; the first four fetched via `.chezmoiexternal.toml`, not committed — herdr's is built in (`dot_config/herdr/config.toml`), no external fetch needed. Ghostty, Zed, Helix, and herdr switch light/dark automatically on system appearance. herdr only ships one dark Catppuccin variant (`catppuccin`, not flavor-named) vs. the Frappe used elsewhere — closest built-in match, not a guaranteed pixel-exact one.
+Catppuccin used across bat, eza, ghostty, Helix, herdr; the first four fetched via `.chezmoiexternal.toml`, not committed — herdr's is built in (`dot_config/herdr/config.toml`), no external fetch needed. Ghostty, Helix, and herdr switch light/dark automatically on system appearance. herdr only ships one dark Catppuccin variant (`catppuccin`, not flavor-named) vs. the Frappe used elsewhere — closest built-in match, not a guaranteed pixel-exact one.
 
 ### Secrets / signing
 

@@ -70,7 +70,6 @@ cask "font-fira-code-nerd-font"
 cask "font-fira-code"
 cask "ghostty"
 cask "rectangle"
-cask "zed@preview"
 
 go "github.com/alexastrum/skl"
 
