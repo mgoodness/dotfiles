@@ -5,7 +5,6 @@
 tap "beeftornado/rmtree", trusted: true
 tap "dmtrkovalenko/fff", trusted: true
 tap "homebrew/core", trusted: true
-tap "soren-starck/tap", trusted: true
 
 brew "bash"
 brew "bat"
@@ -71,7 +70,6 @@ cask "font-fira-code-nerd-font"
 cask "font-fira-code"
 cask "ghostty"
 cask "rectangle"
-cask "soren-starck/tap/sessionwatcher", trusted: true
 cask "zed@preview"
 
 go "github.com/alexastrum/skl"
