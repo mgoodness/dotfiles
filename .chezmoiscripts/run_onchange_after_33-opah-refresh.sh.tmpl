@@ -6,13 +6,34 @@ if [ -n "${CI:-}" ]; then
     exit
 fi
 
-# secrets.yaml hash: {{ include "dot_config/fish/secrets.yaml" | sha256sum }}
+# secrets.mlb.yaml hash: {{ include "dot_config/fish/secrets.mlb.yaml" | sha256sum }}
+# secrets.personal.yaml hash: {{ include "dot_config/fish/secrets.personal.yaml" | sha256sum }}
 
 fish=$(command -v fish || true)
 if ! [ -x "$fish" ]; then
     echo "Skipping due to missing fish"
     exit
 fi
+
+yq=$(command -v yq || true)
+if ! [ -x "$yq" ]; then
+    echo "Skipping due to missing yq"
+    exit
+fi
+
+# opah reads a single config file (first of its known paths that exists); merge
+# whichever role-specific secrets files this machine has into that top spot.
+SOURCES=()
+for f in "$HOME/.config/fish/secrets.mlb.yaml" "$HOME/.config/fish/secrets.personal.yaml"; do
+    [ -f "$f" ] && SOURCES+=("$f")
+done
+
+if [ "${#SOURCES[@]}" -eq 0 ]; then
+    echo "Skipping opah refresh: no secrets sources for this machine's role(s)"
+    exit
+fi
+
+"$yq" eval-all '. as $item ireduce ({}; . * $item)' "${SOURCES[@]}" >"$HOME/.config/fish/secrets.yaml"
 
 echo "Refreshing opah secrets..."
 "$fish" -c "opah refresh"
