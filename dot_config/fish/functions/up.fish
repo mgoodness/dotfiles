@@ -109,11 +109,12 @@ end
 function __up_macos --description "Update macOS"
     softwareupdate --list &| grep -q "No new" && return
 
-    # secrets.mlb.yaml only exists on mlb-role machines; elsewhere there's no
-    # Employee 1Password account to read Okta's password from, so fall back
-    # to an interactive admin-password prompt.
+    # secrets.mlb.yaml/secrets.personal.yaml only exist per machine role;
+    # read the matching account's admin password for non-interactive install.
     if test -f ~/.config/fish/secrets.mlb.yaml
         op read --account mlb.1password.com "op://Employee/Okta/password" | softwareupdate --all --install --stdinpass
+    else if test -f ~/.config/fish/secrets.personal.yaml
+        op read --account my.1password.com "op://Private/Mac mini/password" | softwareupdate --all --install --stdinpass
     else
         softwareupdate --all --install
     end
