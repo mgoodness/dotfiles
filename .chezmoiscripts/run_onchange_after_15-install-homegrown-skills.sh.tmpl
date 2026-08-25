@@ -12,7 +12,7 @@ if ! command -v skl &>/dev/null; then
 fi
 
 #
-# Homegrown skills content hash: {{ output "sh" "-c" "find dot_agents/skills -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum" }}
+# Homegrown skills content hash: {{ output "sh" "-c" (printf "find %s -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum" (joinPath .chezmoi.sourceDir "dot_agents/skills")) }}
 
 {{ range glob (joinPath .chezmoi.sourceDir "dot_agents/skills/*") -}}
 skl add {{ . | quote }} --global --yes -a claude-code
