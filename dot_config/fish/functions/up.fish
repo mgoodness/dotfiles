@@ -114,9 +114,8 @@ function __up_herdr --description "Update herdr and its plugins"
     for plugin in (herdr plugin list --json | jq -c '.result.plugins[] | select(.source.kind == "github")')
         set -l id (echo $plugin | jq -r '.source.owner + "/" + .source.repo')
         set -l enabled (echo $plugin | jq -r '.enabled')
-        herdr plugin uninstall $id >/dev/null
-        herdr plugin install $id --yes >/dev/null
-        test $enabled = false && herdr plugin disable $id >/dev/null
+        herdr plugin install $id --yes >/dev/null 2>&1
+        test $enabled = false && herdr plugin disable $id >/dev/null 2>&1
     end
 end
 
