@@ -108,6 +108,18 @@ end
 #     git workspace run touch .envrc &>/dev/null
 # end
 
+function __up_herdr --description "Update herdr and its plugins"
+    herdr update >/dev/null 2>&1
+
+    for plugin in (herdr plugin list --json | jq -c '.result.plugins[] | select(.source.kind == "github")')
+        set -l id (echo $plugin | jq -r '.source.owner + "/" + .source.repo')
+        set -l enabled (echo $plugin | jq -r '.enabled')
+        herdr plugin uninstall $id >/dev/null
+        herdr plugin install $id --yes >/dev/null
+        test $enabled = false && herdr plugin disable $id >/dev/null
+    end
+end
+
 function __up_mas --description "Update macOS apps"
     mas outdated | grep -qvz " " || mas upgrade
 end
