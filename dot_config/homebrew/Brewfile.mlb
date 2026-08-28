@@ -19,7 +19,6 @@ brew "podman"
 brew "sops"
 
 cask "akuity"
-cask "gcloud-cli"
 cask "slack"
 
 mas "Okta Extension App", id: 1439967473
