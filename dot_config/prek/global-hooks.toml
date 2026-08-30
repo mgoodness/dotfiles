@@ -1,6 +1,6 @@
 # Ref: https://codeberg.org/jsu/dotfiles/src/branch/main/prek/global-hooks.toml
 
-[auto_update]
+[update]
 cooldown_days = 7
 
 [[repos]]
