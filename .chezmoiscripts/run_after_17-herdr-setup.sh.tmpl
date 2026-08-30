@@ -61,3 +61,28 @@ if ! jq -e --arg id "{{ .id }}" '.result.plugins | any((.source.owner + "/" + .s
     herdr plugin install {{ .id }} --yes
 fi
 {{ end -}}
+
+# 4. Zero integration — schedules herdr lifecycle reports from the Zero coding
+# agent via custom hooks (Zero is not a built-in herdr agent kind; the
+# reporter maps Zero's session/tool events to herdr pane-agent state).
+# Unconditional every apply: `zero hooks add` is idempotent (it updates an
+# existing hook with the same id). The reporter bin is chezmoi-managed at
+# ~/.local/bin/herdr-zero-reporter.
+REPORTER="$HOME/.local/bin/herdr-zero-reporter"
+if command -v zero >/dev/null 2>&1 && [ -x "$REPORTER" ]; then
+    # id,event[,matcher] on each line; matcher applies to tool events.
+    while read -r id event matcher; do
+        args=(--user --event "$event" --command "$REPORTER" --name "herdr lifecycle ($event)")
+        if [ -n "$matcher" ]; then
+            args+=(--matcher "$matcher")
+        fi
+        zero hooks add "$id" "${args[@]}" >/dev/null 2>&1
+    done <<'EOF'
+herdr-zero-sessionStart sessionStart
+herdr-zero-beforeTool beforeTool .
+herdr-zero-afterTool afterTool .
+herdr-zero-specialistStart specialistStart
+herdr-zero-specialistStop specialistStop
+herdr-zero-sessionEnd sessionEnd
+EOF
+fi

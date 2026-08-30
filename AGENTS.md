@@ -59,6 +59,7 @@ Parallel worktree development with [herdr](https://herdr.dev) (terminal workspac
 - **Hooks** (fire on `wt switch --create`): `pre-start` preps env (mise → direnv fallback); `post-start` opens a focused herdr workspace at the worktree.
 - **Workspaces**: labeled `Personal` / `MLB` by convention only — herdr has no group/folder primitive to enforce this; see `CONTEXT.md`.
 - **Shell integration**: installed by `run_once_after_31-worktrunk-shell.sh` (`functions/wt.fish`, unmanaged by chezmoi).
+- **Zero lifecycle**: `run_after_17-herdr-setup.sh.tmpl` registers `zero` hooks (6, idempotent) that run `~/.local/bin/herdr-zero-reporter` (chezmoi-managed `dot_local/bin/`) on Zero events, reporting them to herdr via the `custom:zero` source so herdr classifies the Zero agent. It reports `working` on session/tool/specialist activity and releases authority on `sessionEnd`; Zero exposes no prompt-await/permission event, so `idle`/`blocked` aren't reported and herdr's screen-manifest detection takes over after the session.
 
 Design rationale lives in `CONTEXT.md` (glossary) and `docs/adr/` (ADRs 0001, 0002, 0004).
 
