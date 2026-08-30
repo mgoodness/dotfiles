@@ -6,4 +6,5 @@ if [ -n "${CI:-}" ]; then
     exit
 fi
 
+# Claude Code
 claude mcp get fff >/dev/null 2>&1 || claude mcp add -s user fff -- /opt/homebrew/bin/fff-mcp
