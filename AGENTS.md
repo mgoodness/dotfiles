@@ -22,18 +22,19 @@ External resources (`.chezmoiexternal.toml`) fetched from remote archives on 168
 
 Scripts in `.chezmoiscripts/` run in alphanumeric order after `chezmoi apply`. `run_once_*` run once per machine; `run_onchange_*` re-run when a watched file changes; `run_after_*` run on every apply. Guard with condition checks for idempotency.
 
-| Script                                                 | Does                                                      |
-| ------------------------------------------------------ | --------------------------------------------------------- |
-| `run_once_after_10-homebrew.sh`                        | Installs Homebrew if absent, then `brew bundle install`   |
-| `run_onchange_after_11-build-bat-cache.sh.tmpl`        | Rebuilds bat theme cache after theme changes              |
-| `run_onchange_after_12-install-gh-extensions.sh.tmpl`  | Installs `gh` extensions (e.g. `gh-poi`)                  |
-| `run_onchange_after_15-install-agent-skills.sh.tmpl`   | Installs agent skills via `skl`                           |
-| `run_onchange_after_15-install-claude-plugins.sh.tmpl` | Installs Claude Code plugins                              |
-| `run_once_after_16-register-fff-mcp.sh`                | Registers the `fff` MCP server (brew installs the binary) |
-| `run_after_17-herdr-setup.sh.tmpl`                     | herdr: binary, launchd service, integration, plugins      |
-| `run_onchange_after_20-macos.sh`                       | Sets macOS defaults, Dock layout, Touch ID sudo           |
-| `run_after_30-fish.sh`                                 | Adds fish to `/etc/shells` and sets it as login shell     |
-| `run_once_after_31-worktrunk-shell.sh`                 | Installs worktrunk's fish shell integration               |
+| Script                                                 | Does                                                       |
+| ------------------------------------------------------ | ---------------------------------------------------------- |
+| `run_once_after_10-homebrew.sh`                        | Installs Homebrew if absent, then `brew bundle install`    |
+| `run_onchange_after_11-build-bat-cache.sh.tmpl`        | Rebuilds bat theme cache after theme changes               |
+| `run_onchange_after_12-install-gh-extensions.sh.tmpl`  | Installs `gh` extensions (e.g. `gh-poi`)                   |
+| `run_onchange_after_15-install-agent-skills.sh.tmpl`   | Installs agent skills via `skl`                            |
+| `run_onchange_after_15-install-claude-plugins.sh.tmpl` | Installs Claude Code plugins                               |
+| `run_once_after_16-register-fff-mcp.sh`                | Registers the `fff` MCP server (brew installs the binary)  |
+| `run_after_17-herdr-setup.sh.tmpl`                     | herdr: binary, launchd service, integration, plugins       |
+| `run_onchange_after_20-macos.sh`                       | Sets macOS defaults, Dock layout, Touch ID sudo            |
+| `run_after_21-remote-login.sh.tmpl`                    | Enables Remote Login on the Mac mini only (hostname-gated) |
+| `run_after_30-fish.sh`                                 | Adds fish to `/etc/shells` and sets it as login shell      |
+| `run_once_after_31-worktrunk-shell.sh`                 | Installs worktrunk's fish shell integration                |
 
 ## Architecture
 
