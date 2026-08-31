@@ -32,7 +32,14 @@ fi
 # 2. Service — launchd agent (Library/LaunchAgents/dev.herdr.server.plist.tmpl)
 # with keep_alive: true, mirrored from herdr's own Homebrew formula's `service
 # do` block (`brew cat herdr`) — authoritative since herdr's maintainers wrote
-# it, and confirms keep_alive doesn't fight `herdr update --handoff`.
+# it, and confirms keep_alive doesn't fight `herdr update --handoff`. One
+# deviation from that formula: an explicit ThrottleInterval of 1s. `herdr
+# --remote`'s own graceful-restart flow (prompted when the remote server
+# predates SSH-drop-safe handling) kills the server and polls for a fresh one
+# for only ~5s; launchd's default 10s crash-loop throttle can make that
+# single legitimate respawn look like it never happened, from the client's
+# point of view. Confirmed via herdr.log on mikes-mac-mini: the respawn
+# itself succeeds, it just isn't fast enough for that poll without this.
 PLIST="$HOME/Library/LaunchAgents/dev.herdr.server.plist"
 if [ -f "$PLIST" ]; then
     mkdir -p "$HOME/Library/Logs/herdr"
