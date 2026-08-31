@@ -109,6 +109,7 @@ if status is-login
     fish_add_path -g $GCLOUD_SDK_DIR/bin
     fish_add_path -g $HOMEBREW_PREFIX/opt/ruby/bin
     fish_add_path -g $GEM_HOME/bin
+    fish_add_path -g /Applications/Tailscale.app/Contents/MacOS
     fish_add_path -g $LOCAL_BIN
     set PATH (path filter -d $PATH)
 end

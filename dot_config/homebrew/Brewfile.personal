@@ -5,7 +5,6 @@
 mas "GarageBand", id: 682658836
 mas "iMovie", id: 408981434
 mas "Submersion", id: 6757456915
-mas "Tailscale", id: 1475387142
 
 # rubocop:enable Style/FrozenStringLiteralComment
 # rubocop:enable Style/NumericLiterals
