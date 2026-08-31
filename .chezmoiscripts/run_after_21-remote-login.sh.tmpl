@@ -21,6 +21,16 @@ if [ "$(sudo systemsetup -getremotelogin)" != "Remote Login: On" ]; then
     sudo systemsetup -setremotelogin on
 fi
 
+# setremotelogin silently no-ops (no error, no prompt) if the calling app
+# lacks Full Disk Access — a TCC grant only a human can make in System
+# Settings > Privacy & Security. Re-check rather than assume it worked, so a
+# denied/no-op grant doesn't fall through into configuring sshd for a service
+# that was never actually started.
+if [ "$(sudo systemsetup -getremotelogin)" != "Remote Login: On" ]; then
+    echo "Remote Login still off after enabling — this app likely needs Full Disk Access (System Settings > Privacy & Security > Full Disk Access). Skipping sshd config until it's on." >&2
+    exit
+fi
+
 # A drop-in file rather than editing sshd_config or its Apple-managed
 # sshd_config.d/100-macos.conf directly: sshd_config Includes
 # sshd_config.d/*.conf (in lexicographic order, first-set-value-wins) before
@@ -31,6 +41,8 @@ SSHD_DROPIN=/etc/ssh/sshd_config.d/00-disable-password-auth.conf
 if [ "$(cat "$SSHD_DROPIN" 2>/dev/null)" != "PasswordAuthentication no" ]; then
     echo "Disabling SSH password authentication..."
     echo "PasswordAuthentication no" | sudo tee "$SSHD_DROPIN" >/dev/null
-    sudo launchctl kickstart -k system/com.openssh.sshd
+    if sudo launchctl print system/com.openssh.sshd >/dev/null 2>&1; then
+        sudo launchctl kickstart -k system/com.openssh.sshd
+    fi
 fi
 {{ end -}}
