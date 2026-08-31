@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# shellcheck shell=bash
+
+# Authorize the MacBook Pro's SSH key for Remote Login on this machine.
+# Host-specific (not role-specific, see ADR-0005) for the same reason as
+# run_after_21-remote-login.sh.tmpl: this is about one physical Mac's sshd,
+# not something either role should carry.
+# Self-healing: guards itself before acting, so repeated `chezmoi apply` runs
+# are a no-op, matching run_after_17-herdr-setup.sh.tmpl's convention.
+
+if [ -n "${CI:-}" ]; then
+    echo "Skipping due to \$CI"
+    exit
+fi
+
+{{ if eq .chezmoi.hostname "Mikes-Mac-mini" -}}
+# The MacBook Pro's outbound identity for this host, per this repo's
+# 1Password-SSH-agent convention (see dot_ssh/config): the private key lives
+# only in 1Password, this checked-in file is just the public half. Read from
+# the applied copy (not the chezmoi source) so this script only ever depends
+# on files chezmoi has already materialized by the time run_after_ scripts
+# run.
+PUBKEY_FILE=~/.ssh/michael.goodness@mikes-mac-mini.pub
+PUBKEY="$(cat "$PUBKEY_FILE")"
+
+AUTHORIZED_KEYS=~/.ssh/authorized_keys
+if [ ! -e "$AUTHORIZED_KEYS" ] || [ "$(stat -f "%OLp" "$AUTHORIZED_KEYS")" != "600" ]; then
+    echo "Creating $AUTHORIZED_KEYS..."
+    touch "$AUTHORIZED_KEYS"
+    chmod 600 "$AUTHORIZED_KEYS"
+fi
+
+if ! grep -qF "$PUBKEY" "$AUTHORIZED_KEYS"; then
+    echo "Authorizing MacBook Pro SSH key..."
+    echo "$PUBKEY" >>"$AUTHORIZED_KEYS"
+fi
+{{ end -}}
