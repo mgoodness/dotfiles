@@ -36,11 +36,19 @@ fi
 # sshd_config.d/*.conf (in lexicographic order, first-set-value-wins) before
 # any of its own directives. The "00-" prefix sorts ahead of Apple's own
 # "100-macos.conf" so this always wins even if a future macOS starts setting
-# PasswordAuthentication there too.
+# either of these directives too.
+#
+# KbdInteractiveAuthentication also has to go to "no", not just
+# PasswordAuthentication: macOS ships UsePAM yes, and with
+# KbdInteractiveAuthentication left at its "yes" default, PAM will still
+# accept an account password typed through that method — a real bypass of
+# "key-based auth only" that `sshd -T` surfaced on this machine.
 SSHD_DROPIN=/etc/ssh/sshd_config.d/00-disable-password-auth.conf
-if [ "$(cat "$SSHD_DROPIN" 2>/dev/null)" != "PasswordAuthentication no" ]; then
+SSHD_DROPIN_CONTENTS="PasswordAuthentication no
+KbdInteractiveAuthentication no"
+if [ "$(cat "$SSHD_DROPIN" 2>/dev/null)" != "$SSHD_DROPIN_CONTENTS" ]; then
     echo "Disabling SSH password authentication..."
-    echo "PasswordAuthentication no" | sudo tee "$SSHD_DROPIN" >/dev/null
+    echo "$SSHD_DROPIN_CONTENTS" | sudo tee "$SSHD_DROPIN" >/dev/null
     if sudo launchctl print system/com.openssh.sshd >/dev/null 2>&1; then
         sudo launchctl kickstart -k system/com.openssh.sshd
     fi
