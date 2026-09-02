@@ -16,11 +16,14 @@ fi
 
 {{ range .agentSkills -}}
 {{ $id := .id -}}
+{{ $skillArgs := "" -}}
 {{ if index . "skills" -}}
-# skl add {{ $id }} --global {{ range .skills }} --skill {{ . }}{{ end }} --yes
-npx skills add {{ $id }} --global {{ range .skills }} --skill {{ . }}{{ end }} --yes
-{{ else -}}
-# skl add {{ $id }} --global --yes
-npx skills add {{ $id }} --global --yes
+{{ range .skills }}{{ $skillArgs = printf "%s --skill %s" $skillArgs . }}{{ end -}}
 {{ end -}}
+{{ $agentArgs := "" -}}
+{{ if index . "agents" -}}
+{{ range .agents }}{{ $agentArgs = printf "%s --agent %s" $agentArgs . }}{{ end -}}
+{{ end -}}
+# skl add {{ $id }} --global{{ $skillArgs }}{{ $agentArgs }} --yes
+npx skills add {{ $id }} --global{{ $skillArgs }}{{ $agentArgs }} --yes
 {{ end -}}

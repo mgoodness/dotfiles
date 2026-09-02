@@ -17,5 +17,36 @@ id = "spf13/go-skills"
 id = "herdrdev/herdr"
 skills = ["herdr"]
 
+[[agentSkills]]
+agents = ["zed"]
+id = "mattpocock/skills"
+skills = [
+  "ask-matt",
+  "code-review",
+  "codebase-design",
+  "diagnosing-bugs",
+  "domain-modeling",
+  "grill-me",
+  "grill-with-docs",
+  "grilling",
+  "handoff",
+  "implement",
+  "improve-codebase-architecture",
+  "prototype",
+  "research",
+  "resolving-merge-conflicts",
+  "setup-matt-pocock-skills",
+  "tdd",
+  "teach",
+  "to-questionnaire",
+  "to-spec",
+  "to-tickets",
+  "triage",
+  "wait-what",
+  "wayfinder",
+  "wizard",
+  "writing-for-agents",
+]
+
 [[herdrPlugins]]
 id = "devashish2203/herdr-worktrunk"
