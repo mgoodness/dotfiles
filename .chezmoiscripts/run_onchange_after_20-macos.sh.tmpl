@@ -51,6 +51,10 @@ defaults write com.apple.finder QLEnableTextSelection -bool true           # Ena
 defaults write com.apple.finder WarnOnEmptyTrash -bool false               # Don't warn when emptying trash
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false # Don't warn when changing an extension
 
+### Default apps ###
+echo "Setting MacDown 3000 as the default app for Markdown files..."
+duti -s app.macdown.macdown3000 net.daringfireball.markdown all
+
 ### Mission Control ###
 echo "Updating Mission Control settings..."
 defaults write com.apple.dock mru-spaces -bool false
