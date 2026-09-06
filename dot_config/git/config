@@ -15,12 +15,12 @@
 	trustctime = false	# don't trust ctime for file-change detection; unreliable on network/virtual filesystems
 [credential]
 	helper = osxkeychain
-# [credential "https://github.com"]
-# 	helper = !/opt/homebrew/bin/gh auth git-credential
-# [credential "https://gist.github.com"]
-# 	helper = !/opt/homebrew/bin/gh auth git-credential
-# [credential "https://github.mlbam.net"]
-# 	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://github.com"]
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://github.mlbam.net"]
+	helper = !/opt/homebrew/bin/gh auth git-credential
 [delta]
 	hyperlinks = true	# make file paths clickable in supported terminals
 	navigate = true		# enable n/N to jump between diff hunks
