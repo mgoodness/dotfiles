@@ -19,11 +19,11 @@ brew "fd"
 brew "fish", args: ["HEAD"]
 brew "fzf"
 brew "gh"
-brew "go"
 brew "git-delta"
 brew "git"
 brew "gnu-sed"
 brew "gnu-tar"
+brew "go"
 brew "grep"
 brew "helix", args: ["HEAD"]
 brew "httpie"
