@@ -142,8 +142,8 @@ function __up_rustup --description "Update Rust"
 end
 
 function __up_skills --description "Update agent skills"
-    # skl update --global --yes &>/dev/null
-    npx skills update --global --yes
+    skl update --global --yes &>/dev/null
+    # npx skills update --global --yes
 end
 
 # Remove any unfound items
