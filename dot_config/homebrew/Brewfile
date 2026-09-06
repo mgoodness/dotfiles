@@ -70,8 +70,6 @@ cask "ghostty"
 cask "macdown-3000"
 cask "rectangle"
 
-go "github.com/alexastrum/skl"
-
 # krew "config-cleanup"
 # krew "get-all"
 # krew "support-bundle"

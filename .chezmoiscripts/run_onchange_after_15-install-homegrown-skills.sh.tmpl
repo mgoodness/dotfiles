@@ -6,8 +6,8 @@ if [ -n "${CI:-}" ]; then
     exit
 fi
 
-if ! command -v skl &>/dev/null; then
-    echo "Skipping: skl not found"
+if ! command -v npx &>/dev/null; then
+    echo "Skipping: npx not found"
     exit
 fi
 
@@ -15,5 +15,5 @@ fi
 # Homegrown skills content hash: {{ output "sh" "-c" (printf "find %s -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum" (joinPath .chezmoi.sourceDir "dot_agents/skills")) }}
 
 {{ range glob (joinPath .chezmoi.sourceDir "dot_agents/skills/*") -}}
-skl add {{ . | quote }} --global --yes -a claude-code
+npx skills add {{ . | quote }} --global --yes -a claude-code
 {{ end -}}

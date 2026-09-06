@@ -6,8 +6,8 @@ if [ -n "${CI:-}" ]; then
     exit
 fi
 
-if ! command -v skl &>/dev/null; then
-    echo "Skipping: skl not found"
+if ! command -v npx &>/dev/null; then
+    echo "Skipping: npx not found"
     exit
 fi
 
@@ -24,6 +24,5 @@ fi
 {{ if index . "agents" -}}
 {{ range .agents }}{{ $agentArgs = printf "%s --agent %s" $agentArgs . }}{{ end -}}
 {{ end -}}
-skl add {{ $id }} --global{{ $skillArgs }}{{ $agentArgs }} --yes
-# npx skills add {{ $id }} --global{{ $skillArgs }}{{ $agentArgs }} --yes
+npx skills add {{ $id }} --global{{ $skillArgs }}{{ $agentArgs }} --yes
 {{ end -}}

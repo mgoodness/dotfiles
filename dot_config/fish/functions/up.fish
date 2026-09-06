@@ -142,8 +142,7 @@ function __up_rustup --description "Update Rust"
 end
 
 function __up_skills --description "Update agent skills"
-    skl update --global --yes &>/dev/null
-    # npx skills update --global --yes
+    npx skills update --global --yes &>/dev/null
 end
 
 # Remove any unfound items
@@ -162,7 +161,7 @@ for item in (functions -a | string replace -rf "^__up_(?!all|auto|help)" "")
         case macos
             set cmd softwareupdate
         case skills
-            set cmd skl
+            set cmd npx
     end
     command -q $cmd || functions -e __up_$item
 end
