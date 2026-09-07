@@ -75,7 +75,6 @@ cask "rectangle"
 # krew "support-bundle"
 
 mas "1Password for Safari", id: 1569813296
-mas "AdBlock", id: 1402042596
 mas "Developer", id: 640199958
 mas "Keynote", id: 361285480
 mas "Numbers", id: 361304891
