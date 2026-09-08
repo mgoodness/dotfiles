@@ -16,10 +16,13 @@
 [credential]
 	helper = osxkeychain
 [credential "https://github.com"]
+	helper =
 	helper = !/opt/homebrew/bin/gh auth git-credential
 [credential "https://gist.github.com"]
+	helper =
 	helper = !/opt/homebrew/bin/gh auth git-credential
 [credential "https://github.mlbam.net"]
+	helper =
 	helper = !/opt/homebrew/bin/gh auth git-credential
 [delta]
 	hyperlinks = true	# make file paths clickable in supported terminals
