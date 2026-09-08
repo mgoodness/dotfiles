@@ -109,7 +109,20 @@ end
 # end
 
 function __up_herdr --description "Update herdr and its plugins"
-    herdr update >/dev/null 2>&1
+    # Replacing the running server needs interactive approval (default: no)
+    # whenever the background server daemon is up — which is always, since
+    # it's persistent — regardless of whether this shell is attached to a
+    # session. Feed a blank answer so this can never hang on that prompt,
+    # and surface the result instead of hiding it, since that's the only way
+    # to know an update is actually pending.
+    set -l update_msg (herdr update </dev/null 2>&1)
+    if string match -qr 'not updated|outside herdr' -- $update_msg
+        if set -q HERDR_ENV
+            echo (set_color yellow)"dotfiles"(set_color normal): herdr update available — run \`herdr update\` after detaching >&2
+        else
+            echo (set_color yellow)"dotfiles"(set_color normal): herdr update available — run \`herdr update\` to install it >&2
+        end
+    end
 
     for plugin in (herdr plugin list --json | jq -c '.result.plugins[] | select(.source.kind == "github")')
         set -l id (echo $plugin | jq -r '.source.owner + "/" + .source.repo')
