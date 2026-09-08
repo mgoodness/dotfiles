@@ -35,8 +35,8 @@ Host *
     KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
     MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com
     PasswordAuthentication no
-    ServerAliveCountMax 2
-    ServerAliveInterval 300
+    ServerAliveCountMax 0
+    ServerAliveInterval 900
     StrictHostKeyChecking ask
     # UseKeychain yes
     UserKnownHostsFile ~/.ssh/known_hosts
