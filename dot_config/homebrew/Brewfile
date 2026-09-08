@@ -4,6 +4,7 @@
 
 tap "beeftornado/rmtree", trusted: true
 tap "dmtrkovalenko/fff", trusted: true
+tap "mgoodness/tap", "https://github.com/mgoodness/homebrew-tap.git", trusted: true
 
 brew "bash"
 brew "bat"
@@ -32,6 +33,7 @@ brew "just"
 brew "lazygit"
 brew "less"
 brew "mas"
+brew "mgoodness/tap/kit", trusted: true
 brew "mise"
 brew "node"
 brew "oxfmt"
