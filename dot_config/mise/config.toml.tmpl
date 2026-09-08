@@ -3,13 +3,14 @@ env_cache = true
 env_cache_ttl = "1h"
 hook_env.chpwd_only = true
 
-{{ if .mlb -}}
 [env]
+{{ if .mlb -}}
 CLOUDSDK_ACTIVE_CONFIG_NAME = "mlb"
 {{ else if .personal -}}
-[env]
 CLOUDSDK_ACTIVE_CONFIG_NAME = "personal"
 {{ end -}}
+GH_HOST = "github.com"
+GH_TOKEN = { value = "{{ `{{ exec(command='/opt/homebrew/bin/op read --account my.1password.com \"op://Private/GH CLI PAT/credential\"', cache_duration='7d', cache_key='personal-gh-token') }}` }}" }
 
 [settings.ruby]
 compile = false
