@@ -34,8 +34,8 @@ function gh --wraps=gh
             case 2
                 set --function owner (string split / "$spec")[1]
                 if string match -q 'mlb-*' -- "$owner"; or test "$owner" = Michael-Goodness_mlb
-                    set clone_host "emu.github.com"
-                    set repo_dir "$GIT_WORKSPACE/$clone_host/$spec"
+                    set clone_host "github.com"
+                    set repo_dir "$GIT_WORKSPACE/emu.github.com/$spec"
                 else
                     set repo_dir "$GIT_WORKSPACE/github.com/$spec"
                 end
