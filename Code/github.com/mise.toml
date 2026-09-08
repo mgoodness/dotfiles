@@ -1,4 +1,5 @@
 [env]
+CLOUDSDK_ACTIVE_CONFIG_NAME = "personal"
 GH_HOST = "github.com"
 GH_TOKEN = { value = "{{ exec(cache_duration='7d', cache_key='personal-gh-token', command='/opt/homebrew/bin/op read --account my.1password.com \"op://Private/GH CLI PAT/credential\"') }}" }
 

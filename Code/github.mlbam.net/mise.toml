@@ -1,3 +1,4 @@
 [env]
+CLOUDSDK_ACTIVE_CONFIG_NAME = "mlb"
 GH_ENTERPRISE_TOKEN = { value = "{{ exec(cache_duration='7d', cache_key='mlbam-gh-token', command='/opt/homebrew/bin/op read --account mlb.1password.com \"op://Employee/MLBAM GH CLI PAT/credential\"') }}" }
 GH_HOST = "github.mlbam.net"

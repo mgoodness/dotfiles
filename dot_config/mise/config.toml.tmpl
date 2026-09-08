@@ -3,6 +3,14 @@ env_cache = true
 env_cache_ttl = "1h"
 hook_env.chpwd_only = true
 
+{{ if .mlb -}}
+[env]
+CLOUDSDK_ACTIVE_CONFIG_NAME = "mlb"
+{{ else if .personal -}}
+[env]
+CLOUDSDK_ACTIVE_CONFIG_NAME = "personal"
+{{ end -}}
+
 [settings.ruby]
 compile = false
 

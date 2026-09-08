@@ -1,4 +1,5 @@
 [env]
+CLOUDSDK_ACTIVE_CONFIG_NAME = "mlb"
 GH_HOST = "github.com"
 GH_TOKEN = { value = "{{ exec(cache_duration='7d', cache_key='emu-gh-token', command='/opt/homebrew/bin/op read --account mlb.1password.com \"op://Employee/EMU GH CLI PAT/credential\"') }}" }
 
