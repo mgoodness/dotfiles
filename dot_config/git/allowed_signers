@@ -1,0 +1,9 @@
+# SSH allowed-signers file for local `git log --show-signature` /
+# `git verify-commit` verification (gpg.ssh.allowedSignersFile in
+# dot_config/git/config). Public keys only — safe to commit.
+#
+# Format: <principal> <key-type> <base64-key>
+# principal is the git committer email git checks the signature against.
+
+mike@opsgoodness.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKbq/cbVZYW8uIVsdCJxKKtB8OwL7+kzeN/1u6Z1ihEM
+michael.goodness@mlb.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAb/g0+cWz4/0BM4xr8VV/eErixEhe0D6qyHGXPBt6Hq

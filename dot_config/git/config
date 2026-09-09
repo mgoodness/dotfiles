@@ -36,6 +36,7 @@
 [gpg]
 	format = ssh
 [gpg "ssh"]
+	allowedSignersFile = ~/.config/git/allowed_signers
 	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 [hook "prek pre-commit"]
 	event = pre-commit
