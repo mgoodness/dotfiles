@@ -28,7 +28,8 @@ mcpServers:
     command: ["/opt/homebrew/bin/fff-mcp"]
     type: "local"
 # Application settings (all optional)
-# model: "anthropic/claude-sonnet-4-5-20250929"  # Default model to use
+model: "anthropic/claude-sonnet-5" # Default model to use
+theme: catppuccin # UI theme (inline overrides or file path)
 # max-steps: 10                                # Maximum agent steps (0 for unlimited)
 # debug: false                                 # Enable debug logging
 # system-prompt: "/path/to/system-prompt.txt" # System prompt text file
@@ -112,3 +113,5 @@ mcpServers:
 #       topP: 0.95
 #       topK: 40
 #       systemPrompt: "You are a helpful local assistant."
+
+thinking-level: "medium" # off, none, minimal, low, medium, high
