@@ -48,3 +48,12 @@ id = "sort-toml"
 language = "system"
 name = "sort-toml"
 types = ["toml"]
+
+[[repos.hooks]]
+entry = "bash -c 'for f in \"$@\"; do echo \"==> $f\"; chezmoi execute-template <\"$f\" >/dev/null || exit 1; done' --"
+exclude = "^\\.chezmoi\\.toml\\.tmpl$"
+files = "\\.tmpl$"
+id = "chezmoi-templates"
+language = "system"
+name = "chezmoi-templates"
+pass_filenames = true

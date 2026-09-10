@@ -11,7 +11,7 @@ if ! command -v kit &>/dev/null; then
     exit
 fi
 
-# Kit extensions config hash: {{ .kitExtensions | toJson | sha256sum }}
+# Kit extensions config hash: {{ index . "kitExtensions" | toJson | sha256sum }}
 
 # `kit install` (without -u) exits non-zero if the extension is already
 # installed, so this script isn't naturally idempotent like its siblings —
@@ -19,7 +19,7 @@ fi
 # already-installed extensions are `up`'s job (see __up_kit in up.fish).
 manifest="$HOME/.local/share/kit/git/packages.json"
 
-{{ range .kitExtensions -}}
+{{ range index . "kitExtensions" -}}
 if [ ! -f "$manifest" ] || ! grep -q '{{ .id }}' "$manifest"; then
     kit install {{ .id }} --all
 fi
