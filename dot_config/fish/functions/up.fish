@@ -135,6 +135,12 @@ function __up_herdr --description "Update herdr and its plugins"
     end
 end
 
+function __up_kit --description "Update kit extensions"
+    for source in (jq -r '.packages[].source' ~/.local/share/kit/git/packages.json 2>/dev/null)
+        kit install -u $source --all >/dev/null 2>&1
+    end
+end
+
 function __up_mas --description "Update macOS apps"
     mas outdated | grep -qvz " " || mas upgrade
 end

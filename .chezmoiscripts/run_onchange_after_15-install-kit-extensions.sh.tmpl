@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# shellcheck shell=bash
+
+if [ -n "${CI:-}" ]; then
+    echo "Skipping due to \$CI"
+    exit
+fi
+
+if ! command -v kit &>/dev/null; then
+    echo "Skipping: kit not found"
+    exit
+fi
+
+# Kit extensions config hash: {{ .kitExtensions | toJson | sha256sum }}
+
+{{ range .kitExtensions -}}
+kit install github.com/{{ .id }} --all
+{{ end -}}

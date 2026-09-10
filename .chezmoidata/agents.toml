@@ -55,3 +55,6 @@ skills = [
 
 [[herdrPlugins]]
 id = "devashish2203/herdr-worktrunk"
+
+[[kitExtensions]]
+id = "mgoodness/kit-fff-enforcer"
