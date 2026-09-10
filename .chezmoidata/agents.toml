@@ -19,6 +19,11 @@ skills = ["herdr"]
 
 [[agentSkills]]
 agents = ["zed"]
+id = "mark3labs/kit"
+skills = ["kit-extensions"]
+
+[[agentSkills]]
+agents = ["zed"]
 id = "mattpocock/skills"
 skills = [
   "ask-matt",
