@@ -1,18 +1,3 @@
-[[claudePlugins]]
-marketplace = "claude-plugins-official"
-plugins = ["context7", "mattpocock-skills"]
-
-[[claudePlugins]]
-marketplace = "jarrodwatts/claude-hud"
-plugins = ["claude-hud"]
-
-[[claudePlugins]]
-marketplace = "max-sixty/worktrunk"
-plugins = ["worktrunk"]
-
-[[agentSkills]]
-id = "spf13/go-skills"
-
 [[agentSkills]]
 id = "herdrdev/herdr"
 skills = ["herdr"]
@@ -52,6 +37,21 @@ skills = [
   "wizard",
   "writing-for-agents",
 ]
+
+[[agentSkills]]
+id = "spf13/go-skills"
+
+[[claudePlugins]]
+marketplace = "claude-plugins-official"
+plugins = ["context7", "mattpocock-skills"]
+
+[[claudePlugins]]
+marketplace = "jarrodwatts/claude-hud"
+plugins = ["claude-hud"]
+
+[[claudePlugins]]
+marketplace = "max-sixty/worktrunk"
+plugins = ["worktrunk"]
 
 [[herdrPlugins]]
 id = "devashish2203/herdr-worktrunk"
