@@ -57,4 +57,4 @@ plugins = ["worktrunk"]
 id = "devashish2203/herdr-worktrunk"
 
 [[kitExtensions]]
-id = "mgoodness/kit-fff-enforcer"
+id = "github.com/mgoodness/kit-fff-enforcer"

@@ -13,6 +13,14 @@ fi
 
 # Kit extensions config hash: {{ .kitExtensions | toJson | sha256sum }}
 
+# `kit install` (without -u) exits non-zero if the extension is already
+# installed, so this script isn't naturally idempotent like its siblings —
+# guard each entry against the manifest before installing. Updates to
+# already-installed extensions are `up`'s job (see __up_kit in up.fish).
+manifest="$HOME/.local/share/kit/git/packages.json"
+
 {{ range .kitExtensions -}}
-kit install github.com/{{ .id }} --all
+if [ ! -f "$manifest" ] || ! grep -q '{{ .id }}' "$manifest"; then
+    kit install {{ .id }} --all
+fi
 {{ end -}}
