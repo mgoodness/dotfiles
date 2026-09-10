@@ -24,9 +24,6 @@ mcpServers:
     noOAuth: true
     type: "remote"
     url: "https://mcp.context7.com/mcp"
-  fff:
-    command: ["/opt/homebrew/bin/fff-mcp"]
-    type: "local"
 # Application settings (all optional)
 model: "anthropic/claude-sonnet-5" # Default model to use
 # max-steps: 10                                # Maximum agent steps (0 for unlimited)

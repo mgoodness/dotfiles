@@ -3,7 +3,6 @@
 # rubocop:disable Style/StringLiterals
 
 tap "beeftornado/rmtree", trusted: true
-tap "dmtrkovalenko/fff", trusted: true
 tap "mgoodness/tap", "https://github.com/mgoodness/homebrew-tap.git", trusted: true
 
 brew "actionlint"
@@ -14,7 +13,6 @@ brew "chezmoi"
 brew "coreutils"
 brew "curl"
 brew "delve"
-brew "dmtrkovalenko/fff/fff-mcp", trusted: true
 brew "dockutil"
 brew "duti"
 brew "eza"
