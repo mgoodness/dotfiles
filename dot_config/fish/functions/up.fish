@@ -164,7 +164,43 @@ function __up_rustup --description "Update Rust"
 end
 
 function __up_skills --description "Update agent skills"
-    npx skills update --global --yes &>/dev/null
+    gh skill update --all &>/dev/null
+
+    # mattpocock/skills has no top-level manifest gh skill (or npx skills)
+    # can target as a unit — gh skill install only accepts a single skill
+    # name or exact SKILL.md path, never a directory prefix like
+    # skills/engineering — so keeping pace with skills mattpocock adds,
+    # renames, or removes there means rediscovering that list ourselves
+    # each run, rather than relying on a hand-maintained list in
+    # agents.toml. (First install is bootstrapped once per machine by
+    # .chezmoiscripts/run_once_after_15-bootstrap-mattpocock-skills.sh;
+    # this keeps it in sync afterward.)
+    set -l repo mattpocock/skills
+    set -l agents claude-code universal
+    set -l names (
+        for dir in engineering productivity
+            gh api "repos/$repo/contents/skills/$dir" --jq '.[] | select(.type == "dir") | .name' 2>/dev/null
+        end | sort -u
+    )
+
+    if test -z "$names"
+        fish_log -w "dotfiles: could not reach $repo to sync its skills, skipping"
+        return
+    end
+
+    for agent in $agents
+        for name in $names
+            gh skill install $repo $name --agent $agent --scope user -f &>/dev/null
+        end
+    end
+
+    # Prune anything gh skill previously installed from this repo that's no
+    # longer in the discovered set (renamed or removed upstream).
+    set -l source_url "https://github.com/$repo"
+    for path in (gh skill list --scope user --json sourceURL,path 2>/dev/null | jq -r --arg url "$source_url" '.[] | select(.sourceURL == $url) | .path')
+        set -l name (basename $path)
+        contains -- $name $names || rm -rf -- $path
+    end
 end
 
 # Remove any unfound items
@@ -183,7 +219,7 @@ for item in (functions -a | string replace -rf "^__up_(?!all|auto|help)" "")
         case macos
             set cmd softwareupdate
         case skills
-            set cmd npx
+            set cmd gh
     end
     command -q $cmd || functions -e __up_$item
 end
