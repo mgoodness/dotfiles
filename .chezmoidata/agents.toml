@@ -13,7 +13,7 @@ id = "mark3labs/kit"
 skills = ["kit-extensions"]
 
 [[agentSkills]]
-agents = ["universal"]
+agents = ["claude-code", "universal"]
 id = "mattpocock/skills"
 skills = [
   "ask-matt",
@@ -48,7 +48,7 @@ id = "spf13/go-skills"
 
 [[claudePlugins]]
 marketplace = "claude-plugins-official"
-plugins = ["context7", "mattpocock-skills"]
+plugins = ["context7"]
 
 [[claudePlugins]]
 marketplace = "jarrodwatts/claude-hud"
