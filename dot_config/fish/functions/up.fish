@@ -190,7 +190,9 @@ function __up_skills --description "Update agent skills"
 
     for agent in $agents
         for name in $names
-            gh skill install $repo $name --agent $agent --scope user -f &>/dev/null
+            if not set -l err (gh skill install $repo $name --agent $agent --scope user -f 2>&1 1>/dev/null)
+                printf '%s\n' $err >&2
+            end
         end
     end
 

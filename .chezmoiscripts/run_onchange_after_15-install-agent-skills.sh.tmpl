@@ -11,6 +11,18 @@ if ! command -v gh &>/dev/null; then
     exit
 fi
 
+# gh skill install is chatty on every call (ref resolution, discovery notes,
+# an unverified-skills banner, a tree listing, a preview-command footer) even
+# on success. Swallow that unless the call actually fails, so a normal apply
+# doesn't drown in near-identical noise but a real failure still surfaces.
+gh_skill_install() {
+    local err
+    if ! err=$(gh skill install "$@" 2>&1 1>/dev/null); then
+        printf '%s\n' "$err" >&2
+        return 1
+    fi
+}
+
 #
 # Agent skills config hash: {{ .agentSkills | toJson | sha256sum }}
 
@@ -28,10 +40,10 @@ fi
 {{ $agent := . -}}
 {{ if $skills -}}
 {{ range $skills -}}
-gh skill install {{ $id }} {{ . }} --agent {{ $agent }} --scope user -f
+gh_skill_install {{ $id }} {{ . }} --agent {{ $agent }} --scope user -f
 {{ end -}}
 {{ else -}}
-gh skill install {{ $id }} --all --agent {{ $agent }} --scope user -f
+gh_skill_install {{ $id }} --all --agent {{ $agent }} --scope user -f
 {{ end -}}
 {{ end -}}
 {{ end -}}

@@ -19,6 +19,16 @@ if ! command -v gh &>/dev/null; then
     exit
 fi
 
+# gh skill install is chatty on every call even on success; swallow that but
+# still surface a real failure. See install-agent-skills.sh.tmpl for detail.
+gh_skill_install() {
+    local err
+    if ! err=$(gh skill install "$@" 2>&1 1>/dev/null); then
+        printf '%s\n' "$err" >&2
+        return 1
+    fi
+}
+
 repo="mattpocock/skills"
 agents=(claude-code universal)
 
@@ -35,6 +45,6 @@ fi
 
 while IFS= read -r name; do
     for agent in "${agents[@]}"; do
-        gh skill install "$repo" "$name" --agent "$agent" --scope user -f
+        gh_skill_install "$repo" "$name" --agent "$agent" --scope user -f
     done
 done <<<"$names"
