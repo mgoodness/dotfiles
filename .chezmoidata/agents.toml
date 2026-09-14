@@ -3,17 +3,17 @@ id = "herdrdev/herdr"
 skills = ["herdr"]
 
 [[agentSkills]]
-agents = ["claude-code", "zed"]
+agents = ["claude-code", "universal"]
 id = "j178/prek"
 skills = ["prek"]
 
 [[agentSkills]]
-agents = ["zed"]
+agents = ["universal"]
 id = "mark3labs/kit"
 skills = ["kit-extensions"]
 
 [[agentSkills]]
-agents = ["zed"]
+agents = ["universal"]
 id = "mattpocock/skills"
 skills = [
   "ask-matt",

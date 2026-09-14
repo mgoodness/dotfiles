@@ -6,8 +6,8 @@ if [ -n "${CI:-}" ]; then
     exit
 fi
 
-if ! command -v npx &>/dev/null; then
-    echo "Skipping: npx not found"
+if ! command -v gh &>/dev/null; then
+    echo "Skipping: gh not found"
     exit
 fi
 
@@ -16,13 +16,22 @@ fi
 
 {{ range .agentSkills -}}
 {{ $id := .id -}}
-{{ $skillArgs := "" -}}
+{{ $skills := list -}}
 {{ if index . "skills" -}}
-{{ range .skills }}{{ $skillArgs = printf "%s --skill %s" $skillArgs . }}{{ end -}}
+{{ $skills = .skills -}}
 {{ end -}}
-{{ $agentArgs := "" -}}
+{{ $agents := list "claude-code" "universal" -}}
 {{ if index . "agents" -}}
-{{ range .agents }}{{ $agentArgs = printf "%s --agent %s" $agentArgs . }}{{ end -}}
+{{ $agents = .agents | uniq -}}
 {{ end -}}
-npx skills add {{ $id }} --global{{ $skillArgs }}{{ $agentArgs }} --yes
+{{ range $agents -}}
+{{ $agent := . -}}
+{{ if $skills -}}
+{{ range $skills -}}
+gh skill install {{ $id }} {{ . }} --agent {{ $agent }} --scope user -f
+{{ end -}}
+{{ else -}}
+gh skill install {{ $id }} --all --agent {{ $agent }} --scope user -f
+{{ end -}}
+{{ end -}}
 {{ end -}}
