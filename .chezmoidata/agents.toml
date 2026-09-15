@@ -3,7 +3,6 @@ id = "herdrdev/herdr"
 skills = ["herdr"]
 
 [[agentSkills]]
-agents = ["claude-code", "universal"]
 id = "j178/prek"
 skills = ["prek"]
 
