@@ -13,6 +13,9 @@ id = "mark3labs/kit"
 skills = ["kit-extensions"]
 
 [[agentSkills]]
+id = "mgoodness/agent-skills"
+
+[[agentSkills]]
 id = "spf13/go-skills"
 
 [[claudePlugins]]
