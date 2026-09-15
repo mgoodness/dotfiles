@@ -3,7 +3,6 @@ id = "herdrdev/herdr"
 skills = ["herdr"]
 
 [[agentSkills]]
-agents = ["claude-code", "universal"]
 id = "j178/prek"
 skills = ["prek"]
 
@@ -11,6 +10,9 @@ skills = ["prek"]
 agents = ["universal"]
 id = "mark3labs/kit"
 skills = ["kit-extensions"]
+
+[[agentSkills]]
+id = "mgoodness/agent-skills"
 
 [[agentSkills]]
 id = "spf13/go-skills"
