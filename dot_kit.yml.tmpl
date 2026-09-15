@@ -18,6 +18,11 @@
 #     url: "https://api.example.com/mcp"
 
 mcpServers:
+{{ if .mlb -}}
+  akuity:
+    type: "remote"
+    url: "https://akuity.cloud/mcp"
+{{ end -}}
   context7:
     headers:
       - "CONTEXT7_API_KEY: ${env://CONTEXT7_API_KEY}"
@@ -25,7 +30,13 @@ mcpServers:
     type: "remote"
     url: "https://mcp.context7.com/mcp"
 # Application settings (all optional)
+{{ if .mlb -}}
+{{/* MLB machines authenticate Anthropic via `kit auth login anthropic` (Claude
+     subscription OAuth, see `kit auth status`), which already takes
+     precedence over any API key/env var. Pinning the default model here just
+     makes sure that subscription-backed provider is what's used by default. */ -}}
 model: "anthropic/claude-sonnet-5" # Default model to use
+{{ end -}}
 # max-steps: 10                                # Maximum agent steps (0 for unlimited)
 # debug: false                                 # Enable debug logging
 # system-prompt: "/path/to/system-prompt.txt" # System prompt text file
@@ -40,9 +51,11 @@ model: "anthropic/claude-sonnet-5" # Default model to use
 # Per-model generation parameter overrides (apply to specific models)
 # These act as model-level defaults — CLI flags and global settings above take precedence.
 # Keys are "provider/model" strings matching the model you use.
+{{ if .mlb -}}
 modelSettings:
   anthropic/claude-sonnet-5:
     thinkingLevel: "medium"
+{{ end -}}
 # modelSettings:
 #   anthropic/claude-sonnet-4-5-20250929:
 #     temperature: 0.3
