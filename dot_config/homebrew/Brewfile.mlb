@@ -15,6 +15,7 @@ brew "kubernetes-cli"
 brew "kustomize"
 brew "podman"
 brew "sops"
+brew "tcptraceroute"
 
 cask "akuity"
 cask "slack"
