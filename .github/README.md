@@ -38,7 +38,7 @@ lifecycle). A fresh `chezmoi init --apply` wires up the worktrunk half:
 Workspaces are labeled `Personal` / `MLB` by convention only — herdr has no
 group/folder primitive to enforce this the way cmux's sidebar groups did.
 
-Day-to-day: `gh repo clone …` opens the repo as a focused herdr workspace (run `mise
+Day-to-day: `gh repo clone …` places the repo at `~/Code/{host}/{user}/{repo}` (run `mise
 install` yourself to set up env). `wt switch --create <branch>` spins up an isolated
 worktree with env prep and a focused herdr workspace, done for you.
 

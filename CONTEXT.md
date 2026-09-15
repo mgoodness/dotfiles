@@ -7,7 +7,7 @@ Vocabulary for concepts specific to how this repo organizes development workflow
 ### herdr Workflow
 
 **Workspace**:
-herdr's top-level entity for one worktree (or a fresh clone) — carries its own cwd, tabs, and panes. Opened automatically by `gh.fish` (fresh clone) and the worktrunk `post-start` hook (new worktree). Worktree-backed workspaces nest automatically under any other open workspace on the same repo (matched by `repo_key`, read off the worktree's own git metadata) — no manual grouping step.
+herdr's top-level entity for one worktree (or a fresh clone) — carries its own cwd, tabs, and panes. Opened automatically by the worktrunk `post-start` hook (new worktree); a fresh `gh repo clone` no longer opens one automatically. Worktree-backed workspaces nest automatically under any other open workspace on the same repo (matched by `repo_key`, read off the worktree's own git metadata) — no manual grouping step.
 _Avoid_: project, worktree (the git object is still a worktree; the herdr entity representing it is a Workspace), tab (that's one level deeper — see Tab).
 
 **Workspace label** (informal):

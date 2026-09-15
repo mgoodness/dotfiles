@@ -51,7 +51,7 @@ Repos organized by git host under `~/Code/`:
 
 Each directory has `.gitconfig` overriding identity and signing key. Global git config at `dot_config/git/config` uses `includeIf "gitdir/i:~/Code/{host}/"` to load automatically.
 
-`gh repo clone` (via custom `gh.fish` function) places repos at `~/Code/{host}/{user}/{repo}` and opens the clone as a focused herdr workspace (run `mise install` yourself for clone env setup).
+`gh repo clone` (via custom `gh.fish` function) places repos at `~/Code/{host}/{user}/{repo}` (run `mise install` yourself for clone env setup).
 
 ### herdr + worktrunk
 
