@@ -1,11 +1,45 @@
 {
   "agentPushNotifEnabled": true,
+  "autoMode": {
+    "soft_deny": [
+      "$defaults",
+      "Bash(chezmoi apply:*) writes to $HOME outside the repo — treat as routine but review diffs before mass apply",
+      "Bash(kubectl delete:*) and Bash(helm uninstall:*) in the `dot` namespace — destructive workload changes"
+    ],
+    "environment": [
+      "### Org-wide",
+      "**Organization**: None configured",
+      "**Cloud provider(s)**: None configured",
+      "**Repository visibility**: PUBLIC — mgoodness/dotfiles (github.com:mgoodness/dotfiles.git)",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: op (1Password CLI) — `op read` used for secrets retrieval; secrets files present at dot_config/fish/secrets.mlb.yaml and dot_config/fish/secrets.personal.yaml (treat as sensitive, not for commit)",
+      "**Default / protected branches**: main (default); no rulesets or protected branches listed via gh — treat as unprotected",
+      "**CI/CD deploy targets**: None configured",
+      "**Network posture**: None configured",
+      "**Source control**: The trusted repo (mgoodness/dotfiles on github.com) and its remote(s) only — no additional orgs configured",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: None configured",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: dot_config/fish/secrets.mlb.yaml, dot_config/fish/secrets.personal.yaml, dot_config/fish/functions/k8s-context.fish, dot_config/fish/functions/k8s-merge-config.fish, dot_config/fish/functions/k8s-namespace.fish — treat as credential/config material; share only with the repo owner (mgoodness)",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: personal dotfiles / system configuration management (chezmoi-based)",
+      "**Trusted repo**: mgoodness/dotfiles (github.com:mgoodness/dotfiles.git), the working directory ~/.local/share/chezmoi — PUBLIC repo, so only this repo's own work belongs here; confidential/secrets material (e.g. secrets.*.yaml) is never cleared for commit regardless of visibility",
+      "**Org-specific CLIs**: chezmoi, herdr, skl, k8s-context, k8s-merge-config, k8s-namespace (local fish functions/tools used routinely in this repo)",
+      "routine chezmoi/fish/git operations under ~/.local/share/chezmoi are expected and low-risk"
+    ]
+  },
   "disableBundledSkills": true,
   "disableWorkflows": true,
   "enabledPlugins": {
     "claude-hud@claude-hud": true,
     "context7@claude-plugins-official": true,
-    "worktrunk@worktrunk": true
+    "worktrunk@worktrunk": true,
+    "akuity@akuity": true
   },
   "extraKnownMarketplaces": {
     "claude-hud": {
@@ -25,6 +59,12 @@
         "repo": "anthropics/claude-plugins-official",
         "source": "github"
       }
+    },
+    "akuity": {
+      "source": {
+        "repo": "akuity/agent-plugins",
+        "source": "github"
+      }
     }
   },
   "hooks": {
@@ -42,9 +82,15 @@
     ]
   },
   "inputNeededNotifEnabled": true,
-  "model": "sonnet",
   "permissions": {
     "defaultMode": "auto"
+  },
+  "pluginConfigs": {
+    "akuity@akuity": {
+      "options": {
+        "endpoint": "https://akuity.cloud/mcp"
+      }
+    }
   },
   "statusLine": {
     "command": "bash -c 'cols=$(stty size </dev/tty 2>/dev/null | awk '\"'\"'{print $2}'\"'\"'); export COLUMNS=$(( ${cols:-120} > 4 ? ${cols:-120} - 4 : 1 )); plugin_dir=$(ls -d \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\"/plugins/cache/*/claude-hud/*/ 2>/dev/null | sed '\"'\"'s|//*$|/|'\"'\"' | awk -F/ '\"'\"'{ print $(NF-1) \"\\t\" $(0) }'\"'\"' | grep -E '\"'\"'^[0-9]+\\.[0-9]+\\.[0-9]+[[:space:]]'\"'\"' | sort -t. -k1,1n -k2,2n -k3,3n -k4,4n | tail -1 | cut -f2-); exec \"/opt/homebrew/bin/bun\" --env-file /dev/null \"${plugin_dir}src/index.ts\"'",
