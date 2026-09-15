@@ -164,6 +164,7 @@ function __up_rustup --description "Update Rust"
 end
 
 function __up_skills --description "Update agent skills"
+    echo (set_color blue)"dotfiles"(set_color normal): checking installed skills for updates >&2
     gh skill update --all &>/dev/null
 
     # mattpocock/skills has no top-level manifest gh skill (or npx skills)
@@ -188,17 +189,36 @@ function __up_skills --description "Update agent skills"
         return
     end
 
+    # gh skill update --all (above) already diffs every already-installed
+    # skill's tracked tree SHA against its remote repo and only re-downloads
+    # what actually changed upstream — cheap, a repo-level check rather than
+    # one round trip per skill. gh skill install has no such diffing (-f
+    # always re-downloads), so only call it for names genuinely missing from
+    # this machine; everything already present is update's job, not ours.
+    set -l source_url "https://github.com/$repo"
     for agent in $agents
+        set -l installed (gh skill list --agent $agent --scope user --json sourceURL,path 2>/dev/null | jq -r --arg url "$source_url" '.[] | select(.sourceURL == $url) | .path' | xargs -n1 basename)
+        set -l missing
         for name in $names
-            if not set -l err (gh skill install $repo $name --agent $agent --scope user -f 2>&1 1>/dev/null)
-                printf '%s\n' $err >&2
+            contains -- $name $installed || set -a missing $name
+        end
+
+        if test (count $missing) -gt 0
+            set -l total (count $missing)
+            set -l done 0
+            for name in $missing
+                set done (math $done + 1)
+                printf '\r\033[K%sdotfiles%s: installing new skill %s — %s (%s) [%d/%d]' (set_color blue) (set_color normal) $repo $name $agent $done $total >&2
+                if not set -l err (gh skill install $repo $name --agent $agent --scope user -f 2>&1 1>/dev/null)
+                    printf '\n%s\n' $err >&2
+                end
             end
+            printf '\r\033[K' >&2
         end
     end
 
     # Prune anything gh skill previously installed from this repo that's no
     # longer in the discovered set (renamed or removed upstream).
-    set -l source_url "https://github.com/$repo"
     for path in (gh skill list --scope user --json sourceURL,path 2>/dev/null | jq -r --arg url "$source_url" '.[] | select(.sourceURL == $url) | .path')
         set -l name (basename $path)
         contains -- $name $names || rm -rf -- $path
