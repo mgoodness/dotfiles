@@ -164,6 +164,7 @@ function __up_rustup --description "Update Rust"
 end
 
 function __up_skills --description "Update agent skills"
+    echo (set_color blue)"dotfiles"(set_color normal): checking installed skills for updates >&2
     gh skill update --all &>/dev/null
 
     # mattpocock/skills has no top-level manifest gh skill (or npx skills)
@@ -188,13 +189,22 @@ function __up_skills --description "Update agent skills"
         return
     end
 
+    # This loop is the slow part: one network round trip per (skill, agent)
+    # pair (~2s each, unavoidable — gh skill install has no faster bulk mode),
+    # so report progress on a single overwriting line rather than sitting
+    # silent for a minute or more.
+    set -l total (math (count $agents)" * "(count $names))
+    set -l done 0
     for agent in $agents
         for name in $names
+            set done (math $done + 1)
+            printf '\r\033[K%sdotfiles%s: syncing %s — %s (%s) [%d/%d]' (set_color blue) (set_color normal) $repo $name $agent $done $total >&2
             if not set -l err (gh skill install $repo $name --agent $agent --scope user -f 2>&1 1>/dev/null)
-                printf '%s\n' $err >&2
+                printf '\n%s\n' $err >&2
             end
         end
     end
+    printf '\r\033[K' >&2
 
     # Prune anything gh skill previously installed from this repo that's no
     # longer in the discovered set (renamed or removed upstream).
