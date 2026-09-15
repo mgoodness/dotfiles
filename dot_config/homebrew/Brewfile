@@ -23,6 +23,7 @@ brew "fzf"
 brew "gh"
 brew "git-delta"
 brew "git"
+brew "glow"
 brew "gnu-sed"
 brew "gnu-tar"
 brew "go"
@@ -78,6 +79,7 @@ cask "rectangle"
 # krew "get-all"
 # krew "support-bundle"
 
+mas "1Blocker: Ad Blocker", id: 1365531024
 mas "1Password for Safari", id: 1569813296
 mas "Developer", id: 640199958
 mas "Keynote", id: 361285480
