@@ -6,10 +6,6 @@ docs/**
 {{ if not .mlb }}
 Code/emu.github.com/**
 Code/github.mlbam.net/**
-.config/fish/secrets.mlb.yaml
-{{ end -}}
-{{ if not .personal }}
-.config/fish/secrets.personal.yaml
 {{ end -}}
 {{ if not .mlb }}
 .config/homebrew/Brewfile.mlb
