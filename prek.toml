@@ -23,6 +23,7 @@ types = ["fish"]
 
 [[repos.hooks]]
 entry = "oxfmt --no-error-on-unmatched-pattern"
+exclude = "(^|/)modify_.*\\.json$"
 id = "oxfmt"
 language = "system"
 name = "oxfmt"
@@ -30,6 +31,7 @@ types = ["text"]
 
 [[repos.hooks]]
 entry = "bash -c 'for f in \"$@\"; do jq --sort-keys . \"$f\" | sponge \"$f\"; done' --"
+exclude = "(^|/)modify_.*\\.json$"
 id = "sort-json"
 language = "system"
 name = "sort-json"
@@ -56,4 +58,12 @@ files = "\\.tmpl$"
 id = "chezmoi-templates"
 language = "system"
 name = "chezmoi-templates"
+pass_filenames = true
+
+[[repos.hooks]]
+entry = "bash -c 'for f in \"$@\"; do echo \"==> $f\"; echo {} | chezmoi execute-template --with-stdin --file \"$f\" >/dev/null || exit 1; done' --"
+files = "(^|/)modify_.*\\.json$"
+id = "chezmoi-modify-templates"
+language = "system"
+name = "chezmoi-modify-templates"
 pass_filenames = true
