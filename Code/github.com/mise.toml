@@ -1,5 +1,7 @@
 [env]
 CLOUDSDK_ACTIVE_CONFIG_NAME = "personal"
+KIT_MODEL = "openrouter/auto"
+OPENROUTER_API_KEY = { value = "{{ exec(command='/opt/homebrew/bin/fnox get OPENROUTER_API_KEY', cache_duration='7d', cache_key='github-com-openrouter-api-key') }}" }
 
 [tools]
 cocoapods = "1.17.0"
