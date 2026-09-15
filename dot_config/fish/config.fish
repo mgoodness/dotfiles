@@ -1,5 +1,8 @@
 status is-login || exit
 
+# fnox: automatically load/unload secrets per directory (replaces opah)
+fnox activate fish | source
+
 # Environment
 set -gx EDITOR hx
 
