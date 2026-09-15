@@ -1,0 +1,5 @@
+[providers]
+onepass_mlb = { type = "1password", account = "mlb.1password.com" }
+
+[secrets]
+GH_ENTERPRISE_TOKEN = { provider = "onepass_mlb", value = "op://Employee/MLBAM GH CLI PAT/credential" }
