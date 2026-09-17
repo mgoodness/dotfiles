@@ -83,7 +83,7 @@ Catppuccin used across bat, eza, ghostty, Helix, herdr; the first four fetched v
 
 ### pi (`pi-coding-agent`)
 
-`dot_pi/agent/settings.json.tmpl` → `~/.pi/agent/settings.json`, profile-aware: `personal` starts on OpenRouter/DeepSeek, `mlb` on Sonnet 5, both at `high` thinking. Installed via Homebrew (`brew "pi-coding-agent"`). Managed alongside `dot_pi/agent/themes/` — `catppuccin-frappe` (dark) and `catppuccin-latte` (light), auto-selected by the `"<light>/<dark>"` `theme` setting on terminal appearance. Unmanaged: `auth.json` (secrets), `models-store.json` (generated cache), and `sessions/`. pi rewrites `settings.json` itself (model/thinking on Ctrl+S, `lastChangelogVersion` on update), so `chezmoi re-add` after intentional changes.
+`dot_pi/agent/modify_settings.json` → `~/.pi/agent/settings.json`, a `chezmoi:modify-template` (note: marker files must _not_ carry the `.tmpl` suffix, which would suppress the modify handling) that **merges** into Pi's existing file instead of replacing it, so runtime state Pi writes itself survives `chezmoi apply`. Profile-aware seeds: `personal` gets OpenRouter/DeepSeek, `mlb` gets Sonnet 5, both `high` thinking — these only fill in when absent, so a Ctrl+S change is never reverted. `theme` is chezmoi-managed and always wins; the declared npm package is unioned into `packages`; every other key (`lastChangelogVersion`, Pi-added packages) is preserved untouched. Installed via Homebrew (`brew "pi-coding-agent"`). Managed alongside `dot_pi/agent/themes/` — `catppuccin-frappe` (dark) and `catppuccin-latte` (light), auto-selected by the `"<light>/<dark>"` `theme` setting on terminal appearance. Unmanaged: `auth.json` (secrets), `models-store.json` (generated cache), and `sessions/`.
 
 ### Secrets / signing
 

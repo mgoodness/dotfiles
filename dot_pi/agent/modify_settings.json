@@ -1,0 +1,33 @@
+# chezmoi:modify-template
+{{- /*
+Merge wanted config into Pi's existing ~/.pi/agent/settings.json instead of
+replacing it, so runtime state Pi writes itself survives `chezmoi apply`:
+lastChangelogVersion, provider/model/thinking changes from Ctrl+S, and any
+packages added with `pi install`.
+
+- `theme` is chezmoi-managed and always wins.
+- `defaultProvider`/`defaultModel`/`defaultThinkingLevel` are profile seeds:
+  they only fill in when absent, so a Ctrl+S change is never reverted.
+- The declared npm package is unioned into `packages`.
+- Every other key (e.g. lastChangelogVersion) is preserved untouched.
+*/ -}}
+{{- $current := dict -}}
+{{- if trim .chezmoi.stdin -}}
+{{-   $current = fromJson .chezmoi.stdin -}}
+{{- end -}}
+{{- $seeds := dict "defaultProvider" "openrouter" "defaultThinkingLevel" "high" -}}
+{{- if .mlb -}}
+{{-   $_ := set $seeds "defaultModel" "anthropic/claude-sonnet-5" -}}
+{{- else -}}
+{{-   $_ := set $seeds "defaultModel" "~deepseek/deepseek-flash-latest" -}}
+{{- end -}}
+{{- $current = merge $current $seeds -}}
+{{- $_ := set $current "theme" "catppuccin-latte/catppuccin-frappe" -}}
+{{- $packages := index $current "packages" | default list -}}
+{{- range (list "npm:@gotgenes/pi-anthropic-auth") -}}
+{{-   if not (has . $packages) -}}
+{{-     $packages = append $packages . -}}
+{{-   end -}}
+{{- end -}}
+{{- $_ := set $current "packages" $packages -}}
+{{- toPrettyJson $current -}}
