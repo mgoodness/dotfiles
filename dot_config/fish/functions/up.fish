@@ -114,23 +114,44 @@ end
 #     git workspace run touch .envrc &>/dev/null
 # end
 
-function __up_herdr --description "Update herdr and its plugins"
-    # `herdr update` refuses unconditionally while attached to a session
-    # (this shell always is, since the daemon persists) with a precondition
-    # error mentioning "outside herdr" — that message says nothing about
-    # whether a real update exists, so it can't be used as a signal. Only a
-    # genuine "not updated" decline (from herdr's interactive
-    # replace-running-server confirmation, defaulted to no via blank stdin)
-    # or a real pending-restart flag from `herdr status` mean anything.
-    set -l update_msg (herdr update </dev/null 2>&1)
-    if string match -qr 'not updated' -- $update_msg
-        if set -q HERDR_ENV
-            echo (set_color yellow)"dotfiles"(set_color normal): herdr update available — run \`herdr update\` after detaching >&2
-        else
-            echo (set_color yellow)"dotfiles"(set_color normal): herdr update available — run \`herdr update\` to install it >&2
+function __up_herdr --description "Check for a herdr update and update its plugins"
+    # Never run `herdr update` here — even with `--handoff` — because it
+    # downloads and installs unconditionally once a newer release exists.
+    # The instant the on-disk binary matches the latest release, `herdr
+    # update --handoff` becomes a silent no-op ("already up to date") that
+    # can no longer resync the still-running server: there's no dry-run
+    # flag, and handoff only fires as part of an actual install. An
+    # unattended run here would spend that one shot at a disruption-free
+    # swap before a human ever gets to opt into `--handoff`, leaving only
+    # the disruptive `herdr server stop` to resync afterward. So detection
+    # is read-only: compare the installed client version against herdr's
+    # public release manifest (the same one `herdr update` itself fetches)
+    # and tell the human to run `herdr update --handoff` themselves, from a
+    # shell that was never attached to herdr (HERDR_ENV unset) — `herdr
+    # update` unconditionally refuses inside any herdr-spawned shell, since
+    # every shell it spawns inherits HERDR_ENV. The manifest URL below only
+    # covers the stable channel; preview builds use a different schema
+    # (build_id/commit rather than a plain semver), so this stays silent on
+    # preview and leaves detection to the restart_needed/server_binary_stale
+    # check below.
+    set -l status_json (herdr status --json 2>/dev/null | string collect)
+    set -l installed (echo $status_json | jq -r '.client.version // empty')
+    set -l server (echo $status_json | jq -r '.server.version // empty')
+    set -l channel (herdr channel show 2>/dev/null)
+    if test -n "$installed" -a "$channel" = stable
+        set -l latest (curl -fsSL --max-time 5 https://herdr.dev/latest.json 2>/dev/null | jq -r '.version // empty')
+        if test -n "$latest" -a "$latest" != "$installed"
+            echo (set_color yellow)"dotfiles"(set_color normal)": herdr $latest available (have $installed) — run `herdr update --handoff` from a shell outside herdr" >&2
         end
-    else if herdr status --json 2>/dev/null | jq -e '.update.restart_needed or .update.server_binary_stale' >/dev/null 2>&1
-        echo (set_color yellow)"dotfiles"(set_color normal): herdr update installed — restart the session to pick it up >&2
+    end
+
+    # Covers the already-spent case: something (a manual `herdr update`, or
+    # an older version of this script) already installed a newer binary
+    # than the running server loaded. `--handoff` can't help anymore since
+    # there's nothing left for it to install — only a full restart resyncs
+    # the server at this point.
+    if echo $status_json | jq -e '.update.restart_needed or .update.server_binary_stale' >/dev/null 2>&1
+        echo (set_color yellow)"dotfiles"(set_color normal)": herdr $installed installed, but the server is still $server — run `herdr server stop` from a shell outside herdr" >&2
     end
 
     # A herdr upgrade can bump the bundled integration version, leaving the
@@ -245,6 +266,17 @@ function __up_skills --description "Update agent skills"
     end
 end
 
+# This self-discovery (also used by __up_help and __up_all above) relies on
+# every __up_* function living in this one file: fish's `functions -a`
+# finds autoload-eligible functions by scanning $fish_function_path for
+# matching *filenames*, even before they've been sourced, so a function
+# tucked inside a differently-named file (e.g. __up_herdr defined here in
+# up.fish) is invisible to it until something has already triggered loading
+# that file. Splitting a subcommand out is still safe *as long as its own
+# file is named after it* (functions/__up_herdr.fish defining __up_herdr) —
+# fish's directory scan will still find it unloaded. __up_herdr and
+# __up_skills are the two candidates worth peeling out this way if they
+# keep growing; the rest are one-liners not worth a file of their own.
 # Remove any unfound items
 for item in (functions -a | string replace -rf "^__up_(?!all|auto|help)" "")
     set -l cmd $item
