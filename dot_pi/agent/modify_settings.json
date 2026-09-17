@@ -15,10 +15,12 @@ packages added with `pi install`.
 {{- if trim .chezmoi.stdin -}}
 {{-   $current = fromJson .chezmoi.stdin -}}
 {{- end -}}
-{{- $seeds := dict "defaultProvider" "openrouter" "defaultThinkingLevel" "high" -}}
+{{- $seeds := dict "defaultThinkingLevel" "high" -}}
 {{- if .mlb -}}
-{{-   $_ := set $seeds "defaultModel" "anthropic/claude-sonnet-5" -}}
+{{-   $_ := set $seeds "defaultProvider" "github-copilot" -}}
+{{-   $_ := set $seeds "defaultModel" "claude-sonnet-5" -}}
 {{- else -}}
+{{-   $_ := set $seeds "defaultProvider" "openrouter" -}}
 {{-   $_ := set $seeds "defaultModel" "~deepseek/deepseek-flash-latest" -}}
 {{- end -}}
 {{- $current = merge $current $seeds -}}
