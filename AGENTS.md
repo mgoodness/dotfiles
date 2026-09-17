@@ -77,13 +77,17 @@ On shell startup, `up --auto` checks for daily updates.
 
 Catppuccin used across bat, eza, ghostty, Helix, herdr; the first four fetched via `.chezmoiexternal.toml`, not committed — herdr's is built in (`dot_config/herdr/config.toml`), no external fetch needed. Ghostty, Helix, and herdr switch light/dark automatically on system appearance. herdr only ships one dark Catppuccin variant (`catppuccin`, not flavor-named) vs. the Frappe used elsewhere — closest built-in match, not a guaranteed pixel-exact one.
 
+### pi (`pi-coding-agent`)
+
+`dot_pi/agent/settings.json.tmpl` → `~/.pi/agent/settings.json`, profile-aware: `personal` starts on OpenRouter/DeepSeek, `mlb` on Sonnet 5, both at `high` thinking. Installed via Homebrew (`brew "pi-coding-agent"`). Only `settings.json` is managed — `auth.json` (secrets), `models-store.json` (generated cache), and `sessions/` stay unmanaged. pi rewrites this file itself (model/thinking on Ctrl+S, `lastChangelogVersion` on update), so `chezmoi re-add` after intentional changes.
+
 ### Secrets / signing
 
 All SSH signing through 1Password (`op-ssh-sign`). SSH agent socket: `~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock`. Corporate repos on `emu.github.com` use separate signing key in `Code/emu.github.com/dot_gitconfig`.
 
 ## Commit conventions
 
-Follows [Conventional Commits](https://www.conventionalcommits.org/). Template at `dot_config/git/commit`. Scopes: `fish`, `git`, `homebrew`, `macos`, `ghostty`, `zed`, `helix`, `skills`, `herdr`, `mise`.
+Follows [Conventional Commits](https://www.conventionalcommits.org/). Template at `dot_config/git/commit`. Scopes: `fish`, `git`, `homebrew`, `macos`, `ghostty`, `zed`, `helix`, `skills`, `herdr`, `mise`, `pi`.
 
 ## Agent skills
 
