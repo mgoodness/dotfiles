@@ -23,7 +23,7 @@ types = ["fish"]
 
 [[repos.hooks]]
 entry = "oxfmt --no-error-on-unmatched-pattern"
-exclude = "(^|/)modify_.*\\.json$"
+exclude = "(^|/)(modify_.*\\.json|symlink_[^/]+)$"
 id = "oxfmt"
 language = "system"
 name = "oxfmt"
