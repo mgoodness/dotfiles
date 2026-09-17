@@ -30,7 +30,6 @@ Scripts in `.chezmoiscripts/` run in alphanumeric order after `chezmoi apply`. `
 | `run_onchange_after_15-install-agent-skills.sh.tmpl`   | Installs agent skills via `gh skill`                                                  |
 | `run_once_after_15-bootstrap-mattpocock-skills.sh`     | One-time install of mattpocock/skills' engineering + productivity skills              |
 | `run_onchange_after_15-install-claude-plugins.sh.tmpl` | Installs Claude Code plugins                                                          |
-| `run_onchange_after_15-install-kit-extensions.sh.tmpl` | Installs kit extensions declared in `.chezmoidata/agents.toml`'s `kitExtensions` list |
 | `run_after_17-herdr-setup.sh.tmpl`                     | herdr: binary, launchd service, integration, plugins                                  |
 | `run_onchange_after_20-macos.sh`                       | Sets macOS defaults, Dock layout, Touch ID sudo                                       |
 | `run_after_21-remote-login.sh.tmpl`                    | Enables Remote Login on the Mac mini only (hostname-gated)                            |

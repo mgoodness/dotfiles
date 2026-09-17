@@ -7,11 +7,6 @@ id = "j178/prek"
 skills = ["prek"]
 
 [[agentSkills]]
-agents = ["universal"]
-id = "mark3labs/kit"
-skills = ["kit-extensions"]
-
-[[agentSkills]]
 id = "mgoodness/agent-skills"
 
 [[agentSkills]]
