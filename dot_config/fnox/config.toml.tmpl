@@ -1,6 +1,16 @@
 [daemon]
 enabled = true
-idle_timeout = "8h"
+# Matches the 7-day cache_duration mise already uses when wrapping `fnox get
+# GH_TOKEN`/`GH_ENTERPRISE_TOKEN` in exec() (dot_config/mise/config.toml.tmpl,
+# Code/emu.github.com/mise.toml, Code/github.mlbam.net/mise.toml). Those calls
+# barely touch this daemon since mise's own cache gates them to once per 7
+# days regardless; this mainly extends the same window to the secrets fnox
+# resolves directly via shell-hook (EXA_API_KEY, JIRA_API_TOKEN, etc.), which
+# had no mise-side cache and were re-touching 1Password every 8h of idle time.
+# It's a daemon idle-shutdown window, not an on-disk secret TTL: values live
+# only in the running daemon's memory and are gone on reboot/logout regardless
+# of this setting.
+idle_timeout = "7d"
 
 [providers]
 onepass_personal = { type = "1password", account = "my.1password.com" }
