@@ -127,6 +127,16 @@ function __up_herdr --description "Update herdr and its plugins"
         echo (set_color yellow)"dotfiles"(set_color normal): herdr update installed — restart the session to pick it up >&2
     end
 
+    # A herdr upgrade can bump the bundled integration version, leaving the
+    # installed Pi extension stale. The setup script only guards claude (a
+    # `herdr integration status | grep` check), so pi would otherwise go
+    # stale silently; `--outdated-only` names exactly the targets worth
+    # reinstalling and stays quiet when everything is current.
+    if herdr integration status --outdated-only 2>/dev/null | string match -q 'pi:*'
+        echo (set_color blue)"dotfiles"(set_color normal): updating herdr pi integration >&2
+        herdr integration install pi >/dev/null
+    end
+
     for plugin in (herdr plugin list --json | jq -c '.result.plugins[] | select(.source.kind == "github")')
         set -l id (echo $plugin | jq -r '.source.owner + "/" + .source.repo')
         set -l enabled (echo $plugin | jq -r '.enabled')

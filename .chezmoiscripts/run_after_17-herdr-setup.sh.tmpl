@@ -2,8 +2,8 @@
 # shellcheck shell=bash
 
 # Everything herdr needs: install the binary, load its background service,
-# then configure application-level extras (Claude Code session-identity
-# integration, plugins declared in .chezmoidata/agents.toml's herdrPlugins
+# then configure application-level extras (the Claude Code and Pi
+# integrations, plugins declared in .chezmoidata/agents.toml's herdrPlugins
 # list). Runs every apply — every step below guards itself before acting, so
 # this fully self-heals (including the binary: unlike a run_once script, a
 # manually-deleted ~/.local/bin/herdr gets reinstalled on the next apply
@@ -52,13 +52,20 @@ else
     echo "Skipping herdr service: $PLIST not found"
 fi
 
-# 3. Extras — Claude Code integration + declared plugins. Both `herdr
-# integration install` and `herdr plugin install` are safe to re-run on
-# something already installed (verified: no error, no duplication).
-if ! herdr integration status 2>/dev/null | grep -q "^claude: current"; then
-    echo "Installing herdr claude integration..."
-    herdr integration install claude
-fi
+# 3. Extras — agent integrations + declared plugins. Both `herdr integration
+# install` and `herdr plugin install` are safe to re-run on something already
+# installed (verified: no error, no duplication), so the only guard needed is
+# "skip if already current". Checking each target individually also bootstraps
+# it when not yet installed, and reinstalls it when a herdr upgrade bumps the
+# bundled integration version. Pi and Claude are the two agents this machine
+# uses; up.fish keeps Pi current between applies.
+integration_status="$(herdr integration status 2>/dev/null)"
+for target in claude pi; do
+    if ! grep -q "^$target: current" <<<"$integration_status"; then
+        echo "Installing herdr $target integration..."
+        herdr integration install "$target"
+    fi
+done
 
 installed_plugins="$(herdr plugin list --json 2>/dev/null)"
 
