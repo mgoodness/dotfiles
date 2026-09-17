@@ -1,2 +1,4 @@
 .config/fish/secrets.mlb.yaml
 .config/fish/secrets.personal.yaml
+.kit.yml
+.local/share/kit
