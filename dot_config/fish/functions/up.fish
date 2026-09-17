@@ -190,12 +190,12 @@ end
 function __up_macos --description "Update macOS"
     softwareupdate --list &| grep -q "No new" && return
 
-    # secrets.mlb.yaml/secrets.personal.yaml only exist per machine role;
-    # read the matching account's admin password for non-interactive install.
-    if test -f ~/.config/fish/secrets.mlb.yaml
-        op read --account mlb.1password.com "op://Employee/Okta/password" | softwareupdate --all --install --stdinpass
-    else if test -f ~/.config/fish/secrets.personal.yaml
-        op read --account my.1password.com "op://Private/Mac mini/password" | softwareupdate --all --install --stdinpass
+    # SOFTWAREUPDATE_PASSWORD is role-gated in fnox's config (only one of the
+    # personal/mlb 1Password accounts ever defines it per machine), and reads
+    # through fnox's daemon cache instead of a bare `op read`.
+    set -l password (fnox get SOFTWAREUPDATE_PASSWORD 2>/dev/null)
+    if test -n "$password"
+        echo $password | softwareupdate --all --install --stdinpass
     else
         softwareupdate --all --install
     end

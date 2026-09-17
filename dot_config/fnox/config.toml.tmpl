@@ -27,6 +27,14 @@ EXA_API_KEY = { provider = "onepass_personal", value = "op://Private/Exa API Key
 JIRA_API_TOKEN = { provider = "onepass_mlb", value = "op://Employee/Jira CLI Token/credential" }
 TF_TOKEN_terraform_mlbinfra_net = { provider = "onepass_mlb", value = "op://Employee/TFE Token/credential" }
 {{ end -}}
+{{/* Admin password for unattended `softwareupdate --stdinpass` in up.fish's
+     __up_macos. Same one-secret-name/role-picks-the-value pattern as
+     CONTEXT7_API_KEY below -- only one of these is ever defined per machine. */ -}}
+{{ if .personal -}}
+SOFTWAREUPDATE_PASSWORD = { provider = "onepass_personal", value = "op://Private/Mac mini/password" }
+{{ else if .mlb -}}
+SOFTWAREUPDATE_PASSWORD = { provider = "onepass_mlb", value = "op://Employee/Okta/password" }
+{{ end -}}
 {{/* CONTEXT7_API_KEY exists in both 1Password accounts. TOML can't hold the
      key twice, so pick one explicitly. This matches the current opah
      behavior on a dual-role machine, where the personal secrets file was
