@@ -60,7 +60,9 @@ function __up_homebrew --description "Update Homebrew packages"
     set -lx HOMEBREW_BUNDLE_FILE (mktemp)
     cat ~/.config/homebrew/Brewfile ~/.config/homebrew/Brewfile.mlb ~/.config/homebrew/Brewfile.personal 2>/dev/null >$HOMEBREW_BUNDLE_FILE
 
-    brew update -q
+    # `brew update -q` still prints a colored "==> Updating Homebrew..."
+    # header even when already current; drop that one line.
+    brew update -q 2>&1 | string match -r -v 'Updating Homebrew\.\.\.'
     brew bundle -q
     brew upgrade -q
     brew autoremove -q
@@ -86,7 +88,11 @@ function __up_docker --description "Update Docker images"
 end
 
 function __up_dotfiles --description "Update dotfiles"
-    chezmoi update --apply
+    # `chezmoi update` shells out to `git pull`, which prints "Already up to
+    # date." even on a no-op. Drop that one line, keep everything else (new
+    # commits, apply output), and preserve chezmoi's exit status.
+    chezmoi update --apply 2>&1 | string match -r -v '^Already up[- ]to[- ]date\.$'
+    return $pipestatus[1]
 end
 
 function __up_fisher --description "Update fish packages"
@@ -179,7 +185,6 @@ function __up_rustup --description "Update Rust"
 end
 
 function __up_skills --description "Update agent skills"
-    echo (set_color blue)"dotfiles"(set_color normal): checking installed skills for updates >&2
     gh skill update --all &>/dev/null
 
     # mattpocock/skills has no top-level manifest gh skill (or npx skills)
