@@ -1,0 +1,6 @@
+[env]
+CLOUDSDK_ACTIVE_CONFIG_NAME = "personal"
+{{ if .mlb -}}
+PI_DEFAULT_PROVIDER = "openrouter"
+PI_DEFAULT_MODEL = "~deepseek/deepseek-flash-latest"
+{{ end -}}
