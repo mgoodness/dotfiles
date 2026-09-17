@@ -145,6 +145,17 @@ function __up_herdr --description "Update herdr and its plugins"
     end
 end
 
+function __up_wt --description "Update worktrunk's Pi extension"
+    # Unlike `herdr integration status`, worktrunk has no `plugins status`
+    # probe, but `wt config plugins pi install` is content-aware: it rewrites
+    # extensions/worktrunk.ts only when it differs from the bundled copy and
+    # prints "already installed" otherwise. Running it unconditionally is
+    # therefore a safe no-op that self-heals after a Homebrew `wt` upgrade.
+    if not string match -q '*already installed*' -- (wt config plugins pi install -y 2>&1)
+        echo (set_color blue)"dotfiles"(set_color normal): updating worktrunk pi extension >&2
+    end
+end
+
 function __up_mas --description "Update macOS apps"
     mas outdated | grep -qvz " " || mas upgrade
 end

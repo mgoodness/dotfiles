@@ -35,7 +35,7 @@ Scripts in `.chezmoiscripts/` run in alphanumeric order after `chezmoi apply`. `
 | `run_after_21-remote-login.sh.tmpl`                    | Enables Remote Login on the Mac mini only (hostname-gated)                 |
 | `run_after_22-authorized-keys.sh.tmpl`                 | Authorizes the MacBook Pro's SSH key on the Mac mini only (hostname-gated) |
 | `run_after_30-fish.sh`                                 | Adds fish to `/etc/shells` and sets it as login shell                      |
-| `run_once_after_31-worktrunk-shell.sh`                 | Installs worktrunk's fish shell integration                                |
+| `run_after_31-worktrunk-setup.sh`                      | Worktrunk: fish shell integration + Pi extension                           |
 
 ## Git hooks (prek)
 
@@ -64,7 +64,7 @@ Parallel worktree development with [herdr](https://herdr.dev) (terminal workspac
 - **Worktrees**: worktrunk owns create/teardown. The sibling path `repo.branch` keeps each worktree under `~/Code/{host}/`, so per-host identity and signing still apply (ADR-0002). User config: `dot_config/worktrunk/config.toml`.
 - **Hooks** (fire on `wt switch --create`): `pre-start` preps env (mise → direnv fallback); `post-start` opens a focused herdr workspace at the worktree.
 - **Workspaces**: labeled `Personal` / `MLB` by convention only — herdr has no group/folder primitive to enforce this; see `CONTEXT.md`.
-- **Shell integration**: installed by `run_once_after_31-worktrunk-shell.sh` (`functions/wt.fish`, unmanaged by chezmoi).
+- **Shell integration**: installed by `run_after_31-worktrunk-setup.sh` (`functions/wt.fish`, unmanaged by chezmoi). The same script keeps the Pi activity extension (`~/.pi/agent/extensions/worktrunk.ts`) current; `up.fish`'s `__up_wt` does the same between applies.
 
 Design rationale lives in `CONTEXT.md` (glossary) and `docs/adr/` (ADRs 0001, 0002, 0004).
 
