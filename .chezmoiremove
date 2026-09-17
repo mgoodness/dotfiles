@@ -2,3 +2,10 @@
 .config/fish/secrets.personal.yaml
 .kit.yml
 .local/share/kit
+.pi/agent/agents/planner.md
+.pi/agent/agents/reviewer.md
+.pi/agent/agents/scout.md
+.pi/agent/agents/worker.md
+.pi/agent/prompts/implement-and-review.md
+.pi/agent/prompts/implement.md
+.pi/agent/prompts/scout-and-plan.md
