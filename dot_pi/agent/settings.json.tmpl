@@ -1,0 +1,11 @@
+{
+  "theme": "dark",
+  "defaultProvider": "openrouter",
+{{- if .mlb }}
+  "defaultModel": "anthropic/claude-sonnet-5",
+  "defaultThinkingLevel": "high"
+{{- else }}
+  "defaultModel": "~deepseek/deepseek-flash-latest",
+  "defaultThinkingLevel": "high"
+{{- end }}
+}
