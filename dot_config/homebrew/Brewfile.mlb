@@ -18,6 +18,7 @@ brew "sops"
 brew "tcptraceroute"
 
 cask "akuity"
+cask "claude-code@latest"
 cask "slack"
 
 mas "Okta Extension App", id: 1439967473
