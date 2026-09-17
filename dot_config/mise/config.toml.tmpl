@@ -10,7 +10,11 @@ CLOUDSDK_ACTIVE_CONFIG_NAME = "mlb"
 CLOUDSDK_ACTIVE_CONFIG_NAME = "personal"
 {{ end -}}
 GH_HOST = "github.com"
-GH_TOKEN = { value = "{{ `{{ exec(command='/opt/homebrew/bin/fnox get GH_TOKEN', cache_duration='7d', cache_key='personal-gh-token') }}` }}" }
+# PATH is explicit (not just an absolute path to fnox) because some callers
+# invoke mise under a sanitized environment (e.g. Homebrew's superenv during
+# `brew bundle dump`), which strips /opt/homebrew/bin and breaks fnox's
+# internal `op` CLI lookup.
+GH_TOKEN = { value = "{{ `{{ exec(command='PATH=/opt/homebrew/bin:/opt/homebrew/sbin:$PATH /opt/homebrew/bin/fnox get GH_TOKEN', cache_duration='7d', cache_key='personal-gh-token') }}` }}" }
 
 [settings.ruby]
 compile = false
