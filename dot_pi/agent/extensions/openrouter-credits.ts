@@ -1,9 +1,9 @@
 /**
  * OpenRouter credits in the status line.
  *
- * Shows the remaining OpenRouter credit balance in pi's footer whenever the
- * active model's provider is OpenRouter, and hides itself for every other
- * provider.
+ * Shows the remaining OpenRouter credit balance in pi's footer (prefixed with
+ * 💰 so a bare dollar figure doesn't read as unexplained) whenever the active
+ * model's provider is OpenRouter, and hides itself for every other provider.
  *
  * The balance comes from OpenRouter's `/api/v1/credits` endpoint, which reports
  * lifetime totals (`total_credits`, `total_usage`); remaining is the difference.
@@ -73,7 +73,7 @@ function render(ctx: ExtensionContext, balance: Balance): void {
       : balance.remaining <= LOW_BALANCE_USD
         ? "warning"
         : "muted";
-  ctx.ui.setStatus(STATUS_KEY, ctx.ui.theme.fg(color, usd(balance.remaining)));
+  ctx.ui.setStatus(STATUS_KEY, ctx.ui.theme.fg(color, `💰 ${usd(balance.remaining)}`));
 }
 
 function clear(ctx: ExtensionContext): void {
