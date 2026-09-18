@@ -9,7 +9,7 @@ Spin up one or more worktrees, each in its own nested herdr workspace running a 
 
 Each workspace is left with a shell pane at the worktree path, ready for whatever starts next — starting a coding agent is a separate step.
 
-Requires `wt` (see the `worktrunk` skill) and a running herdr server (see the `herdr` skill for CLI mechanics and JSON shapes). Check with `herdr status` — `server: running` means it's up. If it's not, start it yourself rather than asking the user: `herdr server` runs headless (it's a documented mode — `herdr --help` lists it under "Advanced commands: Run as headless server"), and none of this skill's operations (`worktree open`, `workspace list`, `workspace close`) need an attached TUI client, only the server. Background it — `herdr server >/dev/null 2>&1 &` or your tool's equivalent — then re-check `herdr status` before continuing.
+Requires `wt` (see the `worktrunk` skill). This skill only ever runs inside a herdr session, so the server is already up — see the `herdr` skill for CLI mechanics and JSON shapes.
 
 ## Workflow
 
@@ -47,7 +47,7 @@ If this repo's `.config/wt.toml` hooks aren't yet approved, `wt` refuses to run 
 
 Once the user has given a standing answer for _this repo_ (e.g. "just use `--yes`"), apply it on subsequent `wt switch --create` calls in the same repo without re-asking — the trust decision was already made, re-litigating it every time is noise. Ask again only for a repo they haven't decided on yet, or if `.config/wt.toml`'s hooks have changed since they decided.
 
-If this repo's `post-start` hook opens its own pane or workspace, ignore it — this skill spawns its own workspace in step 3, and step 4 cleans up whatever the hook left behind.
+If this repo's `post-start` hook opens its own pane or workspace, ignore it — step 3's `herdr worktree open` adopts an existing workspace at the path rather than racing it, and step 4 cleans up anything that ends up duplicated.
 
 ### 3. Open the worktree as a nested herdr workspace — don't wait on a hook
 
@@ -61,11 +61,13 @@ herdr worktree open --path <worktree-path> --label "<short title>" --no-focus
 
 `--no-focus` is what keeps this backgrounded — without it the new workspace steals focus. Pull the workspace id from the response (`.result.workspace.workspace_id`) and carry it into step 4.
 
+`herdr worktree open` is idempotent per path: when a workspace already exists there — typically one the `post-start` hook opened — the response says `already_open: true` and names that same workspace. It is your workspace, not a stray; step 4's id check passes and there is nothing to close.
+
 Use the ticket's number and title for `<short title>` if one exists (e.g. `Issue #<n>: <short title>`); otherwise a short description of the task, or the branch name if there's nothing more descriptive to give it. This also names the workspace up front, so there's no separate rename step later.
 
 ### 4. Repeat for each additional worktree, then verify no stray workspaces
 
-If spinning up more than one, repeat steps 1–3 per worktree. Either way, check `herdr workspace list` for each worktree path you targeted: it should map to exactly one workspace, and that workspace's `workspace_id` should be the one your own `herdr worktree open` call returned in step 3 — no pre-run snapshot needed, since you already know the id you're checking for. A workspace at your target path whose id you didn't mint yourself is a stray — this repo's `post-start` hook can spawn one on its own, not just a leftover multiplexer, so treat any hook-spawned workspace at your path as disposable regardless of what it's wired to. Id identity is the signal here, not screen content — don't gate the close on `pane read`, since a freshly opened pane can be slow to report on its first read whether or not it's a stray.
+If spinning up more than one, repeat steps 1–3 per worktree. Either way, check `herdr workspace list` for each worktree path you targeted: it should map to exactly one workspace, and that workspace's `workspace_id` should be the one your own `herdr worktree open` call returned in step 3 — no pre-run snapshot needed, since you already know the id you're checking for. A workspace at your target path other than the id the open response named is a stray — this repo's `post-start` hook can spawn one on its own, not just a leftover multiplexer, so treat any extra workspace at your path as disposable regardless of what it's wired to. Id identity is the signal here, not screen content — don't gate the close on `pane read`, since a freshly opened pane can be slow to report on its first read whether or not it's a stray.
 
 **Close strays with `herdr workspace close <id>` — never `herdr worktree remove`.** `remove` deletes the underlying git worktree checkout from disk (verified); `close` only tears down the herdr-side presentation and leaves the checkout untouched. This skill only ever creates worktrees — deleting one is `cleanup-branch`'s job, not a byproduct of tidying up a duplicate pane here.
 
