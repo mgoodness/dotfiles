@@ -30,14 +30,6 @@ name = "oxfmt"
 types = ["text"]
 
 [[repos.hooks]]
-entry = "bash -c 'for f in \"$@\"; do jq --sort-keys . \"$f\" | sponge \"$f\"; done' --"
-exclude = "(^|/)modify_.*\\.json$"
-id = "sort-json"
-language = "system"
-name = "sort-json"
-types = ["json"]
-
-[[repos.hooks]]
 entry = "bash -c 'for f in \"$@\"; do yq --inplace \"sort_keys(..)\" \"$f\"; done' --"
 id = "sort-yaml"
 language = "system"
