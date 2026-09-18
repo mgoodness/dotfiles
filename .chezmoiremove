@@ -1,3 +1,5 @@
+.claude
+.config/claude
 .config/fish/functions/pi.fish
 .config/fish/secrets.mlb.yaml
 .config/fish/secrets.personal.yaml

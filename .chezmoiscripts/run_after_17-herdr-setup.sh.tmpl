@@ -2,10 +2,10 @@
 # shellcheck shell=bash
 
 # Everything herdr needs: install the binary, load its background service,
-# then configure application-level extras (the Claude Code and Pi
-# integrations, plugins declared in .chezmoidata/agents.toml's herdrPlugins
-# list). Runs every apply — every step below guards itself before acting, so
-# this fully self-heals (including the binary: unlike a run_once script, a
+# then configure application-level extras (the Pi integration, plugins
+# declared in .chezmoidata/agents.toml's herdrPlugins list). Runs every
+# apply — every step below guards itself before acting, so this fully
+# self-heals (including the binary: unlike a run_once script, a
 # manually-deleted ~/.local/bin/herdr gets reinstalled on the next apply
 # instead of chezmoi silently believing that step already succeeded).
 
@@ -55,17 +55,15 @@ fi
 # 3. Extras — agent integrations + declared plugins. Both `herdr integration
 # install` and `herdr plugin install` are safe to re-run on something already
 # installed (verified: no error, no duplication), so the only guard needed is
-# "skip if already current". Checking each target individually also bootstraps
+# "skip if already current". Checking the target individually also bootstraps
 # it when not yet installed, and reinstalls it when a herdr upgrade bumps the
-# bundled integration version. Pi and Claude are the two agents this machine
-# uses; up.fish keeps Pi current between applies.
+# bundled integration version. Pi is the only agent this machine uses; up.fish
+# keeps it current between applies.
 integration_status="$(herdr integration status 2>/dev/null)"
-for target in claude pi; do
-    if ! grep -q "^$target: current" <<<"$integration_status"; then
-        echo "Installing herdr $target integration..."
-        herdr integration install "$target"
-    fi
-done
+if ! grep -q "^pi: current" <<<"$integration_status"; then
+    echo "Installing herdr pi integration..."
+    herdr integration install pi
+fi
 
 installed_plugins="$(herdr plugin list --json 2>/dev/null)"
 

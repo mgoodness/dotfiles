@@ -159,10 +159,10 @@ function __up_herdr --description "Check for a herdr update and update its plugi
     end
 
     # A herdr upgrade can bump the bundled integration version, leaving the
-    # installed Pi extension stale. The setup script only guards claude (a
-    # `herdr integration status | grep` check), so pi would otherwise go
-    # stale silently; `--outdated-only` names exactly the targets worth
-    # reinstalling and stays quiet when everything is current.
+    # installed Pi extension stale between chezmoi applies (the setup script
+    # only re-checks it on the next apply); `--outdated-only` names exactly
+    # the targets worth reinstalling and stays quiet when everything is
+    # current.
     if herdr integration status --outdated-only 2>/dev/null | string match -q 'pi:*'
         echo (set_color blue)"dotfiles"(set_color normal): updating herdr pi integration >&2
         herdr integration install pi >/dev/null
@@ -231,7 +231,7 @@ function __up_skills --description "Update agent skills"
     # .chezmoiscripts/run_once_after_15-bootstrap-mattpocock-skills.sh;
     # this keeps it in sync afterward.)
     set -l repo mattpocock/skills
-    set -l agents claude-code pi
+    set -l agents pi
     set -l names (
         for dir in engineering productivity
             gh api "repos/$repo/contents/skills/$dir" --jq '.[] | select(.type == "dir") | .name' 2>/dev/null

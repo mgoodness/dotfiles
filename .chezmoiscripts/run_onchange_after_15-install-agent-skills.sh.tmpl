@@ -38,7 +38,7 @@ skills_add() {
 {{ if index . "skills" -}}
 {{ $skills = .skills -}}
 {{ end -}}
-{{ $agents := list "claude-code" "pi" -}}
+{{ $agents := list "pi" -}}
 {{ if index . "agents" -}}
 {{ $agents = .agents | uniq -}}
 {{ end -}}

@@ -2,8 +2,8 @@
 # shellcheck shell=bash
 
 # One-time bootstrap: install every skill under mattpocock/skills'
-# skills/engineering and skills/productivity directories, for both
-# claude-code and pi. Runs once per machine, at run time (not
+# skills/engineering and skills/productivity directories, for pi. Runs once
+# per machine, at run time (not
 # template-render time), so it doesn't add a network dependency to every
 # `chezmoi apply`. Keeping this set current afterward — picking up skills
 # mattpocock adds, dropping ones removed — is the `up skills` fish
@@ -41,7 +41,7 @@ skills_add() {
 }
 
 repo="mattpocock/skills"
-agents=(claude-code pi)
+agents=(pi)
 
 names=$(
     for dir in skills/engineering skills/productivity; do

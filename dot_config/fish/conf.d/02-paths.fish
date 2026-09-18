@@ -23,9 +23,6 @@ for d in XDG_{CACHE,CONFIG,DATA,STATE}_HOME
     __maybe_mkdir $$d
 end
 
-# Claude
-set -gx CLAUDE_CONFIG_DIR $XDG_CONFIG_HOME/claude
-
 # Homebrew
 set -gx HOMEBREW_BUNDLE_FILE $XDG_CONFIG_HOME/homebrew/Brewfile
 set -gx HOMEBREW_CACHE $XDG_CACHE_HOME/homebrew
