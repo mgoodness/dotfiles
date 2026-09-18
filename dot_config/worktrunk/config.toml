@@ -35,7 +35,7 @@ context = 'ref=agent-context; git show-ref --verify --quiet refs/heads/$ref || r
 # --workspace/--cwd hint needed), which matters here since a hook only ever
 # knows the worktree path, not which workspace triggered it.
 [post-start]
-herdr = 'herdr worktree open --path "{{ worktree_path }}" --label "{{ branch }}" --focus'
+herdr = 'herdr worktree open --path "{{ worktree_path }}" --label "{{ branch }}" --no-focus'
 
 # submersion: init submodules/deps/codegen after the context checkout above.
 [[projects."github.com/mgoodness/submersion".post-start]]

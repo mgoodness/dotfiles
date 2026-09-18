@@ -32,14 +32,15 @@ lifecycle). A fresh `chezmoi init --apply` wires up the worktrunk half:
    then loads its background service and configures its Pi integration and plugins.
 3. `run_once_after_31-worktrunk-shell.sh` installs worktrunk's fish shell integration.
 4. `~/.config/worktrunk/config.toml` hooks fire on `wt switch --create <branch>`: prep
-   env (mise → direnv), then open a focused herdr workspace at the new worktree.
+   env (mise → direnv), then open a herdr workspace at the new worktree, without
+   stealing focus.
 
 Workspaces are labeled `Personal` / `MLB` by convention only — herdr has no
 group/folder primitive to enforce this the way cmux's sidebar groups did.
 
 Day-to-day: `gh repo clone …` places the repo at `~/Code/{host}/{user}/{repo}` (run `mise
 install` yourself to set up env). `wt switch --create <branch>` spins up an isolated
-worktree with env prep and a focused herdr workspace, done for you.
+worktree with env prep and a herdr workspace opened in the background, done for you.
 
 ## Acknowledgements
 
