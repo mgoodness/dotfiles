@@ -89,6 +89,10 @@ async function refresh(
   ctx: ExtensionContext,
   options: { force?: boolean; provider?: string } = {},
 ): Promise<Balance | undefined> {
+  // No footer to update (and nothing will read the return value) outside
+  // TUI/RPC, so skip the render *and* the network call that feeds it.
+  if (!ctx.hasUI) return undefined;
+
   const provider = options.provider ?? ctx.model?.provider;
   if (provider !== PROVIDER) {
     clear(ctx);
@@ -131,6 +135,7 @@ export default function (pi: ExtensionAPI) {
   pi.registerCommand("credits", {
     description: "Show OpenRouter credit balance",
     handler: async (_args, ctx) => {
+      if (!ctx.hasUI) return;
       if (ctx.model?.provider !== PROVIDER) {
         ctx.ui.notify("Active provider is not OpenRouter", "info");
         return;
