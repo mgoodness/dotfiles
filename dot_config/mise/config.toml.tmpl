@@ -2,6 +2,13 @@
 env_cache = true
 env_cache_ttl = "1h"
 hook_env.chpwd_only = true
+# Keep mise from putting its global shims dir on PATH during activation. Shims
+# are global while tool configs are per-project, so a shim left behind by a tool
+# since removed from a mise.toml (or configured only in one host's project dir,
+# e.g. terraform in emu.github.com) shadows the real binary everywhere and fails
+# with "No version is set for shim" outside its project. Activation already
+# exposes the active tool versions directly, so the shims are unnecessary.
+activate_shims = false
 
 [env]
 {{ if .mlb -}}

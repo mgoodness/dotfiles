@@ -6,6 +6,5 @@ set -gx MISE_IGNORED_CONFIG_PATHS $XDG_DATA_HOME/chezmoi/dot_config/mise/config.
 # relying on the mise formula's own vendor_conf.d to auto-source it.
 status is-interactive && mise activate fish | source
 
-# mise shims on PATH so mise-managed tool versions (flutter, dart, etc.)
-# resolve without needing `mise exec --`.
-fish_add_path -g $HOME/.local/share/mise/shims
+# No mise shims dir is added here: `activate_shims = false` in
+# dot_config/mise/config.toml.tmpl keeps `mise activate` from prepending it too.
