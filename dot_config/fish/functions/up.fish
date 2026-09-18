@@ -114,6 +114,10 @@ end
 #     git workspace run touch .envrc &>/dev/null
 # end
 
+function __up_pi --description "Update pi packages"
+    pi update --all >/dev/null
+end
+
 function __up_herdr --description "Check for a herdr update and update its plugins"
     # Never run `herdr update` here — even with `--handoff` — because it
     # downloads and installs unconditionally once a newer release exists.
