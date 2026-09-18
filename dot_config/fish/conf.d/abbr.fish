@@ -42,6 +42,8 @@ abbr kn k8s-namespace
 abbr kport "kubectl port-forward"
 abbr kwatch "watch kubectl"
 
+abbr mdless "mdcat --paginate"
+
 abbr pc pbcopy
 abbr pp pbpaste
 abbr py python3
