@@ -9,7 +9,7 @@ Spin up one or more worktrees, each in its own nested herdr workspace running a 
 
 Each workspace is left with a shell pane at the worktree path, ready for whatever starts next — starting a coding agent is a separate step.
 
-Requires `wt` (see the `worktrunk` skill). This skill only ever runs inside a herdr session, so the server is already up — see the `herdr` skill for CLI mechanics and JSON shapes.
+Requires `wt` (see the `worktrunk` skill). The server is already up — this skill only runs inside a herdr session. See the `herdr` skill for CLI mechanics and JSON shapes.
 
 ## Workflow
 
