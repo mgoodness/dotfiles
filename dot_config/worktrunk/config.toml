@@ -9,9 +9,23 @@ worktree-path = "{{ repo_path }}/../{{ repo }}.{{ branch | sanitize }}"
 # Blocking: prep the environment (mise first, direnv fallback — Q13) before "ready".
 [pre-start]
 env = 'cd "{{ worktree_path }}" && if [ -f mise.toml ] || [ -f .mise.toml ] || [ -f .config/mise/config.toml ] || [ -f .tool-versions ]; then mise trust && mise install; elif [ -f .envrc ]; then direnv allow; fi'
+# Blocking so context/overlay files exist before --execute or an agent starts;
+# runs concurrently with `env` (a hook table runs its entries concurrently) and
+# is local, so it adds no measurable latency.
+#
+# Restores files present (A) or modified (M) on agent-context relative to HEAD:
+# context-only docs land untracked (??), overlay files like AGENTS.md land as an
+# uncommitted tracked modification (M). Generically a no-op where the repo has
+# no agent-context branch. Uses checkout + restore --staged (per the
+# agent-context-branch skill), NOT git merge: a merge makes agent-context's
+# commits real ancestors of the branch (so they'd ride along into any future
+# PR), and git's merge silently drops any file that's unchanged on the
+# agent-context side but was deleted from main after the two branches' common
+# ancestor — no conflict is raised, it just vanishes. checkout + restore
+# --staged avoids both, without creating any merge relationship.
+context = 'ref=agent-context; git show-ref --verify --quiet refs/heads/$ref || ref=origin/agent-context; if git show-ref --verify --quiet refs/heads/$ref || git show-ref --verify --quiet refs/remotes/$ref; then git diff --name-only --diff-filter=AM -z HEAD "$ref" | xargs -0 -r git checkout "$ref" --; git diff --name-only --diff-filter=AM -z HEAD "$ref" | xargs -0 -r git restore --staged; fi'
 
-# Background: open a focused herdr workspace at the new worktree (Q5), and pull
-# in an agent-context branch's files when the repo has one — no-op elsewhere.
+# Background: open a focused herdr workspace at the new worktree (Q5).
 # Kept in global config (not repo-tracked) so it never shows up in a PR diff,
 # and doesn't hit the chicken-and-egg problem of needing the hook file itself
 # to arrive via the merge it triggers.
@@ -20,17 +34,7 @@ env = 'cd "{{ worktree_path }}" && if [ -f mise.toml ] || [ -f .mise.toml ] || [
 # it reads repo identity off the worktree's own git metadata (verified: no
 # --workspace/--cwd hint needed), which matters here since a hook only ever
 # knows the worktree path, not which workspace triggered it.
-#
-# Uses checkout + restore --staged (per the agent-context-branch skill), NOT
-# git merge: a merge makes agent-context's commits real ancestors of the
-# branch (so they'd ride along into any future PR), and git's merge silently
-# drops any file that's unchanged on the agent-context side but was deleted
-# from main after the two branches' common ancestor — no conflict is raised,
-# it just vanishes. checkout + restore --staged avoids both: it copies
-# whatever files currently exist on agent-context, generically, without
-# creating any merge relationship.
 [post-start]
-context = 'if git show-ref --verify --quiet refs/heads/agent-context || git show-ref --verify --quiet refs/remotes/origin/agent-context; then git ls-tree -r -z --name-only agent-context | xargs -0 git checkout agent-context --; git ls-tree -r -z --name-only agent-context | xargs -0 git restore --staged; fi'
 herdr = 'herdr worktree open --path "{{ worktree_path }}" --label "{{ branch }}" --focus'
 
 # submersion: init submodules/deps/codegen after the context checkout above.
