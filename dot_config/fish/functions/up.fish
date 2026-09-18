@@ -210,19 +210,28 @@ function __up_rustup --description "Update Rust"
 end
 
 function __up_skills --description "Update agent skills"
-    gh skill update --all &>/dev/null
+    # Pinned so a `skills` release doesn't silently change apply behavior on
+    # one machine before another. Bump deliberately, in lockstep with the
+    # same pin in the two skills-install chezmoiscripts.
+    set -l skills_version 1.7.0
 
-    # mattpocock/skills has no top-level manifest gh skill (or npx skills)
-    # can target as a unit — gh skill install only accepts a single skill
-    # name or exact SKILL.md path, never a directory prefix like
-    # skills/engineering — so keeping pace with skills mattpocock adds,
-    # renames, or removes there means rediscovering that list ourselves
-    # each run, rather than relying on a hand-maintained list in
-    # agents.toml. (First install is bootstrapped once per machine by
+    # `skills update` has no --json/structured-error mode (unlike `add` and
+    # `remove` below), so — same as the old `gh skill update --all` — a
+    # failure here is swallowed rather than surfaced. Not a regression, just
+    # an upstream gap.
+    npx --yes "skills@$skills_version" update -g -y &>/dev/null
+
+    # mattpocock/skills has no top-level manifest the skills CLI (or gh
+    # skill) can target as a unit — `add --skill` only accepts exact names,
+    # never a directory prefix like skills/engineering — so keeping pace
+    # with skills mattpocock adds, renames, or removes there means
+    # rediscovering that list ourselves each run, rather than relying on a
+    # hand-maintained list in agents.toml. (First install is bootstrapped
+    # once per machine by
     # .chezmoiscripts/run_once_after_15-bootstrap-mattpocock-skills.sh;
     # this keeps it in sync afterward.)
     set -l repo mattpocock/skills
-    set -l agents claude-code universal
+    set -l agents claude-code pi
     set -l names (
         for dir in engineering productivity
             gh api "repos/$repo/contents/skills/$dir" --jq '.[] | select(.type == "dir") | .name' 2>/dev/null
@@ -234,39 +243,36 @@ function __up_skills --description "Update agent skills"
         return
     end
 
-    # gh skill update --all (above) already diffs every already-installed
-    # skill's tracked tree SHA against its remote repo and only re-downloads
-    # what actually changed upstream — cheap, a repo-level check rather than
-    # one round trip per skill. gh skill install has no such diffing (-f
-    # always re-downloads), so only call it for names genuinely missing from
-    # this machine; everything already present is update's job, not ours.
-    set -l source_url "https://github.com/$repo"
-    for agent in $agents
-        set -l installed (gh skill list --agent $agent --scope user --json sourceURL,path 2>/dev/null | jq -r --arg url "$source_url" '.[] | select(.sourceURL == $url) | .path' | xargs -n1 basename)
-        set -l missing
-        for name in $names
-            contains -- $name $installed || set -a missing $name
-        end
+    # `skills update` (above) already diffs every already-installed skill's
+    # tracked hash against its source and only re-fetches what changed
+    # upstream. `skills add` has no such diffing, so only call it for names
+    # genuinely missing from this machine. Installed-from-this-repo names
+    # come straight from ~/.agents/.skill-lock.json — the lock file `gh
+    # skill` and the `skills` CLI both read and write, keyed by name rather
+    # than by name-and-agent, so one lookup covers every agent at once.
+    # Lock keys for nested-path installs carry the discovery prefix (e.g.
+    # "engineering/ask-matt"), but $names and the on-disk skill dirs are
+    # bare ("ask-matt") — take just the last path segment to compare like
+    # for like.
+    set -l installed (jq -r --arg repo "$repo" '.skills | to_entries[] | select(.value.source == $repo) | .key | split("/")[-1]' ~/.agents/.skill-lock.json 2>/dev/null)
+    set -l missing
+    for name in $names
+        contains -- $name $installed || set -a missing $name
+    end
 
-        if test (count $missing) -gt 0
-            set -l total (count $missing)
-            set -l done 0
-            for name in $missing
-                set done (math $done + 1)
-                printf '\r\033[K%sdotfiles%s: installing new skill %s — %s (%s) [%d/%d]' (set_color blue) (set_color normal) $repo $name $agent $done $total >&2
-                if not set -l err (gh skill install $repo $name --agent $agent --scope user -f 2>&1 1>/dev/null)
-                    printf '\n%s\n' $err >&2
-                end
-            end
-            printf '\r\033[K' >&2
+    if test (count $missing) -gt 0
+        printf '%sdotfiles%s: installing %d new skill(s) from %s: %s\n' (set_color blue) (set_color normal) (count $missing) $repo (string join ', ' $missing) >&2
+        if not set -l err (npx --yes "skills@$skills_version" add $repo --skill $missing --agent $agents -g -y --json 2>&1 1>/dev/null)
+            printf '%s\n' $err >&2
         end
     end
 
-    # Prune anything gh skill previously installed from this repo that's no
-    # longer in the discovered set (renamed or removed upstream).
-    for path in (gh skill list --scope user --json sourceURL,path 2>/dev/null | jq -r --arg url "$source_url" '.[] | select(.sourceURL == $url) | .path')
-        set -l name (basename $path)
-        contains -- $name $names || rm -rf -- $path
+    # Prune anything previously installed from this repo that's no longer in
+    # the discovered set (renamed or removed upstream). `skills remove` is
+    # lock-aware, unlike a bare `rm -rf` — it can't leave a stale lock entry
+    # behind the way removing the directory by hand can.
+    for name in $installed
+        contains -- $name $names || npx --yes "skills@$skills_version" remove $name -g --agent $agents -y &>/dev/null
     end
 end
 
@@ -297,7 +303,11 @@ for item in (functions -a | string replace -rf "^__up_(?!all|auto|help)" "")
         case macos
             set cmd softwareupdate
         case skills
-            set cmd gh
+            # command -q with multiple args is OR (any one suffices, as used
+            # above for docker/podman) — skills needs gh *and* npx, so check
+            # both explicitly instead of relying on that shared line below.
+            command -q gh && command -q npx || functions -e __up_$item
+            continue
     end
     command -q $cmd || functions -e __up_$item
 end

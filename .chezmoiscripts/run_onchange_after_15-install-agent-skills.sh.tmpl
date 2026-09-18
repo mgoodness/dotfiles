@@ -6,19 +6,25 @@ if [ -n "${CI:-}" ]; then
     exit
 fi
 
-if ! command -v gh &>/dev/null; then
-    echo "Skipping: gh not found"
+if ! command -v npx &>/dev/null; then
+    echo "Skipping: npx not found"
     exit
 fi
 
-# gh skill install is chatty on every call (ref resolution, discovery notes,
-# an unverified-skills banner, a tree listing, a preview-command footer) even
-# on success. Swallow that unless the call actually fails, so a normal apply
-# doesn't drown in near-identical noise but a real failure still surfaces.
-gh_skill_install() {
-    local err
-    if ! err=$(gh skill install "$@" 2>&1 1>/dev/null); then
-        printf '%s\n' "$err" >&2
+# Pinned so a `skills` release doesn't silently change apply behavior on one
+# machine before another. Bump deliberately; see `up skills` for the fish
+# side of this same pin.
+skills_version="1.7.0"
+
+# `skills add` is chatty on every call (clone spinner, install summary, a
+# Socket/Snyk security-scan table) even on success. Swallow that unless the
+# call actually fails. --json is load-bearing here, not just for parsing:
+# without it, the human-readable mode exits 0 even on a hard failure (bad
+# repo, bad skill name), so a real failure would otherwise go unnoticed.
+skills_add() {
+    local out
+    if ! out=$(npx --yes "skills@${skills_version}" add "$@" --json 2>&1); then
+        printf '%s\n' "$out" >&2
         return 1
     fi
 }
@@ -32,18 +38,13 @@ gh_skill_install() {
 {{ if index . "skills" -}}
 {{ $skills = .skills -}}
 {{ end -}}
-{{ $agents := list "claude-code" "universal" -}}
+{{ $agents := list "claude-code" "pi" -}}
 {{ if index . "agents" -}}
 {{ $agents = .agents | uniq -}}
 {{ end -}}
-{{ range $agents -}}
-{{ $agent := . -}}
 {{ if $skills -}}
-{{ range $skills -}}
-gh_skill_install {{ $id }} {{ . }} --agent {{ $agent }} --scope user -f
-{{ end -}}
+skills_add {{ $id }} --skill {{ $skills | join " " }} --agent {{ $agents | join " " }} -g -y
 {{ else -}}
-gh_skill_install {{ $id }} --all --agent {{ $agent }} --scope user -f
-{{ end -}}
+skills_add {{ $id }} --agent {{ $agents | join " " }} -g -y
 {{ end -}}
 {{ end -}}
