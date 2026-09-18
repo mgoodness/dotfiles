@@ -7,9 +7,6 @@ id = "j178/prek"
 skills = ["prek"]
 
 [[agentSkills]]
-id = "mgoodness/agent-skills"
-
-[[agentSkills]]
 id = "spf13/go-skills"
 
 [[herdrPlugins]]
