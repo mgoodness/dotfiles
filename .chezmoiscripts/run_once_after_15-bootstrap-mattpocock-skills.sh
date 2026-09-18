@@ -41,7 +41,11 @@ skills_add() {
 }
 
 repo="mattpocock/skills"
-agents=(pi)
+# "universal" writes only into ~/.agents/skills, which pi already discovers
+# on its own; targeting "pi" would additionally copy every skill into
+# ~/.pi/agent/skills, and pi would then report each one as a name collision
+# between those two identical locations.
+agents=(universal)
 
 names=$(
     for dir in skills/engineering skills/productivity; do

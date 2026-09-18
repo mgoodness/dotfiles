@@ -38,7 +38,13 @@ skills_add() {
 {{ if index . "skills" -}}
 {{ $skills = .skills -}}
 {{ end -}}
-{{ $agents := list "pi" -}}
+# "universal" writes only into ~/.agents/skills, the location pi (and any
+# other harness honoring the shared-skills convention) already discovers on
+# its own. Targeting "pi" here instead would make the CLI additionally copy
+# every skill into ~/.pi/agent/skills, a second, independently-updated copy
+# pi also scans — pi then reports every single skill as a name collision
+# between the two identical locations.
+{{ $agents := list "universal" -}}
 {{ if index . "agents" -}}
 {{ $agents = .agents | uniq -}}
 {{ end -}}

@@ -231,7 +231,11 @@ function __up_skills --description "Update agent skills"
     # .chezmoiscripts/run_once_after_15-bootstrap-mattpocock-skills.sh;
     # this keeps it in sync afterward.)
     set -l repo mattpocock/skills
-    set -l agents pi
+    # "universal" writes only into ~/.agents/skills, which pi already
+    # discovers on its own; targeting "pi" would additionally copy every
+    # skill into ~/.pi/agent/skills, and pi would then report each one as a
+    # name collision between those two identical locations.
+    set -l agents universal
     set -l names (
         for dir in engineering productivity
             gh api "repos/$repo/contents/skills/$dir" --jq '.[] | select(.type == "dir") | .name' 2>/dev/null

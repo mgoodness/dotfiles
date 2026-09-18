@@ -61,7 +61,7 @@ Parallel worktree development with [herdr](https://herdr.dev) (terminal workspac
 > Ghostty installs via Homebrew (`cask "ghostty"`); herdr installs via its own installer (`run_after_17-herdr-setup.sh.tmpl`, not Homebrew — the curl-installed binary is what supports `herdr update --handoff`).
 
 - **Worktrees**: worktrunk owns create/teardown. The sibling path `repo.branch` keeps each worktree under `~/Code/{host}/`, so per-host identity and signing still apply (ADR-0002). User config: `dot_config/worktrunk/config.toml`.
-- **Hooks** (fire on `wt switch --create`): `pre-start` preps env (mise → direnv fallback); `post-start` opens a focused herdr workspace at the worktree.
+- **Hooks** (fire on `wt switch --create`): `pre-start` preps env (mise → direnv fallback); `post-start` opens a herdr workspace at the worktree, without stealing focus.
 - **Workspaces**: labeled `Personal` / `MLB` by convention only — herdr has no group/folder primitive to enforce this; see `CONTEXT.md`.
 - **Shell integration**: installed by `run_after_31-worktrunk-setup.sh` (`functions/wt.fish`, unmanaged by chezmoi). The same script keeps the Pi activity extension (`~/.pi/agent/extensions/worktrunk.ts`) current; `up.fish`'s `__up_wt` does the same between applies.
 
