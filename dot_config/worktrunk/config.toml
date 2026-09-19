@@ -9,58 +9,6 @@ worktree-path = "{{ repo_path }}/../{{ repo }}.{{ branch | sanitize }}"
 # Blocking: prep the environment (mise first, direnv fallback — Q13) before "ready".
 [pre-start]
 env = 'cd "{{ worktree_path }}" && if [ -f mise.toml ] || [ -f .mise.toml ] || [ -f .config/mise/config.toml ] || [ -f .tool-versions ]; then mise trust && mise install; elif [ -f .envrc ]; then direnv allow; fi'
-# Blocking so context/overlay files exist before --execute or an agent starts;
-# runs concurrently with `env` (a hook table runs its entries concurrently) and
-# is local, so it adds no measurable latency.
-#
-# Restores files present (A) or modified (M) on agent-context relative to HEAD:
-# context-only docs land untracked (??), overlay files like AGENTS.md land as an
-# uncommitted tracked modification (M). Generically a no-op where the repo has
-# no agent-context branch. Uses checkout + restore --staged (per the
-# agent-context-branch skill), NOT git merge: a merge makes agent-context's
-# commits real ancestors of the branch (so they'd ride along into any future
-# PR), and git's merge silently drops any file that's unchanged on the
-# agent-context side but was deleted from main after the two branches' common
-# ancestor — no conflict is raised, it just vanishes. checkout + restore
-# --staged avoids both, without creating any merge relationship.
-context = '''
-ref=agent-context
-git show-ref --verify --quiet refs/heads/$ref || ref=origin/agent-context
-if git show-ref --verify --quiet refs/heads/$ref || git show-ref --verify --quiet refs/remotes/$ref; then
-  # (1) New worktree: restore files agent-context has actually moved since the
-  #     merge base. Comparing $ref:$f against $base:$f — not a blind AM checkout —
-  #     skips files where agent-context is merely behind HEAD (its older code
-  #     blobs would otherwise be checked out over main's). Context-only adds and
-  #     overlay edits still restore.
-  base=$(git merge-base HEAD "$ref")
-  git diff --name-only --diff-filter=AM -z HEAD "$ref" | while IFS= read -r -d '' f; do
-    refblob=$(git rev-parse "$ref:$f" 2>/dev/null) || continue
-    baseblob=$(git rev-parse "$base:$f" 2>/dev/null)
-    if [ -n "$baseblob" ] && [ "$refblob" = "$baseblob" ]; then continue; fi
-    git checkout "$ref" -- "$f"
-    git restore --staged -- "$f"
-  done
-
-  # (2) Main worktree: refresh ONLY untracked context-only docs. Never touch a
-  #     tracked file there — agent-context lags main between rebases, so its
-  #     older code blobs would otherwise revert main. Same merge-base filter as
-  #     (1); content compare (not git diff) because untracked files have no baseline.
-  main="{{ repo_path }}"
-  mainbase=$(git -C "$main" merge-base HEAD "$ref")
-  git -C "$main" diff --name-only --diff-filter=AM -z HEAD "$ref" | while IFS= read -r -d '' f; do
-    refblob=$(git -C "$main" rev-parse "$ref:$f" 2>/dev/null) || continue
-    baseblob=$(git -C "$main" rev-parse "$mainbase:$f" 2>/dev/null)
-    if [ -n "$baseblob" ] && [ "$refblob" = "$baseblob" ]; then continue; fi
-    if git -C "$main" ls-files --error-unmatch -- "$f" >/dev/null 2>&1; then continue; fi
-    if [ ! -e "$main/$f" ]; then continue; fi
-    if git -C "$main" show "$ref:$f" 2>/dev/null | cmp -s - "$main/$f"; then continue; fi
-    printf 'wt context: refreshing main/%s from agent-context\n' "$f" >&2
-    git -C "$main" checkout "$ref" -- "$f"
-    git -C "$main" restore --staged -- "$f"
-  done
-fi
-'''
-
 # Background: open a focused herdr workspace at the new worktree (Q5).
 # Kept in global config (not repo-tracked) so it never shows up in a PR diff,
 # and doesn't hit the chicken-and-egg problem of needing the hook file itself
@@ -73,7 +21,7 @@ fi
 [post-start]
 herdr = 'herdr worktree open --path "{{ worktree_path }}" --label "{{ branch }}" --no-focus'
 
-# submersion: init submodules/deps/codegen after the context checkout above.
+# submersion: init submodules/deps/codegen after env prep above.
 [[projects."github.com/mgoodness/submersion".post-start]]
 submodules = "git submodule update --init --recursive"
 

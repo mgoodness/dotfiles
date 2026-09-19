@@ -9,5 +9,5 @@ Worktree creation, sibling pathing, teardown, and per-worktree environment setup
 
 ## Consequences
 
-- A worktrunk post-start hook is the single integration point: it preps the environment (`mise`/`direnv`), pulls in the agent-context branch's files if the repo has one, then calls `herdr worktree open --path "{{ worktree_path }}" --label "{{ branch }}" --no-focus`.
+- A worktrunk post-start hook is the single integration point: it preps the environment (`mise`/`direnv`), then calls `herdr worktree open --path "{{ worktree_path }}" --label "{{ branch }}" --no-focus`.
 - Herdr has no equivalent of Muxy's "auto-expand worktrees on project switch" safety net — a Worktree made outside worktrunk won't automatically surface in Herdr and needs `herdr worktree open` run for it explicitly.
