@@ -23,7 +23,43 @@ env = 'cd "{{ worktree_path }}" && if [ -f mise.toml ] || [ -f .mise.toml ] || [
 # agent-context side but was deleted from main after the two branches' common
 # ancestor — no conflict is raised, it just vanishes. checkout + restore
 # --staged avoids both, without creating any merge relationship.
-context = 'ref=agent-context; git show-ref --verify --quiet refs/heads/$ref || ref=origin/agent-context; if git show-ref --verify --quiet refs/heads/$ref || git show-ref --verify --quiet refs/remotes/$ref; then git diff --name-only --diff-filter=AM -z HEAD "$ref" | xargs -0 -r git checkout "$ref" --; git diff --name-only --diff-filter=AM -z HEAD "$ref" | xargs -0 -r git restore --staged; fi'
+context = '''
+ref=agent-context
+git show-ref --verify --quiet refs/heads/$ref || ref=origin/agent-context
+if git show-ref --verify --quiet refs/heads/$ref || git show-ref --verify --quiet refs/remotes/$ref; then
+  # (1) New worktree: restore files agent-context has actually moved since the
+  #     merge base. Comparing $ref:$f against $base:$f — not a blind AM checkout —
+  #     skips files where agent-context is merely behind HEAD (its older code
+  #     blobs would otherwise be checked out over main's). Context-only adds and
+  #     overlay edits still restore.
+  base=$(git merge-base HEAD "$ref")
+  git diff --name-only --diff-filter=AM -z HEAD "$ref" | while IFS= read -r -d '' f; do
+    refblob=$(git rev-parse "$ref:$f" 2>/dev/null) || continue
+    baseblob=$(git rev-parse "$base:$f" 2>/dev/null)
+    if [ -n "$baseblob" ] && [ "$refblob" = "$baseblob" ]; then continue; fi
+    git checkout "$ref" -- "$f"
+    git restore --staged -- "$f"
+  done
+
+  # (2) Main worktree: refresh ONLY untracked context-only docs. Never touch a
+  #     tracked file there — agent-context lags main between rebases, so its
+  #     older code blobs would otherwise revert main. Same merge-base filter as
+  #     (1); content compare (not git diff) because untracked files have no baseline.
+  main="{{ repo_path }}"
+  mainbase=$(git -C "$main" merge-base HEAD "$ref")
+  git -C "$main" diff --name-only --diff-filter=AM -z HEAD "$ref" | while IFS= read -r -d '' f; do
+    refblob=$(git -C "$main" rev-parse "$ref:$f" 2>/dev/null) || continue
+    baseblob=$(git -C "$main" rev-parse "$mainbase:$f" 2>/dev/null)
+    if [ -n "$baseblob" ] && [ "$refblob" = "$baseblob" ]; then continue; fi
+    if git -C "$main" ls-files --error-unmatch -- "$f" >/dev/null 2>&1; then continue; fi
+    if [ ! -e "$main/$f" ]; then continue; fi
+    if git -C "$main" show "$ref:$f" 2>/dev/null | cmp -s - "$main/$f"; then continue; fi
+    printf 'wt context: refreshing main/%s from agent-context\n' "$f" >&2
+    git -C "$main" checkout "$ref" -- "$f"
+    git -C "$main" restore --staged -- "$f"
+  done
+fi
+'''
 
 # Background: open a focused herdr workspace at the new worktree (Q5).
 # Kept in global config (not repo-tracked) so it never shows up in a PR diff,
