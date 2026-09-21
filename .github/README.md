@@ -20,28 +20,19 @@ Otherwise:
 sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply mgoodness
 ```
 
-## herdr + worktrunk
+## worktrunk
 
-Parallel git-worktree development with [herdr](https://herdr.dev) (terminal workspace
-manager, run inside Ghostty) and [worktrunk](https://worktrunk.dev) (`wt`, worktree
-lifecycle). A fresh `chezmoi init --apply` wires up the worktrunk half:
+Parallel git-worktree development with [worktrunk](https://worktrunk.dev) (`wt`,
+worktree lifecycle), run inside Ghostty. A fresh `chezmoi init --apply` wires it up:
 
 1. Homebrew installs `worktrunk`, `mise`, and the `ghostty` cask.
-2. `run_after_17-herdr-setup.sh` installs herdr via its own installer — not
-   Homebrew, so `herdr update --handoff` (in-place session updates) keeps working —
-   then loads its background service and configures its agent skill, Pi
-   integration, and worktrunk plugin.
-3. `run_once_after_31-worktrunk-shell.sh` installs worktrunk's fish shell integration.
-4. `~/.config/worktrunk/config.toml` hooks fire on `wt switch --create <branch>`: prep
-   env (mise → direnv), then open a herdr workspace at the new worktree, without
-   stealing focus.
-
-Workspaces are labeled `Personal` / `MLB` by convention only — herdr has no
-group/folder primitive to enforce this the way cmux's sidebar groups did.
+2. `run_after_31-worktrunk-setup.sh` installs worktrunk's fish shell integration and
+   its Pi activity extension.
+3. `~/.config/worktrunk/config.toml`'s `pre-start` hook fires on `wt switch --create <branch>`: prep env (mise → direnv).
 
 Day-to-day: `gh repo clone …` places the repo at `~/Code/{host}/{user}/{repo}` (run `mise
 install` yourself to set up env). `wt switch --create <branch>` spins up an isolated
-worktree with env prep and a herdr workspace opened in the background, done for you.
+worktree with env prep done for you.
 
 ## Acknowledgements
 

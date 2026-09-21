@@ -5,7 +5,7 @@ description: Clean up a branch and its associated worktree, remote ref, and loca
 
 # Cleanup Branch
 
-Remove a branch and its worktree once its PR is merged: the local branch, the remote ref, and the herdr workspace it ran in. See the `herdr` skill for CLI mechanics and JSON shapes.
+Remove a branch and its worktree once its PR is merged: the local branch, the remote ref, and the worktree itself.
 
 ## Workflow
 
@@ -105,31 +105,7 @@ Ask: "Delete branch `<branch>`[and remove worktree at `<path>`]? (y/N)"
 
 Abort if the user declines.
 
-### 7. Tear down the worktree's herdr workspace before removing it
-
-Merge status only tells you the git state is clean — not that an agent has stopped touching the directory. If a worktree exists, resolve it to its herdr workspace:
-
-```sh
-herdr worktree list | jq -r --arg p "<path>" '.result.worktrees[] | select(.path==$p) | .open_workspace_id'
-```
-
-A null or empty result means no workspace is open there — skip to step 8.
-
-Otherwise inspect the workspace's panes:
-
-```sh
-herdr pane list --workspace <workspace-id>
-```
-
-Any pane carrying an `agent` field is a live agent — any value counts (`claude`, `pi`, `codex`, …), regardless of `agent_status`. A pane without the field is a bare shell. Closing the workspace stops whatever runs in it, so this tears down every agent kind with no per-agent exit command:
-
-```sh
-herdr workspace close <workspace-id>
-```
-
-Confirm it no longer resolves (`herdr workspace get <workspace-id>`) before continuing, so the agent is stopped before the directory goes away. If herdr refuses the close, surface that to the user rather than forcing it; the `herdr` skill covers close semantics.
-
-### 8. Remove the worktree and/or branch
+### 7. Remove the worktree and/or branch
 
 **If a worktree exists** — use worktrunk, which handles removal, metadata pruning, and branch deletion in one step:
 
@@ -161,7 +137,7 @@ gh poi --state merged             # delete
 
 Use `gh poi lock <branch>` to protect any branch that should be kept.
 
-### 9. Delete remote branch
+### 8. Delete remote branch
 
 Runs for both paths — no-op if GitHub already deleted it:
 
@@ -169,10 +145,10 @@ Runs for both paths — no-op if GitHub already deleted it:
 git ls-remote --heads origin <branch> | grep -q . && git push origin --delete <branch> || true
 ```
 
-### 10. Report what was done
+### 9. Report what was done
 
-Note the live agent stopped (if one was found), branch deleted, and worktree removed (if applicable).
+Note the branch deleted and worktree removed (if applicable).
 
 ## Completion criterion
 
-The branch is gone locally and from `origin`, its worktree no longer appears in `git worktree list`, and no herdr workspace remains for it.
+The branch is gone locally and from `origin`, and its worktree no longer appears in `git worktree list`.

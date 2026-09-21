@@ -1,5 +1,7 @@
 # Worktrunk owns the worktree lifecycle
 
+> **Partially superseded by [ADR-0006](0006-drop-herdr.md).** Herdr is gone; worktrunk's ownership of the worktree lifecycle (below) is unaffected, but every mention of Herdr as "the UI/Pane layer" describes a since-removed integration.
+
 Worktree creation, sibling pathing, teardown, and per-worktree environment setup are owned by [worktrunk](https://worktrunk.dev) (`wt`) — not a hand-rolled fish function and not Herdr's built-in `worktree create`. Worktrunk's default path template already emits the sibling `repo.branch` form we want, it installs via Homebrew (so it rides in the Brewfile and stays reproducible), and it is purpose-built for parallel-agent workflows, giving us lifecycle hooks for free instead of code to maintain. Herdr stays the UI / Pane layer: a worktrunk post-start hook calls `herdr worktree open --path ... --no-focus` to nest the new worktree under the right Herdr workspace without stealing focus from whatever you're already looking at.
 
 ## Considered Options

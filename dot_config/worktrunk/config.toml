@@ -9,17 +9,6 @@ worktree-path = "{{ repo_path }}/../{{ repo }}.{{ branch | sanitize }}"
 # Blocking: prep the environment (mise first, direnv fallback — Q13) before "ready".
 [pre-start]
 env = 'cd "{{ worktree_path }}" && if [ -f mise.toml ] || [ -f .mise.toml ] || [ -f .config/mise/config.toml ] || [ -f .tool-versions ]; then mise trust && mise install; elif [ -f .envrc ]; then direnv allow; fi'
-# Background: open a focused herdr workspace at the new worktree (Q5).
-# Kept in global config (not repo-tracked) so it never shows up in a PR diff,
-# and doesn't hit the chicken-and-egg problem of needing the hook file itself
-# to arrive via the merge it triggers.
-#
-# `--path` alone is enough for herdr to nest this under the right parent —
-# it reads repo identity off the worktree's own git metadata (verified: no
-# --workspace/--cwd hint needed), which matters here since a hook only ever
-# knows the worktree path, not which workspace triggered it.
-[post-start]
-herdr = 'herdr worktree open --path "{{ worktree_path }}" --label "{{ branch }}" --no-focus'
 
 # submersion: init submodules/deps/codegen after env prep above.
 [[projects."github.com/mgoodness/submersion".post-start]]
