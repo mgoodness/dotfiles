@@ -4,6 +4,7 @@
 .config/fish/functions/pi.fish
 .config/fish/secrets.mlb.yaml
 .config/fish/secrets.personal.yaml
+.config/herdr
 .kit.yml
 .local/share/kit
 .pi/agent/agents/planner.md
@@ -13,3 +14,4 @@
 .pi/agent/prompts/implement-and-review.md
 .pi/agent/prompts/implement.md
 .pi/agent/prompts/scout-and-plan.md
+Library/LaunchAgents/dev.herdr.server.plist
