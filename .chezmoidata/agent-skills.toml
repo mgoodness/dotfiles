@@ -1,0 +1,10 @@
+[[agentSkills]]
+id = "herdrdev/herdr"
+skills = ["herdr"]
+
+[[agentSkills]]
+id = "j178/prek"
+skills = ["prek"]
+
+[[agentSkills]]
+id = "spf13/go-skills"

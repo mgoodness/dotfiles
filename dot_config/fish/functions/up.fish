@@ -226,7 +226,7 @@ function __up_skills --description "Update agent skills"
     # never a directory prefix like skills/engineering — so keeping pace
     # with skills mattpocock adds, renames, or removes there means
     # rediscovering that list ourselves each run, rather than relying on a
-    # hand-maintained list in agents.toml. (First install is bootstrapped
+    # hand-maintained list in agent-skills.toml. (First install is bootstrapped
     # once per machine by
     # .chezmoiscripts/run_once_after_15-bootstrap-mattpocock-skills.sh;
     # this keeps it in sync afterward.)
