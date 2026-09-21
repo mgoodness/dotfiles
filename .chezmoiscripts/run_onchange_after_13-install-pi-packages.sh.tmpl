@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# shellcheck shell=bash
+
+if [ -n "${CI:-}" ]; then
+    echo "Skipping due to \$CI"
+    exit
+fi
+
+if ! command -v pi &>/dev/null; then
+    echo "Skipping: pi not found"
+    exit
+fi
+
+# `pi install` only fetches an npm/git package (writing its files under
+# ~/.pi/agent/npm/); auto-install-on-startup is documented for project
+# packages after trust, not for user-scoped ones. Declaring a package in
+# modify_settings.json's merged `packages` list is not enough on its own, so
+# run the real install here too.
+
+# Pi packages config hash: {{ .piPackages | toJson | sha256sum }}
+
+{{ range .piPackages -}}
+pi install {{ .id }}
+{{ end -}}

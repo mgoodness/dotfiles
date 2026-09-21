@@ -8,7 +8,10 @@ packages added with `pi install`.
 - `theme` is chezmoi-managed and always wins.
 - `defaultProvider`/`defaultModel`/`defaultThinkingLevel` are profile seeds:
   they only fill in when absent, so a Ctrl+S change is never reverted.
-- The declared npm package is unioned into `packages`.
+- Packages declared in `.chezmoidata/pi-packages.toml` are unioned into
+  `packages`. A companion run_onchange script actually installs them
+  (`pi install`), since declaring a package here only makes pi load it if
+  it's already fetched under `~/.pi/agent/npm/`.
 - Every other key (e.g. lastChangelogVersion) is preserved untouched.
 */ -}}
 {{- $current := dict -}}
@@ -26,9 +29,9 @@ packages added with `pi install`.
 {{- $current = merge $current $seeds -}}
 {{- $_ := set $current "theme" "catppuccin-latte/catppuccin-frappe" -}}
 {{- $packages := index $current "packages" | default list -}}
-{{- range (list "npm:@gotgenes/pi-anthropic-auth") -}}
-{{-   if not (has . $packages) -}}
-{{-     $packages = append $packages . -}}
+{{- range .piPackages -}}
+{{-   if not (has .id $packages) -}}
+{{-     $packages = append $packages .id -}}
 {{-   end -}}
 {{- end -}}
 {{- $_ := set $current "packages" $packages -}}
