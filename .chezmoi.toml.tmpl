@@ -11,3 +11,20 @@
 
 [status]
     exclude = ["scripts"]
+
+[update]
+    # Same as chezmoi's own default (`git pull --autostash --rebase`), plus
+    # `-q` so a no-op pull's "Already up to date." never reaches stdout in
+    # the first place — `up dotfiles` (dot_config/fish/functions/up.fish)
+    # used to strip that one line back out with a `| string match` pipe, but
+    # piping chezmoi's stdout breaks its bubbletea conflict-resolution
+    # prompt (a real target-changed prompt still needs to render and read a
+    # keystroke; a broken pipe just makes it hang invisibly instead).
+    # Silencing git at the source means `up dotfiles` can run
+    # `chezmoi update --apply` attached directly to the terminal, so that
+    # prompt still works when it's genuinely needed. No `--recurse-submodules`
+    # here (unlike chezmoi's own default, which adds it automatically when a
+    # repo has submodules): this repo has none today; add it back if that
+    # changes.
+    command = "git"
+    args = ["pull", "--autostash", "--rebase", "-q"]

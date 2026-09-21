@@ -88,11 +88,22 @@ function __up_docker --description "Update Docker images"
 end
 
 function __up_dotfiles --description "Update dotfiles"
-    # `chezmoi update` shells out to `git pull`, which prints "Already up to
-    # date." even on a no-op. Drop that one line, keep everything else (new
-    # commits, apply output), and preserve chezmoi's exit status.
-    chezmoi update --apply 2>&1 | string match -r -v '^Already up[- ]to[- ]date\.$'
-    return $pipestatus[1]
+    # Runs attached to the real terminal, unpiped and unforced: chezmoi.toml's
+    # [update] section already makes the underlying `git pull` quiet (-q), so
+    # there's no "Already up to date." noise left to filter out here. That
+    # matters because piping this through `| string match` (the old way of
+    # dropping that line) broke chezmoi's bubbletea conflict-resolution
+    # prompt — the "<target> has changed since chezmoi last wrote it?"
+    # overwrite/skip/quit TUI needs a real terminal to render and to read a
+    # keystroke, and a pipe made it hang invisibly instead. Running it plain
+    # keeps that prompt genuinely interactive for the rare case it's needed.
+    # `--init` re-derives chezmoi.toml from .chezmoi.toml.tmpl on every run,
+    # not just at `chezmoi init` time — so an [update]/[diff]/etc. edit
+    # committed to that template takes effect on the next pull without a
+    # separate manual `chezmoi init`. Safe to repeat: promptBoolOnce (mlb/
+    # personal role data) only prompts once and reuses the saved answer
+    # thereafter, so this never re-prompts on an already-answered machine.
+    chezmoi update --init --apply
 end
 
 function __up_fisher --description "Update fish packages"
