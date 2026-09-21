@@ -6,7 +6,7 @@
 # run_after_21-remote-login.sh.tmpl: this is about one physical Mac's sshd,
 # not something either role should carry.
 # Self-healing: guards itself before acting, so repeated `chezmoi apply` runs
-# are a no-op, matching run_after_17-herdr-setup.sh.tmpl's convention.
+# are a no-op, matching run_after_17-herdr-setup.sh's convention.
 
 if [ -n "${CI:-}" ]; then
     echo "Skipping due to \$CI"

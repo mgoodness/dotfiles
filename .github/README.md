@@ -27,9 +27,10 @@ manager, run inside Ghostty) and [worktrunk](https://worktrunk.dev) (`wt`, workt
 lifecycle). A fresh `chezmoi init --apply` wires up the worktrunk half:
 
 1. Homebrew installs `worktrunk`, `mise`, and the `ghostty` cask.
-2. `run_after_17-herdr-setup.sh.tmpl` installs herdr via its own installer — not
+2. `run_after_17-herdr-setup.sh` installs herdr via its own installer — not
    Homebrew, so `herdr update --handoff` (in-place session updates) keeps working —
-   then loads its background service and configures its Pi integration and plugins.
+   then loads its background service and configures its agent skill, Pi
+   integration, and worktrunk plugin.
 3. `run_once_after_31-worktrunk-shell.sh` installs worktrunk's fish shell integration.
 4. `~/.config/worktrunk/config.toml` hooks fire on `wt switch --create <branch>`: prep
    env (mise → direnv), then open a herdr workspace at the new worktree, without

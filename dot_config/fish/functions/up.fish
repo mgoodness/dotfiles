@@ -212,7 +212,7 @@ end
 function __up_skills --description "Update agent skills"
     # Pinned so a `skills` release doesn't silently change apply behavior on
     # one machine before another. Bump deliberately, in lockstep with the
-    # same pin in the two skills-install chezmoiscripts.
+    # same pin in the other skills-install chezmoiscripts.
     set -l skills_version 1.7.0
 
     # `skills update` has no --json/structured-error mode (unlike `add` and
