@@ -16,13 +16,22 @@ where some of this was already cleaned up by hand.
 chezmoi update --apply
 ```
 
-This alone removes `~/.config/herdr/` and `~/Library/LaunchAgents/dev.herdr.server.plist`
-(via `.chezmoiremove` — deleting a file from chezmoi's source doesn't delete the
-already-applied target on its own, hence the explicit entries) and updates every
-herdr-aware file (`up.fish`, `02-paths.fish`, `worktrunk/config.toml`,
+This alone removes `~/Library/LaunchAgents/dev.herdr.server.plist` and (usually)
+`~/.config/herdr/` (via `.chezmoiremove` — deleting a file from chezmoi's source doesn't
+delete the already-applied target on its own, hence the explicit entries) and updates
+every herdr-aware file (`up.fish`, `02-paths.fish`, `worktrunk/config.toml`,
 `cleanup-branch/SKILL.md`) to its herdr-free version. It does **not** stop the running
 server first — do that next, before the directory holding its socket disappears out
 from under it.
+
+> **If `~/.config/herdr/` survives the apply**, it's because herdr's runtime wrote a
+> `session.json` into it after chezmoi last touched the directory, so chezmoi treats it as
+> "changed since chezmoi last wrote it" and stops to ask before removing — a prompt that
+> aborts outright in a non-interactive shell (no `/dev/tty`). Force it through:
+>
+> ```sh
+> chezmoi apply --force ~/.config/herdr
+> ```
 
 ## 2. Stop the background service — `bootout`, not `stop`
 
@@ -44,8 +53,9 @@ None of the following is chezmoi-managed — herdr's own installer and its own r
 these here directly, so `chezmoi update --apply` in step 1 has no way to know about them:
 
 ```sh
-# The curl-installed binary itself, plus any stray update temp files it left behind.
-rm -f ~/.local/bin/herdr ~/.local/bin/.herdr-update-*.tmp
+# The curl-installed binary itself, its sibling zero-reporter helper script, and any
+# stray update temp files it left behind.
+rm -f ~/.local/bin/herdr ~/.local/bin/herdr-zero-reporter ~/.local/bin/.herdr-update-*.tmp
 
 # launchd's stdout/stderr log target (the directory the plist pointed at).
 rm -rf ~/Library/Logs/herdr
