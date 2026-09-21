@@ -5,7 +5,7 @@
 # specific rather than role-specific (mlb/personal, see ADR-0005) since this
 # is about one physical Mac, not something either role should carry.
 # Self-healing: guards itself before acting, so repeated `chezmoi apply` runs
-# are a no-op, matching run_after_17-herdr-setup.sh's convention.
+# are a no-op, matching this repo's other run_after_ scripts.
 
 if [ -n "${CI:-}" ]; then
     echo "Skipping due to \$CI"
