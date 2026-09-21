@@ -3,6 +3,7 @@
 # rubocop:disable Style/StringLiterals
 
 tap "beeftornado/rmtree", trusted: true
+tap "thdxg/tap", trusted: true
 
 brew "actionlint"
 brew "bash"
@@ -70,7 +71,7 @@ cask "font-fira-code-nerd-font"
 cask "font-fira-code"
 cask "gcloud-cli"
 cask "ghostty"
-cask "macdown-3000"
+cask "macterm"
 cask "rectangle"
 
 # krew "config-cleanup"
