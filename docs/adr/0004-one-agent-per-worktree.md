@@ -1,5 +1,7 @@
 # One agent per worktree
 
+> **Partially superseded by [ADR-0006](0006-drop-herdr.md).** The herdr-specific mechanics below (Panes, `herdr agent prompt`, the worktrunk plugin's keybinds) no longer apply — herdr is gone. The one-agent-per-worktree decision itself is unchanged.
+
 Parallel AI Agents each get their own Worktree (and branch); we never run multiple _editing_ Agents as separate Panes on one shared working tree. A shared working tree means concurrent Agents overwrite each other's uncommitted edits, defeating the isolation that worktrees exist to provide. Worktrunk is built for exactly this fan-out (`wt switch --create taskN`), and Herdr's worktrunk plugin binds `prefix+shift+g` / `prefix+shift+c` to switch or create a Worktree from the default or current branch.
 
 ## Consequences
