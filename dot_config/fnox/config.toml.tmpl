@@ -20,6 +20,7 @@ onepass_mlb = { type = "1password", account = "mlb.1password.com" }
 
 [secrets]
 GH_TOKEN = { provider = "onepass_personal", value = "op://Private/GH CLI PAT/credential" }
+OPENCODE_API_KEY = { provider = "onepass_personal", value = "op://Private/OpenCode API Key/credential" }
 {{ if .personal -}}
 EXA_API_KEY = { provider = "onepass_personal", value = "op://Private/Exa API Key/credential" }
 {{ end -}}
