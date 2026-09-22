@@ -16,7 +16,6 @@ secrets through [fnox](https://fnox.jdx.dev/), and [Catppuccin](https://catppucc
   (`.chezmoiexternal.toml`, 168h refresh). Macterm and Helix follow the system light/dark appearance.
 - **pi** — the [pi](https://pi.dev/) coding agent: homegrown skills (`~/.agents/skills`), global
   extensions, subagent definitions, and npm packages.
-- **Worktrees** — [worktrunk](https://worktrunk.dev) + Macterm for parallel git-worktree development.
 
 ## Installation
 
@@ -40,26 +39,18 @@ After applying, `.chezmoiscripts/` installs Homebrew packages (`brew bundle`), g
 pi packages, and agent skills; sets macOS defaults; configures fish as the login shell; and
 wires up worktrunk.
 
-## Code workspace
+## Development workflow
 
 Repos live under `~/Code/` by git host — `github.com/`, `emu.github.com/`, and
 `github.mlbam.net/` — each with its own `.gitconfig` for identity and signing (1Password
-`op-ssh-sign`). `gh repo clone` places a repo at `~/Code/{host}/{user}/{repo}`.
+`op-ssh-sign`). `gh repo clone` places a repo at `~/Code/{host}/{user}/{repo}` (run `mise
+install` yourself for a plain clone).
 
-## worktrunk
-
-Parallel git-worktree development with [worktrunk](https://worktrunk.dev) (`wt`, worktree
-lifecycle), run inside Macterm. A fresh `chezmoi init --apply` wires it up:
-
-1. Homebrew installs `worktrunk`, `mise`, and the `macterm` cask.
-2. `run_after_31-worktrunk-setup.sh` installs worktrunk's fish shell integration and its pi
-   activity extension.
-3. `~/.config/worktrunk/config.toml`'s `pre-start` hook fires on `wt switch --create <branch>`:
-   prep env (mise → direnv).
-
-Day-to-day: `gh repo clone …` places the repo at `~/Code/{host}/{user}/{repo}` (run `mise
-install` yourself for a plain clone). `wt switch --create <branch>` spins up an isolated
-worktree with env prep done for you.
+Parallel work happens in git worktrees via [worktrunk](https://worktrunk.dev) (`wt`), run inside
+Macterm. A fresh `chezmoi init --apply` installs `worktrunk` and the `macterm` cask, and
+`run_after_31-worktrunk-setup.sh` wires up worktrunk's fish integration and pi activity extension.
+The `pre-start` hook in `~/.config/worktrunk/config.toml` preps env (mise → direnv) on
+`wt switch --create <branch>`, so each new worktree is ready to go.
 
 ## Acknowledgements
 
