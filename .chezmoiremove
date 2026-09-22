@@ -1,6 +1,8 @@
 .agents/skills/agent-context-branch
+.agents/skills/spin-up-worktrees
 .claude
 .config/claude
+.config/ghostty/config
 .config/fish/functions/pi.fish
 .config/fish/secrets.mlb.yaml
 .config/fish/secrets.personal.yaml
