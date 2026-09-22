@@ -23,9 +23,9 @@ sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply mgoodness
 ## worktrunk
 
 Parallel git-worktree development with [worktrunk](https://worktrunk.dev) (`wt`,
-worktree lifecycle), run inside Ghostty. A fresh `chezmoi init --apply` wires it up:
+worktree lifecycle), run inside Macterm. A fresh `chezmoi init --apply` wires it up:
 
-1. Homebrew installs `worktrunk`, `mise`, and the `ghostty` cask.
+1. Homebrew installs `worktrunk`, `mise`, and the `macterm` cask.
 2. `run_after_31-worktrunk-setup.sh` installs worktrunk's fish shell integration and
    its Pi activity extension.
 3. `~/.config/worktrunk/config.toml`'s `pre-start` hook fires on `wt switch --create <branch>`: prep env (mise → direnv).

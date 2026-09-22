@@ -70,7 +70,6 @@ cask "discord"
 cask "font-fira-code-nerd-font"
 cask "font-fira-code"
 cask "gcloud-cli"
-cask "ghostty"
 cask "thdxg/tap/macterm", trusted: true
 cask "rectangle"
 

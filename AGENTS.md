@@ -56,9 +56,9 @@ Each directory has `.gitconfig` overriding identity and signing key. Global git 
 
 ### worktrunk
 
-Parallel git-worktree development via [worktrunk](https://worktrunk.dev) (`wt`, worktree lifecycle), run inside Ghostty.
+Parallel git-worktree development via [worktrunk](https://worktrunk.dev) (`wt`, worktree lifecycle), run inside Macterm.
 
-> Ghostty installs via Homebrew (`cask "ghostty"`).
+> Macterm installs via Homebrew (`cask "thdxg/tap/macterm"`) and reads the kept Ghostty config (`dot_config/ghostty/`).
 
 - **Worktrees**: worktrunk owns create/teardown. The sibling path `repo.branch` keeps each worktree under `~/Code/{host}/`, so per-host identity and signing still apply (ADR-0002). User config: `dot_config/worktrunk/config.toml`.
 - **Hooks** (fire on `wt switch --create`): `pre-start` preps env (mise → direnv fallback). There's no `post-start` hook anymore — it used to open a herdr workspace at the new worktree; herdr is gone (ADR-0006), so a fresh worktree no longer opens any UI/pane for you automatically.
@@ -77,7 +77,7 @@ On shell startup, `up --auto` checks for daily updates.
 
 ### Themes
 
-Catppuccin used across bat, eza, ghostty, and Helix, fetched via `.chezmoiexternal.toml`, not committed. Ghostty and Helix switch light/dark automatically on system appearance.
+Catppuccin used across bat, eza, ghostty, and Helix, fetched via `.chezmoiexternal.toml`, not committed. Macterm (via the kept Ghostty config) and Helix switch light/dark automatically on system appearance.
 
 ### pi (`pi-coding-agent`)
 
