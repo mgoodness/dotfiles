@@ -13,3 +13,6 @@ Code/github.mlbam.net/**
 {{ if not .personal }}
 .config/homebrew/Brewfile.personal
 {{ end -}}
+{{ if not .mlb }}
+.agents/skills/argocd-akuity
+{{ end -}}
