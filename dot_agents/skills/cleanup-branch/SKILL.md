@@ -108,13 +108,16 @@ Abort if the user declines.
 
 ### 7. Close its Macterm tab
 
-Close the worktree's tab before the directory goes away (the `macterm` skill has the CLI mechanics). Find the tab whose pane's `cwd` is the worktree path in `macterm pane list`, then close it by id:
+Close the worktree's tab before the directory goes away (the `macterm` skill has the CLI mechanics). Find the tab whose pane's `cwd` is the worktree path in `macterm pane list`, then quit its agent and close the tab by id:
 
 ```sh
+macterm pane key --session <session> ctrl+d   # quit the agent gracefully
 macterm tab close <tab-id>
 ```
 
-Close verbs always need an explicit target. A `busy` close means an agent is still running in that tab — surface that to the user rather than forcing the close, which would kill the session.
+The agent is usually still resident, and a close with a running program is refused as `busy`. Quitting first avoids it: pi exits on Ctrl-D (its `app.exit`, when the input is empty), which hands the pane back to its shell. If the input held text, Ctrl-D edits instead, so send Ctrl-C once to clear it, then Ctrl-D. A close that still reports `busy` means the agent is mid-turn — surface that to the user rather than forcing the close, which kills the pane's session.
+
+Close verbs always need an explicit target.
 
 ### 8. Remove the worktree and/or branch
 
