@@ -1,11 +1,11 @@
 ---
 name: cleanup-branch
-description: Clean up a branch and its associated worktree, remote ref, and local tracking branch. Use when the user wants to clean up after a PR is merged, or mentions "delete worktree" or "delete branch".
+description: Clean up a branch and everything around it — its worktree, its Macterm tab, its remote ref, and its local branch. Use when the user wants to clean up after a PR is merged, or mentions "delete worktree" or "delete branch".
 ---
 
 # Cleanup Branch
 
-Remove a branch and its worktree once its PR is merged: the local branch, the remote ref, and the worktree itself.
+Remove a branch once its PR is merged: its worktree, its Macterm tab, the local branch, and the remote ref.
 
 ## Workflow
 
@@ -100,12 +100,23 @@ Show the user exactly what will be removed:
 
 - Branch: `<headRefName>`
 - Worktree path: `<path>` (or "none")
+- Macterm tab: the tab rooted at `<path>` (or "none")
 
 Ask: "Delete branch `<branch>`[and remove worktree at `<path>`]? (y/N)"
 
 Abort if the user declines.
 
-### 7. Remove the worktree and/or branch
+### 7. Close its Macterm tab
+
+Close the worktree's tab before the directory goes away (the `macterm` skill has the CLI mechanics). Find the tab whose pane's `cwd` is the worktree path in `macterm pane list`, then close it by id:
+
+```sh
+macterm tab close <tab-id>
+```
+
+Close verbs always need an explicit target. A `busy` close means an agent is still running in that tab — surface that to the user rather than forcing the close, which would kill the session.
+
+### 8. Remove the worktree and/or branch
 
 **If a worktree exists** — use worktrunk, which handles removal, metadata pruning, and branch deletion in one step:
 
@@ -137,7 +148,7 @@ gh poi --state merged             # delete
 
 Use `gh poi lock <branch>` to protect any branch that should be kept.
 
-### 8. Delete remote branch
+### 9. Delete remote branch
 
 Runs for both paths — no-op if GitHub already deleted it:
 
@@ -145,10 +156,10 @@ Runs for both paths — no-op if GitHub already deleted it:
 git ls-remote --heads origin <branch> | grep -q . && git push origin --delete <branch> || true
 ```
 
-### 9. Report what was done
+### 10. Report what was done
 
-Note the branch deleted and worktree removed (if applicable).
+Note the branch deleted, and the worktree and tab removed (if applicable).
 
 ## Completion criterion
 
-The branch is gone locally and from `origin`, and its worktree no longer appears in `git worktree list`.
+The branch is gone locally and from `origin`, its worktree no longer appears in `git worktree list`, and no Macterm tab is rooted at its path.
