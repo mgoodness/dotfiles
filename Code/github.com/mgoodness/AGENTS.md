@@ -6,7 +6,7 @@ Applies to every repository under this directory. Repo-specific instructions liv
 
 Per-repo `docs/agents/*.md` is the authoritative configuration for the engineering skills — issue tracker, triage labels, domain docs, ticket slicing. Read those files before doing flow work, and change them rather than the installed skills under `~/.agents/skills/`: those are vendored from upstream (most from `mattpocock/skills`), a lockfile records their hashes, and local edits are lost on update.
 
-If a skill's behaviour needs to change for you, in preference order: extend the per-repo `docs/agents/` config, add the rule to a repo `AGENTS.md`, add it to this file if it holds everywhere, or package it as a skill in your own `mgoodness/agent-skills`. Upstream it only when it is generally useful and you are willing to maintain it.
+If a skill's behaviour needs to change for you, in preference order: extend the per-repo `docs/agents/` config, add the rule to a repo `AGENTS.md`, add it to this file if it holds everywhere, or package it as a skill in your own dotfiles, at `dot_agents/skills/<name>/`. Upstream it only when it is generally useful and you are willing to maintain it.
 
 ## Slicing work into tickets
 
