@@ -91,6 +91,8 @@ only ever appears in real output.
 close kills that pane's session and whatever was running in it. Close verbs
 always require an explicit target.
 
+**Log it when the sentinel-wait dance or a flag-order mistake costs you a retry.** Both are candidate friction for a future composite pane-run tool. Comment one line — date, skill, which friction — on [dotfiles#46](https://github.com/mgoodness/dotfiles/issues/46); once that issue holds 3 occurrences, recommend building the tool to the user instead of logging a 4th.
+
 **`pane resize` is debug-only, and its failure is misleading.** A release CLI
 has no `resize` subcommand, so it falls through to `pane`'s default (`list`)
 and reports `Unexpected argument 'resize'` under a `pane list` usage line —
