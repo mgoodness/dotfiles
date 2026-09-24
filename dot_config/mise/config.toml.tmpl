@@ -14,8 +14,20 @@ activate_shims = false
 GH_HOST = "github.com"
 # PATH is explicit (not just an absolute path to fnox) because some callers
 # invoke mise under a sanitized environment (e.g. Homebrew's superenv during
-# `brew bundle dump`), which strips /opt/homebrew/bin and breaks fnox's
-# internal `op` CLI lookup.
+# `brew bundle dump`, which up.fish runs), stripping /opt/homebrew/bin and
+# breaking fnox's internal `op` CLI lookup.
+#
+# This exec() is not redundant with fnox's own `fnox activate fish` hook,
+# which already delivers this same token directly per-directory in an
+# interactive shell (see Code/emu.github.com/fnox.toml and
+# Code/github.mlbam.net/fnox.toml for the per-host overrides fnox merges in).
+# mise needs its own copy because mise eagerly resolves [env] on invocation,
+# including in non-interactive/sanitized callers like the one above, where
+# fnox's shell hook was never sourced. fnox is still the single source of
+# truth for the secret's op:// path/account — mise only calls `fnox get`,
+# it never redeclares the path. The 7d cache_duration here is mirrored by
+# fnox's own daemon idle_timeout (dot_config/fnox/config.toml.tmpl) so both
+# caches expire on roughly the same schedule.
 GH_TOKEN = { value = "{{ `{{ exec(command='PATH=/opt/homebrew/bin:/opt/homebrew/sbin:$PATH /opt/homebrew/bin/fnox get GH_TOKEN', cache_duration='7d', cache_key='personal-gh-token') }}` }}" }
 {{ if .mlb -}}
 CLOUDSDK_ACTIVE_CONFIG_NAME = "mlb"

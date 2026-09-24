@@ -1,4 +1,6 @@
 [env]
 CLOUDSDK_ACTIVE_CONFIG_NAME = "mlb"
+# See dot_config/mise/config.toml.tmpl for why this exec() isn't redundant
+# with fnox's own per-directory activation.
 GH_ENTERPRISE_TOKEN = { value = "{{ exec(cache_duration='7d', cache_key='mlbam-gh-token', command='/opt/homebrew/bin/fnox get GH_ENTERPRISE_TOKEN') }}" }
 GH_HOST = "github.mlbam.net"
