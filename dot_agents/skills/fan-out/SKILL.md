@@ -53,7 +53,7 @@ Two rules make the targeting reliable (the `macterm` skill has the CLI's own mec
 - **Target by session, not by pane index.** `--session macterm-…` survives a Macterm relaunch; `pane:N` means the _focused_ tab's Nth pane, so a command aimed that way can land in a tab you were not aiming at.
 - **Put the selector flags before the command.** `pane run <command> …` treats everything after the command as more command, so `pane run "pi" --session <s>` self-targets the calling pane and types `pi --session <s>` into it. Write `pane run --session <s> "pi"`.
 
-Wait for the agent to be idle before staging — poll `macterm pane list` until the pane's process is the agent's, then confirm its status bar names the worktree.
+Wait for the agent's own footer before staging: poll `macterm pane dump` for the line naming the worktree. That footer is the readiness signal — `pane list`'s `process` field can lag the agent's start by half a minute, so treat it as advisory.
 
 **Done when** each ticket has exactly one tab, titled for it, with the agent idle at its worktree and `/implement #<n>` staged but unsubmitted. Leave the commands staged: the human pressing Enter in each tab is what starts the work, which keeps the fan-out itself from writing any code.
 
