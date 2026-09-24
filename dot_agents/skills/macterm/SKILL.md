@@ -53,9 +53,12 @@ Full flags for any verb: `macterm help <verb> [<subcommand>]`.
 
 **Target explicitly.** `--pane pane:2` is the 1-based index within the active
 tab. `--session macterm-…` is restart-stable — pane UUIDs regenerate every
-launch, session names don't. Read both from `pane list`. With no selector,
-`pane run`/`pane key` target the current pane via `$MACTERM_SESSION` — only
-meaningful when the caller is itself inside a Macterm pane.
+launch, session names don't. Read both from `pane list`. Both resolve inside
+the **active project**; pass `--project <name>` to target a tab in any other,
+or the command answers "no pane in this project runs session …". With no
+selector, `pane run`/`pane key` target the current pane via
+`$MACTERM_SESSION` — only meaningful when the caller is itself inside a
+Macterm pane.
 
 **`pane run` pastes text, `pane key` sends a key event — they aren't
 interchangeable.** `pane run` submits with a trailing newline by default;
