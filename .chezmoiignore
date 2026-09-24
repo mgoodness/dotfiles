@@ -7,16 +7,10 @@ docs/**
 {{ if not .mlb }}
 Code/emu.github.com/**
 Code/github.mlbam.net/**
-{{ end -}}
-{{ if not .mlb }}
 .config/homebrew/Brewfile.mlb
+.agents/skills/argocd-akuity
+Code/github.com/fnox.toml
 {{ end -}}
 {{ if not .personal }}
 .config/homebrew/Brewfile.personal
-{{ end -}}
-{{ if not .mlb }}
-.agents/skills/argocd-akuity
-{{ end -}}
-{{ if not .mlb }}
-Code/github.com/fnox.toml
 {{ end -}}
