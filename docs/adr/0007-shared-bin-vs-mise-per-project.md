@@ -1,0 +1,11 @@
+# Shared global bin dirs for general-purpose CLI tools; mise per-project for repo-config-coupled ones
+
+`dot_config/fish/conf.d/02-paths.fish` deliberately points every language toolchain's package-install command at one shared, on-`PATH` directory — `GOBIN`, `CARGO_INSTALL_ROOT`, and `GEM_HOME`'s `bin` all resolve under `~/.local` (npm's own `NPM_CONFIG_PREFIX` equivalent is commented out, but the intent is the same). A single `go install`/`cargo install`/`gem install` puts a tool on `PATH` everywhere, with no per-project setup — the right default for tools whose behavior doesn't depend on which repo you're standing in: `gopls`, `goimports`, and similar general-purpose editors' helpers and CLIs.
+
+That default is wrong for a tool whose correct behavior is coupled to a specific repo's own config or lockfile — a linter is the clearest case: `golangci-lint`'s enabled rules and its tolerance for a repo's `go.mod` `go` directive are read from that repo's own `.golangci.yml`, so one global binary shared across every Go project can silently drift from what any single repo's config and toolchain version actually need (see `go-ci`'s Common Mistakes for the `go.mod`-ahead-of-golangci-lint failure mode). The same shape applies outside Go: an ESLint/Prettier version pinned to one Node project's `package.json`, or a Python formatter pinned to one project's `pyproject.toml`, are equally wrong to resolve from a single shared global install. For these, mise's per-project `mise.toml` (`mise use <tool>@<version>`, e.g. via mise's `aqua:` backend for `golangci-lint`) is the right mechanism — it's already the pattern this repo uses for `terraform`/`terraform-docs` in `Code/emu.github.com/mise.toml`.
+
+## Consequences
+
+- The shared `~/.local/bin` (and its per-language equivalents) stays reserved for tools that are genuinely global — don't `go install`/`cargo install`/`gem install` something there just because it's convenient if the tool's correctness depends on a specific repo's config.
+- A repo-config-coupled tool with no version already pinned in that repo (whether by `mise.toml`, `package.json`'s `devDependencies`, or similar) is a signal to add one, not to reach for a global install.
+- This is a per-tool judgment call, not a blanket rule against global installs — most language-server and general-purpose CLIs still belong in the shared bin dir.

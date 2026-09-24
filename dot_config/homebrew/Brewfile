@@ -26,7 +26,6 @@ brew "git"
 brew "gnu-sed"
 brew "gnu-tar"
 brew "go"
-brew "goreleaser"
 brew "grep"
 brew "helix", args: ["HEAD"]
 brew "httpie"
