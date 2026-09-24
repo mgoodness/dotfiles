@@ -10,6 +10,7 @@
 .config/herdr
 .kit.yml
 .local/share/kit
+.pi/agent/extensions/openrouter-credits.ts
 .pi/agent/agents/planner.md
 .pi/agent/agents/reviewer.md
 .pi/agent/agents/scout.md
