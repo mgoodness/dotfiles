@@ -44,13 +44,14 @@ In the repo's Macterm project, per worktree: open a tab rooted at the worktree, 
 ```sh
 macterm tab new --project <project> --run "cd <worktree-path>"
 macterm tab rename <tab-id> "#<n> · <short title>"
-macterm pane run --session <session> "pi"                             # launch the agent
-macterm pane run --session <session> --no-submit "/implement #<n>"    # stage, don't submit
+macterm pane run --project <project> --session <session> "pi"                             # launch the agent
+macterm pane run --project <project> --session <session> --no-submit "/implement #<n>"    # stage, don't submit
 ```
 
-Two rules make the targeting reliable (the `macterm` skill has the CLI's own mechanics):
+Three rules make the targeting reliable (the `macterm` skill has the CLI's own mechanics):
 
 - **Target by session, not by pane index.** `--session macterm-…` survives a Macterm relaunch; `pane:N` means the _focused_ tab's Nth pane, so a command aimed that way can land in a tab you were not aiming at.
+- **Name the project alongside the session.** `--session` resolves inside the active project, so a fan-out run while another project is focused misses the tab; pass `--project <project>`, the same name `tab new` took.
 - **Put the selector flags before the command.** `pane run <command> …` treats everything after the command as more command, so `pane run "pi" --session <s>` self-targets the calling pane and types `pi --session <s>` into it. Write `pane run --session <s> "pi"`.
 
 Wait for the agent's own footer before staging: poll `macterm pane dump` for the line naming the worktree. That footer is the readiness signal — `pane list`'s `process` field can lag the agent's start by half a minute, so treat it as advisory.
