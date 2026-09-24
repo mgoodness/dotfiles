@@ -17,3 +17,6 @@ Code/github.mlbam.net/**
 {{ if not .mlb }}
 .agents/skills/argocd-akuity
 {{ end -}}
+{{ if not .mlb }}
+Code/github.com/fnox.toml
+{{ end -}}
