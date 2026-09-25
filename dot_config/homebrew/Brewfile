@@ -5,7 +5,6 @@
 tap "beeftornado/rmtree", trusted: true
 tap "thdxg/tap", trusted: true
 
-brew "actionlint"
 brew "bash"
 brew "bat"
 brew "bun"
@@ -45,7 +44,6 @@ brew "ptpython"
 brew "ripgrep"
 brew "ruby"
 brew "sd"
-brew "shellcheck"
 brew "shfmt"
 brew "sponge"
 brew "taplo"
@@ -57,7 +55,6 @@ brew "vivid"
 brew "wget"
 brew "worktrunk"
 brew "yq"
-brew "zizmor"
 brew "zoxide"
 
 cask "1password-cli"
