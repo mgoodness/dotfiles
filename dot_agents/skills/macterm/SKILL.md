@@ -9,29 +9,16 @@ description: Control the Macterm terminal emulator from the command line — run
 
 ## Reaching it
 
-- **Inside a Macterm pane**: `macterm` is already on `PATH`, and `$MACTERM_SESSION`
-  is that pane's own session — so a bare `macterm pane split` self-targets.
-- **Outside** (e.g. a sandboxed agent shell): run
-  `/Applications/Macterm.app/Contents/Resources/bin/macterm`. It discovers the
-  socket itself; pass `--socket <path>` only to pin a specific install (e.g. a
-  debug build alongside a release one).
-- **`Connection refused` while `ps`/`lsof` show Macterm running and holding
-  an fd on the socket path**: the app's control-socket listener died inside
-  the process while the UI stayed up — not a sandboxing artifact, and not
-  fixed by retrying, `--socket`, or a different shell (confirm with a raw
-  connect, e.g. `python3 -c "import socket; socket.socket(socket.AF_UNIX).connect('<path>')"`,
-  to rule out a caller-side sandbox before concluding this). The fix is to quit
-  and relaunch Macterm (`osascript -e 'tell application "Macterm" to quit'`,
-  then `open -a Macterm`) so it rebinds a live listener. Terminal sessions are
-  `zmx`-backed and restart-stable, so a relaunch reconnects the GUI to running
-  sessions rather than killing them.
+- **Inside a Macterm pane**: `macterm` is already on `PATH`, and `$MACTERM_SESSION` is that pane's own session — so a bare `macterm pane split` self-targets.
+- **Outside** (e.g. a sandboxed agent shell): run `/Applications/Macterm.app/Contents/Resources/bin/macterm`. It discovers the socket itself; pass `--socket <path>` only to pin a specific install (e.g. a debug build alongside a release one).
+- **`Connection refused` while `ps`/`lsof` show Macterm running and holding an fd on the socket path**: the app's control-socket listener died inside the process while the UI stayed up — not a sandboxing artifact, and not fixed by retrying, `--socket`, or a different shell (confirm with a raw connect, e.g. `python3 -c "import socket; socket.socket(socket.AF_UNIX).connect('<path>')"`, to rule out a caller-side sandbox before concluding this). The fix is to quit and relaunch Macterm (`osascript -e 'tell application "Macterm" to quit'`, then `open -a Macterm`) so it rebinds a live listener. Terminal sessions are `zmx`-backed and restart-stable, so a relaunch reconnects the GUI to running sessions rather than killing them.
 
 Exit codes: `0` success, `1` Macterm reported an error, `2` couldn't reach it.
 Nothing goes to stdout unless the command succeeded. Every verb takes `--json`.
 
 ## Verbs
 
-|                                                        |                                                                          |
+| Verb                                                   | Does                                                                     |
 | ------------------------------------------------------ | ------------------------------------------------------------------------ |
 | `project list/create/select/rename/remove`             | Projects — one per repo/directory; `create <path>` is idempotent by path |
 | `window list/new/focus/close`                          | Terminal windows                                                         |
@@ -51,30 +38,13 @@ Full flags for any verb: `macterm help <verb> [<subcommand>]`.
 
 ## Rules
 
-**Target explicitly.** `--pane pane:2` is the 1-based index within the active
-tab. `--session macterm-…` is restart-stable — pane UUIDs regenerate every
-launch, session names don't. Read both from `pane list`. Both resolve inside
-the **active project**; pass `--project <name>` to target a tab in any other,
-or the command answers "no pane in this project runs session …". With no
-selector, `pane run`/`pane key` target the current pane via
-`$MACTERM_SESSION` — only meaningful when the caller is itself inside a
-Macterm pane.
+**Target explicitly.** `--pane pane:2` is the 1-based index within the active tab. `--session macterm-…` is restart-stable — pane UUIDs regenerate every launch, session names don't. Read both from `pane list`. Both resolve inside the **active project**; pass `--project <name>` to target a tab in any other, or the command answers "no pane in this project runs session …". With no selector, `pane run`/`pane key` target the current pane via `$MACTERM_SESSION` — only meaningful when the caller is itself inside a Macterm pane.
 
-**`pane run` pastes text, `pane key` sends a key event — they aren't
-interchangeable.** `pane run` submits with a trailing newline by default;
-`--no-submit` leaves the text on the prompt unsubmitted (pre-filling a command
-for a human, or feeding a TUI that submits on its own terms) — follow up with
-`macterm pane key return` to execute it as a real submission. Reach for
-`pane key` instead of typed text when you need an actual key _event_ a control
-byte (`ctrl+c`) or a named key (`escape`, `up`) that no pasted text can
-express.
+**`pane run` pastes text, `pane key` sends a key event — they aren't interchangeable.** `pane run` submits with a trailing newline by default; `--no-submit` leaves the text on the prompt unsubmitted (pre-filling a command for a human, or feeding a TUI that submits on its own terms) — follow up with `macterm pane key return` to execute it as a real submission. Reach for `pane key` instead of typed text when you need an actual key _event_ a control byte (`ctrl+c`) or a named key (`escape`, `up`) that no pasted text can express.
 
-**Wrap redirects in `/bin/sh -c '…'`.** Typed text lands in the _user's_
-shell, and shells disagree: in nushell `>` is a comparison operator, so a
-bare `echo ok > /tmp/done` silently writes no file.
+**Wrap redirects in `/bin/sh -c '…'`.** Typed text lands in the _user's_ shell, and shells disagree: in nushell `>` is a comparison operator, so a bare `echo ok > /tmp/done` silently writes no file.
 
-**Wait for a sentinel, never a sleep.** There is no reliable "is it finished"
-signal to poll:
+**Wait for a sentinel, never a sleep.** There is no reliable "is it finished" signal to poll:
 
 ```sh
 rm -f /tmp/done
@@ -83,24 +53,12 @@ until [ -f /tmp/done ]; do sleep 0.5; done
 macterm pane dump --pane pane:2 | tail -20
 ```
 
-If you poll the screen instead, remember the line you typed is echoed there —
-assemble the marker at runtime (`printf done-%s $NONCE`) so the joined string
-only ever appears in real output.
+If you poll the screen instead, remember the line you typed is echoed there — assemble the marker at runtime (`printf done-%s $NONCE`) so the joined string only ever appears in real output.
 
-**A `busy` error means ask the user, not retry with `--force`.** Forcing a
-close kills that pane's session and whatever was running in it. Close verbs
-always require an explicit target.
+**A `busy` error means ask the user, not retry with `--force`.** Forcing a close kills that pane's session and whatever was running in it. Close verbs always require an explicit target.
 
-**A new tab's terminal spawns when the tab is selected or focused.** Until it
-does, `--run`, `pane run` and `pane dump` pass it by, and `pane dump` answers
-_the pane's terminal isn't live yet_. Focus it to spawn it — `pane focus
---project <p>` targets the tab you just created — and do that **before**
-renaming it, because the spawn resets the title to the automatic one.
+**A new tab's terminal spawns when the tab is selected or focused.** Until it does, `--run`, `pane run` and `pane dump` pass it by, and `pane dump` answers _the pane's terminal isn't live yet_. Focus it to spawn it — `pane focus --project <p>` targets the tab you just created — and do that **before** renaming it, because the spawn resets the title to the automatic one.
 
 **Log it when the sentinel-wait dance, a flag-order mistake, or a tab that never spawned costs you a retry.** All three are candidate friction for a future composite pane-run tool. Comment one line — date, skill, which friction — on [dotfiles#46](https://github.com/mgoodness/dotfiles/issues/46); once that issue holds 3 occurrences, recommend building the tool to the user instead of logging a 4th.
 
-**`pane resize` is debug-only, and its failure is misleading.** A release CLI
-has no `resize` subcommand, so it falls through to `pane`'s default (`list`)
-and reports `Unexpected argument 'resize'` under a `pane list` usage line —
-nothing about the real cause. Use `pane resize-split --axis <horizontal|vertical>
---ratio <0.15–0.85>` instead, which exists in every build.
+**`pane resize` is debug-only, and its failure is misleading.** A release CLI has no `resize` subcommand, so it falls through to `pane`'s default (`list`) and reports `Unexpected argument 'resize'` under a `pane list` usage line — nothing about the real cause. Use `pane resize-split --axis <horizontal|vertical> --ratio <0.15–0.85>` instead, which exists in every build.
