@@ -57,12 +57,12 @@ repo = "https://github.com/shellcheck-py/shellcheck-py"
 rev = "v0.11.0.1-1"
 
 [[repos]]
-repo = "local"
-
-[[repos.hooks]]
-entry = "shfmt --indent=4 --write --keep-padding"
-exclude = ".*\\.tmpl$"
-id = "shfmt"
-language = "system"
-name = "shfmt"
-types = ["shell"]
+hooks = [
+  { id = "shfmt", args = [
+    "--indent=4",
+    "--write",
+    "--keep-padding",
+  ], exclude = ".*\\.tmpl$" },
+]
+repo = "https://github.com/scop/pre-commit-shfmt"
+rev = "v3.14.1-1"
