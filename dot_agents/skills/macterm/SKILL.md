@@ -35,7 +35,7 @@ Nothing goes to stdout unless the command succeeded. Every verb takes `--json`.
 | ------------------------------------------------------ | ------------------------------------------------------------------------ |
 | `project list/create/select/rename/remove`             | Projects — one per repo/directory; `create <path>` is idempotent by path |
 | `window list/new/focus/close`                          | Terminal windows                                                         |
-| `tab list/new/select/move/rename/close`                | Tabs; `tab new --run CMD` spawns a command                               |
+| `tab list/new/select/move/rename/close`                | Tabs; `tab new --run CMD` runs — focus the tab to spawn its terminal     |
 | `pane list`                                            | Panes with session names, cwd, foreground process, focus marker          |
 | `pane dump [--scrollback]`                             | What the pane is displaying — the observation channel                    |
 | `pane run <text>`                                      | Paste text plus a newline into a live pane's shell or REPL               |
@@ -91,7 +91,13 @@ only ever appears in real output.
 close kills that pane's session and whatever was running in it. Close verbs
 always require an explicit target.
 
-**Log it when the sentinel-wait dance or a flag-order mistake costs you a retry.** Both are candidate friction for a future composite pane-run tool. Comment one line — date, skill, which friction — on [dotfiles#46](https://github.com/mgoodness/dotfiles/issues/46); once that issue holds 3 occurrences, recommend building the tool to the user instead of logging a 4th.
+**A new tab's terminal spawns when the tab is selected or focused.** Until it
+does, `--run`, `pane run` and `pane dump` pass it by, and `pane dump` answers
+_the pane's terminal isn't live yet_. Focus it to spawn it — `pane focus
+--project <p>` targets the tab you just created — and do that **before**
+renaming it, because the spawn resets the title to the automatic one.
+
+**Log it when the sentinel-wait dance, a flag-order mistake, or a tab that never spawned costs you a retry.** All three are candidate friction for a future composite pane-run tool. Comment one line — date, skill, which friction — on [dotfiles#46](https://github.com/mgoodness/dotfiles/issues/46); once that issue holds 3 occurrences, recommend building the tool to the user instead of logging a 4th.
 
 **`pane resize` is debug-only, and its failure is misleading.** A release CLI
 has no `resize` subcommand, so it falls through to `pane`'s default (`list`)

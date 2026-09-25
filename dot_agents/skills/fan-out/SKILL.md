@@ -43,7 +43,8 @@ In the repo's Macterm project, per worktree: open a tab rooted at the worktree, 
 
 ```sh
 macterm tab new --project <project> --run "cd <worktree-path>"
-macterm tab rename <tab-id> "#<n> · <short title>"
+macterm pane focus --project <project>                    # spawn the tab's terminal
+macterm tab rename <tab-id> "#<n> · <short title>"        # after the spawn: it resets the title
 macterm pane run --project <project> --session <session> "pi"                             # launch the agent
 macterm pane run --project <project> --session <session> --no-submit "/implement #<n>"    # stage, don't submit
 ```
@@ -54,7 +55,9 @@ Three rules make the targeting reliable (the `macterm` skill has the CLI's own m
 - **Name the project alongside the session.** `--session` resolves inside the active project, so a fan-out run while another project is focused misses the tab; pass `--project <project>`, the same name `tab new` took.
 - **Put the selector flags before the command.** `pane run <command> …` treats everything after the command as more command, so `pane run "pi" --session <s>` self-targets the calling pane and types `pi --session <s>` into it. Write `pane run --session <s> "pi"`.
 
-Wait for the agent's own footer before staging: poll `macterm pane dump` for the line naming the worktree. That footer is the readiness signal — `pane list`'s `process` field can lag the agent's start by half a minute, so treat it as advisory.
+Wait for the agent's own footer before staging: poll `macterm pane dump` for the line naming the worktree. That footer is the readiness signal — `pane list`'s `process` field can lag the agent's start by half a minute, so treat it as advisory. A tab whose terminal never spawned answers `pane dump`
+with _the pane's terminal isn't live yet_ instead — focus it and retry; the
+`macterm` skill's tab rule has the why.
 
 **Done when** each ticket has exactly one tab, titled for it, with the agent idle at its worktree and `/implement #<n>` staged but unsubmitted. Leave the commands staged: the human pressing Enter in each tab is what starts the work, which keeps the fan-out itself from writing any code.
 
