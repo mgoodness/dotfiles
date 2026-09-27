@@ -11,6 +11,8 @@ A fan-out is only as good as its set. Two tickets that must share a file, a path
 
 ## 1. Prove the set is parallel
 
+Fetch and fast-forward the trunk worktree first (`git fetch origin --quiet && git pull --ff-only`, run from the trunk worktree). Both this step's own exploration and step 2's `--base <trunk>` read the trunk worktree's checked-out files, not just its refs — a `git fetch` alone leaves them stale. Skip this and a wave check can clear a collision that a PR merged since you were last here already created, the same way this section exists to catch. A pull that fails (dirty tree, diverged history) means the trunk worktree isn't fit to fan out from yet — resolve that before cutting anything, don't route around it.
+
 Start from the **frontier**: the tickets that are open with no open blocker. If the repo documents its own frontier query or wave check, use it — a repo's ticket-slicing note is the authority over this section's general shape.
 
 Wave-check the frontier for the two collisions: tickets that _create_ the same foundation (a manifest, a lockfile, a workflow, a package layout), and tickets that must agree on a path, name, or surface that no ticket decides. Either one means the frontier is not yet the wave.
@@ -22,6 +24,8 @@ When the check fails, fix the tracker before cutting worktrees, so no branch is 
 - **Human prerequisite** (a credential, a dashboard step) → a `ready-for-human` ticket, kept off the agent branches.
 
 Record each remedy as a real blocking edge, so the tracker's own frontier query reflects it.
+
+A third pattern doesn't gate this step. An additive registry built for exactly this — a list or struct a caller assembles once and callees register into, so no ticket creates a foundation — still has one call site that wires every registration in: the constructor or builder literal that hands the assembled value to its caller. Two tickets in the wave each adding one field or line there will conflict when the second merges, purely from landing near the same lines (a formatter realigning the literal is enough). Unlike the two collisions above, this is a cheap `git rebase` for whichever PR lands second, not a design decision — note it when you present the wave rather than fixing the tracker to dodge it.
 
 **Done when** every ticket you are about to fan out has no open blocker, and every ticket you are holding back carries an edge naming its blocker.
 
