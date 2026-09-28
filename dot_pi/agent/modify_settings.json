@@ -23,8 +23,8 @@ packages added with `pi install`.
 {{-   $_ := set $seeds "defaultProvider" "github-copilot" -}}
 {{-   $_ := set $seeds "defaultModel" "claude-sonnet-5" -}}
 {{- else -}}
-{{-   $_ := set $seeds "defaultProvider" "openrouter" -}}
-{{-   $_ := set $seeds "defaultModel" "~deepseek/deepseek-flash-latest" -}}
+{{-   $_ := set $seeds "defaultProvider" "opencode-go" -}}
+{{-   $_ := set $seeds "defaultModel" "deepseek-v4.1-flash" -}}
 {{- end -}}
 {{- $current = merge $current $seeds -}}
 {{- $_ := set $current "theme" "catppuccin-latte/catppuccin-frappe" -}}
