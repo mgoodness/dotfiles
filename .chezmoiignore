@@ -2,6 +2,7 @@ README.md
 prek.toml
 AGENTS.md
 CONTEXT.md
+mise.toml
 docs/**
 
 {{ if not .mlb }}

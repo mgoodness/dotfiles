@@ -1,0 +1,6 @@
+[tools]
+# Repo-local formatter for the "prek repo" hook (prek.toml). Scoped here
+# instead of Homebrew because it's only ever invoked for this repo's own
+# text-formatting hook, not as a general dev tool. `mise activate fish`
+# (dot_config/fish/conf.d/mise.fish) puts it on PATH on cd into this repo.
+oxfmt = "latest"
