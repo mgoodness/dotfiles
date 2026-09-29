@@ -204,14 +204,27 @@ function __up_skills --description "Update agent skills"
     # tracked hash against its source and only re-fetches what changed
     # upstream. `skills add` has no such diffing, so only call it for names
     # genuinely missing from this machine. Installed-from-this-repo names
-    # come straight from ~/.agents/.skill-lock.json — the lock file `gh
-    # skill` and the `skills` CLI both read and write, keyed by name rather
-    # than by name-and-agent, so one lookup covers every agent at once.
-    # Lock keys for nested-path installs carry the discovery prefix (e.g.
-    # "engineering/ask-matt"), but $names and the on-disk skill dirs are
-    # bare ("ask-matt") — take just the last path segment to compare like
-    # for like.
-    set -l installed (jq -r --arg repo "$repo" '.skills | to_entries[] | select(.value.source == $repo) | .key | split("/")[-1]' ~/.agents/.skill-lock.json 2>/dev/null)
+    # come from the lock file `gh skill` and the `skills` CLI both read and
+    # write, keyed by name rather than by name-and-agent, so one lookup
+    # covers every agent at once. Lock keys for nested-path installs carry
+    # the discovery prefix (e.g. "engineering/ask-matt"), but $names and
+    # the on-disk skill dirs are bare ("ask-matt") — take just the last
+    # path segment to compare like for like.
+    #
+    # The lock file's location isn't fixed: the `skills` CLI's
+    # getSkillLockPath() honors $XDG_STATE_HOME when set (writing to
+    # $XDG_STATE_HOME/skills/.skill-lock.json instead of the default
+    # ~/.agents/.skill-lock.json), and 02-paths.fish sets that var for
+    # every fish session this function runs in — so mirror that same
+    # resolution here. Getting this wrong doesn't lose data (skills
+    # add/update always write to the CLI's real lock file regardless), it
+    # just makes this diff blind to already-installed skills, so every new
+    # skill gets reported as "new" and re-added on every single run.
+    set -l lock_path ~/.agents/.skill-lock.json
+    if test -n "$XDG_STATE_HOME"
+        set lock_path "$XDG_STATE_HOME/skills/.skill-lock.json"
+    end
+    set -l installed (jq -r --arg repo "$repo" '.skills | to_entries[] | select(.value.source == $repo) | .key | split("/")[-1]' $lock_path 2>/dev/null)
     set -l missing
     for name in $names
         contains -- $name $installed || set -a missing $name
