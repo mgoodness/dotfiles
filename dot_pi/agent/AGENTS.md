@@ -25,6 +25,14 @@ Upstream it only when it is generally useful and you will maintain it.
   the question and any constraints (trusted sources, destination path, output
   format) as the task. It leaves one cited Markdown artefact, reports the path,
   and writes nothing else in the worktree.
+- **`/implement-spec`.** Its **exploration subagent** is the `research` agent —
+  dispatch it the same way. Its **implementer** and **merger** subagents are
+  `implement-spec-implementer` and `implement-spec-merger`: dispatch one
+  implementer per ticket (in that ticket's worktree/branch) across the ready
+  frontier, then a merger per completed branch onto the integration branch.
+  Pass ticket/branch/worktree pointers as the task, not restated ticket
+  content — the protocol (worktree checks, `tdd`, merge-before-reporting) is
+  already baked into each agent.
 
 ## Ticket slicing
 
