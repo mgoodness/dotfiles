@@ -3,6 +3,7 @@
 # rubocop:disable Style/StringLiterals
 
 tap "beeftornado/rmtree", trusted: true
+tap "sozercan/repo", trusted: true
 tap "thdxg/tap", trusted: true
 
 brew "bash"
@@ -63,6 +64,7 @@ cask "discord"
 cask "font-fira-code-nerd-font"
 cask "font-fira-code"
 cask "gcloud-cli"
+cask "sozercan/repo/kaset", trusted: true
 cask "thdxg/tap/macterm", trusted: true
 cask "rectangle"
 
