@@ -4,11 +4,3 @@ copy-on-select = clipboard
 focus-follows-mouse = true
 font-family = "FiraCode Nerd Font Mono"
 theme = light:catppuccin-latte.conf,dark:catppuccin-frappe.conf
-
-# Startup window size, in grid cells (cols x rows), captured from the
-# current window's live grid (macterm pane inspect). Both keys must be
-# set together or neither takes effect. On macOS this only applies when
-# there's no restored window state to fall back to (window-save-state
-# defaults to restoring the last session).
-window-width = 245
-window-height = 67
