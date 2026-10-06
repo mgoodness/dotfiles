@@ -6,6 +6,10 @@ mas "GarageBand", id: 682658836
 mas "iMovie", id: 408981434
 mas "Submersion", id: 6757456915
 
+# TODO: move back to the shared Brewfile once the 1Password for Safari
+# TestFlight build on mlb machines is no longer needed.
+mas "1Password for Safari", id: 1569813296
+
 # rubocop:enable Style/FrozenStringLiteralComment
 # rubocop:enable Style/NumericLiterals
 # rubocop:enable Style/StringLiterals
