@@ -6,6 +6,14 @@ if [ -n "${CI:-}" ]; then
     exit
 fi
 
+# Same XDG_STATE_HOME pin as run_once_after_15-bootstrap-mattpocock-skills.sh
+# (see that script's comment): this runs as plain bash, which won't have
+# fish's 02-paths.fish exports unless inherited from an interactive fish
+# parent, so pin it explicitly to keep the `skills` CLI's lock file at one
+# deterministic path across every caller.
+: "${XDG_STATE_HOME:=$HOME/.local/state}"
+export XDG_STATE_HOME
+
 if ! command -v npx &>/dev/null; then
     echo "Skipping: npx not found"
     exit

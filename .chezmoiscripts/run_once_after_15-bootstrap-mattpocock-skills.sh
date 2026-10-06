@@ -14,6 +14,18 @@ if [ -n "${CI:-}" ]; then
     exit
 fi
 
+# The `skills` CLI's lock file lives under $XDG_STATE_HOME, which
+# dot_config/fish/conf.d/02-paths.fish only exports inside an interactive
+# fish session. This script runs as plain bash during `chezmoi init
+# --apply`, often *before* fish has ever been the login shell on a fresh
+# machine, so that var would otherwise be unset here and the CLI would fall
+# back to its default ~/.agents/.skill-lock.json — a second, stale lock file
+# that then silently diverges from the one `up skills` (fish, XDG_STATE_HOME
+# already set) reads and writes. Pin it here so every caller of `npx skills`
+# agrees on one lock path regardless of which shell invoked this script.
+: "${XDG_STATE_HOME:=$HOME/.local/state}"
+export XDG_STATE_HOME
+
 if ! command -v gh &>/dev/null; then
     echo "Skipping: gh not found"
     exit
