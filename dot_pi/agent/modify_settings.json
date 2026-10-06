@@ -5,7 +5,14 @@ replacing it, so runtime state Pi writes itself survives `chezmoi apply`:
 lastChangelogVersion, provider/model/thinking changes from Ctrl+S, and any
 packages added with `pi install`.
 
-- `theme` is chezmoi-managed and always wins.
+- `theme` is chezmoi-managed and always wins. Evaluated against pi v1's
+  `system` theme (colors derived live from the terminal's own ANSI
+  palette) via a side-by-side `/theme-table` role-swatch comparison in two
+  Macterm panes; kept the hand-maintained Catppuccin Frappe/Latte files for
+  their per-role variety (26 distinct Catppuccin hues feeding syntax
+  highlighting, thinking-level borders, etc., vs. `system`'s 16 ANSI
+  colors stretched across the same roles) over `system`'s single
+  source-of-truth appeal.
 - `defaultProvider`/`defaultModel`/`defaultThinkingLevel` are profile seeds:
   they only fill in when absent, so a Ctrl+S change is never reverted.
 - Packages declared in `.chezmoidata/pi-packages.toml` are unioned into
