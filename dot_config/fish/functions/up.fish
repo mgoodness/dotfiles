@@ -126,7 +126,17 @@ end
 # end
 
 function __up_pi --description "Update pi packages"
-    pi update --all >/dev/null
+    # --extensions only (not --all): the `pi` binary itself is Homebrew's
+    # job (__up_homebrew), not pi's own. `pi update --self`/`--all` detects
+    # Homebrew's keg layout (libexec/lib/node_modules/@earendil-works/...)
+    # as a global npm root and happily self-updates in place, silently
+    # mutating files inside the Cellar without bumping the keg's version
+    # directory or brew's receipt — `brew list --versions` then lies about
+    # what's actually running, and the drift is invisible to `up homebrew`'s
+    # delta diff. --extensions still refreshes installed packages
+    # (pi-anthropic-auth, context7-pi, pi-exa, pi-usage-live) and reconciles
+    # pinned git refs, which is all this was ever meant to do.
+    pi update --extensions >/dev/null
 end
 
 function __up_wt --description "Update worktrunk's Pi extension"
