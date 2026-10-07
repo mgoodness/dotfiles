@@ -2,7 +2,9 @@ function gh --wraps=gh
     set --function clone_host # only set for mlb- clones; overrides GH_HOST for this call only
     set --function repo_dir # empty unless this is a clone; gates the cd-restore below
     set --function orig_pwd $PWD # cloning temporarily cd's; restore this before returning
-    if test \( "$argv[1]" = repo -a "$argv[2]" = clone \) -a -n "$argv[3]"
+    if test "$argv[1]" = repo
+        and test "$argv[2]" = clone
+        and test -n "$argv[3]"
         # Normalize full URLs (https://.../owner/repo, git@host:owner/repo) down to the
         # same [host/]owner/repo shorthand the switch below already understands.
         set --function spec (string replace -r '\.git$' '' -- "$argv[3]")
