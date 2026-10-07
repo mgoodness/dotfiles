@@ -20,6 +20,7 @@ brew "tcptraceroute"
 cask "akuity"
 cask "slack"
 
+mas "1Password for Safari", id: 0
 mas "Okta Extension App", id: 1439967473
 mas "Okta Verify", id: 490179405
 
