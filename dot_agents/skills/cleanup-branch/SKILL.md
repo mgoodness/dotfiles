@@ -12,26 +12,26 @@ Remove a branch once its PR is merged: its worktree, its Macterm tab, the local 
 ### 1. Find the branch and its PR
 
 Run `git rev-parse --show-toplevel` to get the current worktree path.
-Run `git worktree list` to find all worktrees.
+Run `git worktree list` to find all worktrees; the **main worktree** is the one listed first, since it owns `.git`.
 
-Find the default branch:
+Resolve the repo you push to, once, and name it on every `gh` call below:
 
 ```sh
-gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name'
+repo=$(git remote get-url origin | sed -E 's#^git@[^:]+:##; s#^https?://[^/]+/##; s#\.git$##')
 ```
 
-Identify the **main worktree** as the one whose branch matches the default branch.
+A bare `gh` call takes its repo from the tracked remote's `gh-resolved` entry, which `gh repo set-default <upstream>` points at the repo you _don't_ push to — so it quietly reads upstream's PRs instead of yours.
 
 If the current worktree IS the main worktree, enumerate all non-main worktrees and look up their associated PRs. For each non-main worktree, prefer running from within that worktree's directory when possible:
 
 ```sh
-gh pr view --json number,state,mergedAt,title,headRefName
+gh pr view --repo "$repo" --json number,state,mergedAt,title,headRefName
 ```
 
 If the worktree path is outside the project root (not usable as a `cd` target), fall back to querying by branch name from the main worktree — include `--state all` to catch merged PRs:
 
 ```sh
-gh pr list --head <branch> --state all --json number,state,mergedAt,title,headRefName
+gh pr list --repo "$repo" --head <branch> --state all --json number,state,mergedAt,title,headRefName
 ```
 
 Present a table of results to the user:
@@ -56,7 +56,7 @@ Abort unless the user explicitly chooses `--force`.
 Run:
 
 ```sh
-gh pr view --json number,state,mergedAt,title,headRefName
+gh pr view --repo "$repo" --json number,state,mergedAt,title,headRefName
 ```
 
 - If `state` is not `"MERGED"`, abort: "PR #N is not merged (state: STATE). Aborting."
@@ -72,27 +72,17 @@ Verify you are in the right place:
 git rev-parse --abbrev-ref HEAD
 ```
 
-This should print the default branch name (e.g. `main`).
+This should print the branch the main worktree has checked out (e.g. `main`).
 
 ### 5. Pull the main worktree
 
-From the main worktree path, check whether an `upstream` remote exists:
+From the main worktree path, fast-forward the branch it has checked out, from the remote it tracks:
 
 ```sh
-git remote | grep -q upstream && echo yes || echo no
+git pull --ff-only
 ```
 
-If `upstream` exists, pull from it explicitly:
-
-```sh
-git pull upstream <default-branch>
-```
-
-Otherwise:
-
-```sh
-git pull
-```
+Upstream syncing stays out of cleanup: upstream's branch need not share your fork's name — here `master` against `main` — so pulling `upstream/<branch>` either misses or crosses lineages.
 
 ### 6. Confirm before deleting
 
