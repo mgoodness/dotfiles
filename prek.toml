@@ -22,10 +22,11 @@ name = "fish_indent"
 types = ["fish"]
 
 [[repos.hooks]]
+additional_dependencies = ["oxfmt@0.71.0"]
 entry = "oxfmt --no-error-on-unmatched-pattern"
 exclude = "(^|/)(modify_.*\\.json|symlink_[^/]+)$"
 id = "oxfmt"
-language = "system"
+language = "mise"
 name = "oxfmt"
 types = ["text"]
 
