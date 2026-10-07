@@ -12,9 +12,18 @@ fi
 ### General ###
 echo "Updating general settings..."
 defaults write NSGlobalDomain AppleWindowTabbingMode -string always # Prefer tabs
-# Touch ID for sudo
-if ! grep -q pam_tid.so /etc/pam.d/sudo; then
-    sudo sed -i .bak -e "2s/^/auth       sufficient     pam_tid.so\n/" /etc/pam.d/sudo
+# Touch ID for sudo, via the update-persistent /etc/pam.d/sudo_local
+# mechanism (Sonoma+) rather than patching /etc/pam.d/sudo directly: Apple
+# resets /etc/pam.d/sudo on every macOS update, and this script only
+# reruns when its own content changes, so a direct edit would silently go
+# stale until some unrelated change to this file happened to retrigger it.
+if [ ! -f /etc/pam.d/sudo_local ] || ! grep -Eq '^auth[[:space:]]+sufficient[[:space:]]+pam_tid\.so' /etc/pam.d/sudo_local; then
+    sed 's/^#auth/auth/' /etc/pam.d/sudo_local.template | sudo tee /etc/pam.d/sudo_local >/dev/null
+fi
+# Clean up a Touch ID line this script previously injected directly into
+# /etc/pam.d/sudo, now superseded by sudo_local above.
+if grep -q pam_tid.so /etc/pam.d/sudo; then
+    sudo sed -i .bak -e '/pam_tid\.so/d' /etc/pam.d/sudo
 fi
 
 ### Dock ###
