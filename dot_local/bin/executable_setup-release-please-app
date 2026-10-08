@@ -1,0 +1,314 @@
+#!/usr/bin/env bash
+#
+# setup-release-please-app — install a release-please GitHub App and wire its
+# credentials into a repository or a whole organization.
+#
+# release-please acts as a GitHub App rather than the default GITHUB_TOKEN: a
+# PR, tag or release authored by GITHUB_TOKEN cannot trigger the next
+# workflow, and a bot PR's checks otherwise wait on manual approval.
+#
+# One App is shared across repos. This tool installs it and sets:
+#
+#   variable RELEASE_PLEASE_APP_CLIENT_ID
+#   secret   RELEASE_PLEASE_APP_PRIVATE_KEY
+#
+# The client ID comes from ~/.config/release-please/apps.conf for private Apps
+# (they are not on the public API), or from the public GitHub API for public
+# ones — which is what an org-wide App usually is. A public App owned by an
+# organization defaults to org scope, so every repo in that organization
+# inherits the variable and secret from one place.
+#
+# --client-id and --key-file (the private key, the one that actually needs a
+# secrets manager) both accept an op://vault/item/field reference in place of
+# a literal value or file path — copy one via 1Password's "Copy Secret
+# Reference" on the field or file, then the whole setup is one non-interactive
+# command with nothing to paste by hand.
+
+set -euo pipefail
+
+PROG=${0##*/}
+DEFAULT_APP=mgoodness-release-please
+CONFIG_FILE=${XDG_CONFIG_HOME:-$HOME/.config}/release-please/apps.conf
+VAR_NAME=RELEASE_PLEASE_APP_CLIENT_ID
+SECRET_NAME=RELEASE_PLEASE_APP_PRIVATE_KEY
+
+APP=$DEFAULT_APP
+CLIENT_ID=
+REPO=
+REPO_SET=0
+ORG=
+SECRET_VISIBILITY=all
+SECRET_REPOS=
+KEY_FILE=
+DO_INSTALL=1
+ASSUME_YES=0
+DRY_RUN=0
+
+usage() {
+    cat <<EOF
+$PROG — install a release-please GitHub App and wire its credentials.
+
+Options:
+  -a, --app SLUG            App slug (default: $DEFAULT_APP).
+  -c, --client-id ID        App client ID, or an op://vault/item/field
+                            reference. Default: $CONFIG_FILE, then the
+                            public GitHub API.
+  -r, --repo OWNER/REPO     Target repository (default: the current repo).
+      --org ORG             Set the variable/secret at ORG scope, inherited
+                            by every repo in the org, instead of one repo.
+      --secret-visibility V Org secret visibility: all|private|selected
+                            (default: all).
+      --repos R1,R2         Repositories for --secret-visibility selected.
+  -k, --key-file PATH       App private key .pem ('-' reads stdin, 'op://...'
+                            resolves via the 1Password CLI). If omitted and
+                            a terminal is attached, you are prompted.
+      --no-install          Skip the browser step that installs the App.
+  -y, --yes                 Do not pause for the browser step.
+  -n, --dry-run             Print the gh commands instead of running them.
+  -h, --help                Show this help.
+
+The default scope is org-wide when the App is owned by an organization, and
+the current repository otherwise; pass --repo to force repository scope.
+EOF
+}
+
+die() {
+        printf '%s: error: %s\n' "$PROG" "$1" >&2
+                                                   exit 1
+}
+info() { printf '  %s\n' "$1"; }
+warn() { printf '%s: warning: %s\n' "$PROG" "$1" >&2; }
+
+open_url() {
+    local url=$1
+    info "opening $url"
+    {
+        if command -v wslview >/dev/null 2>&1; then
+                                                wslview "$url"
+        elif command -v explorer.exe >/dev/null 2>&1; then
+                                                       explorer.exe "$url"
+        elif command -v xdg-open >/dev/null 2>&1; then
+                                                   xdg-open "$url"
+        elif command -v open >/dev/null 2>&1; then
+                                               open "$url"
+        else warn "couldn't open a browser; visit $url"; fi
+    } >/dev/null 2>&1 || warn "couldn't open a browser; visit $url"
+}
+
+pause() {
+          printf '  %s ' "Press Enter to continue..."
+                                                       read -r _ || true
+}
+
+# op_read REF — resolve an op://vault/item/field reference via the 1Password CLI.
+op_read() {
+    command -v op >/dev/null 2>&1 ||
+        die "the 1Password CLI (op) is required to resolve '$1'"
+    op read "$1"
+}
+
+run() {
+    if ((DRY_RUN)); then
+        printf '  + %s\n' "$*"
+    else
+        "$@"
+    fi
+}
+
+# registry_client_id SLUG — echo the client ID from the config file, if listed.
+registry_client_id() {
+    local slug=$1 line k v
+    [[ -f $CONFIG_FILE ]] || return 1
+    while IFS= read -r line; do
+        line=${line%%#*}
+        [[ $line == *=* ]] || continue
+        k=${line%%=*}
+        v=${line#*=}
+        k=${k//[[:space:]]/}
+        v=${v//[[:space:]]/}
+        if [[ $k == "$slug" ]]; then
+            printf '%s' "$v"
+            return 0
+        fi
+    done <"$CONFIG_FILE"
+    return 1
+}
+
+while (($#)); do
+    case $1 in
+    -a | --app)
+                APP=${2:?--app needs a slug}
+                                              shift 2
+                                                      ;;
+    -c | --client-id)
+                      CLIENT_ID=${2:?--client-id needs a value}
+                                                                 shift 2
+                                                                         ;;
+    -r | --repo)
+                 REPO=${2:?--repo needs OWNER/REPO}
+                                                     REPO_SET=1
+                                                                 shift 2
+                                                                         ;;
+    --org)
+           ORG=${2:?--org needs a name}
+                                         shift 2
+                                                 ;;
+    --secret-visibility)
+                         SECRET_VISIBILITY=${2:?}
+                                                   shift 2
+                                                           ;;
+    --repos)
+             SECRET_REPOS=${2:?}
+                                  shift 2
+                                          ;;
+    -k | --key-file)
+                     KEY_FILE=${2:?--key-file needs a path}
+                                                             shift 2
+                                                                     ;;
+    --no-install)
+                  DO_INSTALL=0
+                                shift
+                                      ;;
+    -y | --yes)
+                ASSUME_YES=1
+                              shift
+                                    ;;
+    -n | --dry-run)
+                    DRY_RUN=1
+                               shift
+                                     ;;
+    -h | --help)
+                 usage
+                        exit 0
+                               ;;
+    --)
+        shift
+               break
+                     ;;
+    *) die "unknown option: $1 (try --help)" ;;
+    esac
+done
+(($# == 0)) || die "unexpected argument(s): $*"
+
+case $SECRET_VISIBILITY in
+  all | private | selected) ;;
+  *) die "--secret-visibility must be all, private or selected" ;;
+esac
+[[ $SECRET_VISIBILITY != selected || -n $SECRET_REPOS ]] ||
+    die "--secret-visibility selected needs --repos R1,R2"
+
+command -v gh >/dev/null 2>&1 || die "the GitHub CLI (gh) is required"
+gh auth status >/dev/null 2>&1 || die "gh is not authenticated; run: gh auth login"
+
+# Public Apps (org-wide ones usually are) resolve from the API, which also
+# tells us the owner so an org-owned App can default to org scope.
+API_CLIENT_ID=
+APP_OWNER=
+APP_OWNER_TYPE=
+if api_line=$(gh api "/apps/$APP" --jq '[.client_id, .owner.login, .owner.type] | @tsv' 2>/dev/null); then
+    IFS=$'\t' read -r API_CLIENT_ID APP_OWNER APP_OWNER_TYPE <<<"$api_line"
+fi
+
+if [[ -z $CLIENT_ID ]]; then
+    CLIENT_ID=$(registry_client_id "$APP" || true)
+fi
+[[ -n $CLIENT_ID ]] || CLIENT_ID=$API_CLIENT_ID
+[[ -n $CLIENT_ID ]] ||
+    die "no client ID for '$APP'; pass --client-id or add '$APP=<id>' to $CONFIG_FILE"
+[[ $CLIENT_ID == op://* ]] && CLIENT_ID=$(op_read "$CLIENT_ID")
+
+# An org-owned App is org-wide by default; --repo forces repository scope.
+if [[ -z $ORG && $REPO_SET == 0 && $APP_OWNER_TYPE == Organization && -n $APP_OWNER ]]; then
+    ORG=$APP_OWNER
+    info "App '$APP' is owned by organization '$ORG'; wiring org-wide (use --repo to scope to one repo)."
+fi
+
+if [[ -z $ORG && -z $REPO ]]; then
+    # Prefer the origin remote: gh repo view resolves a fork to its parent.
+    if url=$(git remote get-url origin 2>/dev/null) && [[ $url =~ github\.com[:/]([^/]+/[^/]+)$ ]]; then
+        REPO=${BASH_REMATCH[1]%.git}
+    else
+        REPO=$(gh repo view --json nameWithOwner --jq .nameWithOwner 2>/dev/null || true)
+    fi
+fi
+[[ -n $ORG || -n $REPO ]] || die "not inside a GitHub repository; pass --repo OWNER/REPO"
+
+if [[ -n $ORG ]]; then
+    SCOPE="organization $ORG"
+else
+    SCOPE="repository $REPO"
+fi
+info "App:    $APP"
+info "Client: $CLIENT_ID"
+info "Scope:  $SCOPE"
+echo
+
+if ((DO_INSTALL)); then
+    info "Install the App on the $SCOPE (browser):"
+    if [[ -n $ORG ]]; then
+        info "  choose organization '$ORG' and 'All repositories'"
+    else
+        info "  choose 'Only select repositories' → $REPO"
+    fi
+    open_url "https://github.com/apps/$APP/installations/new"
+    ((ASSUME_YES)) || pause
+    echo
+fi
+
+var_cmd=(gh variable set "$VAR_NAME" --body "$CLIENT_ID")
+if [[ -n $ORG ]]; then
+    var_cmd+=(--org "$ORG")
+else
+    var_cmd+=(--repo "$REPO")
+fi
+sec_cmd=(gh secret set "$SECRET_NAME")
+if [[ -n $ORG ]]; then
+    sec_cmd+=(--org "$ORG" --visibility "$SECRET_VISIBILITY")
+    [[ $SECRET_VISIBILITY == selected ]] && sec_cmd+=(--repos "$SECRET_REPOS")
+else
+    sec_cmd+=(--repo "$REPO")
+fi
+
+info "variable $VAR_NAME"
+run "${var_cmd[@]}"
+
+if [[ -z $KEY_FILE && -t 0 && $DRY_RUN == 0 ]]; then
+    printf '  Path to the App .pem private key, or an op:// reference (Enter to skip): '
+    read -r KEY_FILE || true
+fi
+
+KEY=
+if [[ -n $KEY_FILE ]]; then
+    if [[ $KEY_FILE == - ]]; then
+        KEY=$(cat)
+    elif [[ $KEY_FILE == op://* ]]; then
+        KEY=$(op_read "$KEY_FILE")
+    else
+        [[ -f $KEY_FILE ]] || die "no such file: $KEY_FILE"
+        KEY=$(<"$KEY_FILE")
+    fi
+    [[ $KEY == *"PRIVATE KEY"* ]] || die "$KEY_FILE does not look like a private key"
+fi
+
+if [[ -z $KEY ]]; then
+    warn "no private key supplied (pass --key-file, a path, '-', or an op:// reference); set $SECRET_NAME yourself, for example:"
+    printf '    gh secret set %s %s < path/to/key.pem\n' "$SECRET_NAME" \
+        "$([[ -n $ORG ]] && printf -- '--org %s' "$ORG" || printf -- '--repo %s' "$REPO")"
+else
+    info "secret   $SECRET_NAME"
+    if ((DRY_RUN)); then
+        printf '  + %s  # secret value from %s\n' "${sec_cmd[*]}" "${KEY_FILE:--}"
+    else
+        printf '%s' "$KEY" | "${sec_cmd[@]}"
+    fi
+fi
+
+echo
+info "done."
+if ((! DRY_RUN)); then
+    if [[ -n $ORG ]]; then
+        info "Verify: gh variable list --org $ORG && gh secret list --org $ORG"
+    else
+        info "Verify: gh variable list --repo $REPO && gh secret list --repo $REPO"
+    fi
+fi
