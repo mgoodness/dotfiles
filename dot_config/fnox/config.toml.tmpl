@@ -16,6 +16,11 @@ onepass_mlb = { type = "1password", account = "mlb.1password.com" }
 
 [secrets]
 GH_TOKEN = { provider = "onepass_personal", value = "op://Private/GH CLI PAT/credential" }
+# opencode-go is pi's default provider on BOTH profiles (see
+# dot_pi/agent/modify_settings.json), so its credential must load globally
+# regardless of profile — not just under `.personal`. Always resolves from
+# onepass_personal, which is defined on both.
+OPENCODE_API_KEY = { provider = "onepass_personal", value = "op://Private/OpenCode API Key/credential" }
 {{ if .mlb -}}
 CONTEXT7_API_KEY = { provider = "onepass_mlb", value = "op://Employee/Context7/api key" }
 EXA_API_KEY = { provider = "onepass_mlb", value = "op://Employee/Exa API Key/credential" }
@@ -26,7 +31,6 @@ TF_TOKEN_terraform_mlbinfra_net = { provider = "onepass_mlb", value = "op://Empl
 CONTEXT7_API_KEY = { provider = "onepass_personal", value = "op://Private/Context7 API Key/credential" }
 DEEPSEEK_API_KEY = { provider = "onepass_personal", value = "op://Private/DeepSeek API Key/credential" }
 EXA_API_KEY = { provider = "onepass_personal", value = "op://Private/Exa API Key/credential" }
-OPENCODE_API_KEY = { provider = "onepass_personal", value = "op://Private/OpenCode API Key/credential" }
 OPENROUTER_API_KEY = { provider = "onepass_personal", value = "op://Private/OpenRouter API Key/credential" }
 SOFTWAREUPDATE_PASSWORD = { provider = "onepass_personal", value = "op://Private/Mac mini/password" }
 {{ end -}}
