@@ -13,8 +13,11 @@ packages added with `pi install`.
   highlighting, thinking-level borders, etc., vs. `system`'s 16 ANSI
   colors stretched across the same roles) over `system`'s single
   source-of-truth appeal.
-- `defaultProvider`/`defaultModel`/`defaultThinkingLevel` are profile seeds:
-  they only fill in when absent, so a Ctrl+S change is never reverted.
+- `defaultProvider`/`defaultModel`/`defaultThinkingLevel` are machine seeds:
+  they only fill in when absent, so a Ctrl+S change is never reverted. Both
+  profiles seed the same provider/model now (opencode-go/deepseek-v4.1-flash);
+  see `Code/github.com/mise.toml.tmpl` for the one remaining divergence this
+  leaves behind.
 - Packages declared in `.chezmoidata/pi-packages.toml` are unioned into
   `packages`. A companion run_onchange script actually installs them
   (`pi install`), since declaring a package here only makes pi load it if
@@ -25,14 +28,7 @@ packages added with `pi install`.
 {{- if trim .chezmoi.stdin -}}
 {{-   $current = fromJson .chezmoi.stdin -}}
 {{- end -}}
-{{- $seeds := dict "defaultThinkingLevel" "high" -}}
-{{- if .mlb -}}
-{{-   $_ := set $seeds "defaultProvider" "github-copilot" -}}
-{{-   $_ := set $seeds "defaultModel" "claude-sonnet-5" -}}
-{{- else -}}
-{{-   $_ := set $seeds "defaultProvider" "opencode-go" -}}
-{{-   $_ := set $seeds "defaultModel" "deepseek-v4.1-flash" -}}
-{{- end -}}
+{{- $seeds := dict "defaultThinkingLevel" "high" "defaultProvider" "opencode-go" "defaultModel" "deepseek-v4.1-flash" -}}
 {{- $current = merge $current $seeds -}}
 {{- $_ := set $current "theme" "catppuccin-latte/catppuccin-frappe" -}}
 {{- $packages := index $current "packages" | default list -}}

@@ -1,5 +1,10 @@
 [env]
 CLOUDSDK_ACTIVE_CONFIG_NAME = "mlb"
+# Both profiles now share the opencode-go/deepseek-v4.1-flash global default
+# (see dot_pi/agent/modify_settings.json); force Copilot/Sonnet 5 back for
+# actual corporate work here so it isn't billed against opencode-go instead.
+PI_DEFAULT_MODEL = "claude-sonnet-5"
+PI_DEFAULT_PROVIDER = "github-copilot"
 # See dot_config/mise/config.toml.tmpl for why this exec() isn't redundant
 # with fnox's own per-directory activation.
 GH_ENTERPRISE_TOKEN = { value = "{{ exec(cache_duration='7d', cache_key='mlbam-gh-token', command='/opt/homebrew/bin/fnox get GH_ENTERPRISE_TOKEN') }}" }
