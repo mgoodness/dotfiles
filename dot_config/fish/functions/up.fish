@@ -52,6 +52,36 @@ function __up_all --description "Update everything"
     end
 end
 
+# __brew_retry_link_conflicts CMD... — run a brew command, streaming its
+# output as usual; if it fails with Homebrew's own Keg::ConflictError
+# ("Could not symlink ..."), apply the exact `brew link --overwrite <formula>`
+# fix Homebrew's own error text names, then retry CMD once. ruby is the
+# recurring case here: its bundled default gems (erb, rdoc, ...) install into
+# a path keyed only by Ruby's ABI version (e.g. 4.0.0), shared across every
+# 4.0.x point release by design, so a stale real file from a prior install
+# can block the new keg's symlink step on every future point bump. Not a
+# local misconfiguration — see e.g. Homebrew/brew's Common-Issues.md and
+# actions/runner-images#13856 for the same conflict shape on other formulae.
+function __brew_retry_link_conflicts --description "Run a brew command, auto-applying its own suggested --overwrite fix once on a link conflict"
+    set -l tmp (mktemp)
+    $argv 2>&1 | tee $tmp
+    set -l code $pipestatus[1]
+    if test $code -ne 0
+        set -l fixes (string match -rg '^\s*(brew link --overwrite \S+)\s*$' <$tmp | sort -u)
+        if test (count $fixes) -gt 0
+            for fix in $fixes
+                echo (set_color yellow)"dotfiles"(set_color normal)": auto-fixing Homebrew link conflict: $fix" >&2
+                eval $fix
+            end
+            rm -f $tmp
+            $argv
+            return
+        end
+    end
+    rm -f $tmp
+    return $code
+end
+
 function __up_homebrew --description "Update Homebrew packages"
     chezmoi apply --force ~/.config/homebrew
 
@@ -63,8 +93,8 @@ function __up_homebrew --description "Update Homebrew packages"
     # `brew update -q` still prints a colored "==> Updating Homebrew..."
     # header even when already current; drop that one line.
     brew update -q 2>&1 | string match -r -v 'Updating Homebrew\.\.\.'
-    brew bundle -q
-    brew upgrade -q
+    __brew_retry_link_conflicts brew bundle -q
+    __brew_retry_link_conflicts brew upgrade -q
     brew autoremove -q
     brew cleanup -q
     brew doctor -q
