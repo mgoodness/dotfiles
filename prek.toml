@@ -1,5 +1,13 @@
 [update]
 cooldown_days = 7
+# Never adopt a prerelease tag. Without this, autoupdate pins the newest tag
+# overall, which for betterleaks was `v2.0.0-rc.1` (PR #48). Both dashed
+# (`v2.0.0-rc.1`) and undashed (`v1.8.0rc1`) prerelease forms are covered;
+# trailing `-1` style tags (shellcheck-py, pre-commit-shfmt) are not.
+exclude_tags = [
+  "*-{alpha,beta,rc,dev,pre,preview,snapshot,nightly}*",
+  "*{alpha,beta,rc,dev,pre}[0-9]*",
+]
 
 [[repos]]
 hooks = [{ id = "md-toc", args = ["--in-place", "--skip-lines=1", "github"] }]
