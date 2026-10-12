@@ -29,7 +29,6 @@ brew "grep"
 brew "helix", args: ["HEAD"]
 brew "httpie"
 brew "jq"
-brew "lazygit"
 brew "less"
 brew "mas"
 brew "mdcat"
@@ -75,7 +74,6 @@ mas "Developer", id: 640199958
 mas "Keynote", id: 361285480
 mas "Numbers", id: 361304891
 mas "Pages", id: 361309726
-mas "Tailscale", id: 1475387142
 mas "TestFlight", id: 899247664
 mas "Xcode", id: 497799835
 
