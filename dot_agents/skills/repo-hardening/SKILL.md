@@ -1,12 +1,12 @@
 ---
 name: repo-hardening
 description: >
-  Harden a GitHub repo so required checks and automated merges are actually safe: rulesets,
-  merge settings, Dependabot with auto-merge, immutable releases, and Actions security practices
-  (SHA pinning, `pull_request_target` hygiene, token scoping). Use when configuring or auditing
-  a ruleset, merge settings, Dependabot, auto-merge, immutable releases, or when zizmor/actionlint
-  flags a workflow. Defers CI content to a language skill (e.g. `go-ci`), release-please to
-  `release-please`, and App-token mechanics to `github-app-token`.
+  Harden a GitHub repo so required checks and automated merges actually bite: rulesets, merge
+  settings, Dependabot with auto-merge, immutable releases, signed commits, and Actions security
+  practices (SHA pinning, `pull_request_target` hygiene, token scoping). Use when auditing an
+  existing ruleset or merge settings, or when zizmor/actionlint flags a workflow. Defers CI content
+  to a language skill (e.g. `go-ci`), release-please to `release-please`, and App-token mechanics
+  to `github-app-token`.
 ---
 
 # Repo Hardening: Making Required Checks and Auto-Merge Actually Bite
@@ -29,6 +29,7 @@ This is the step that makes the required check and auto-merge (step 4) load-bear
 - The `required_status_checks` rule's own `required_status_checks` array (yes, the rule type and its parameter share a name) takes `context` values matching the CI job's `name:` field — the same mismatch step 1 warns about, made concrete here. `strict_required_status_checks_policy: true` is `strict` renamed: it requires the PR branch be up to date with the base before merging.
 - **`bypass_actors: []` is not optional to reason about — it's the load-bearing line.** Rulesets have no implicit admin exemption: unlike classic protection's `enforce_admins`, which defaults to _not_ enforcing against admins until you flip it on, an empty (or omitted) `bypass_actors` list means the ruleset binds literally everyone, repo and org admins included. Classic protection's `enforce_admins: true` closed an escape hatch that existed by default; a ruleset with no bypass actors has no escape hatch to close in the first place. Add an entry only for a bypass you actually want (e.g. `{"actor_type": "OrganizationAdmin", "bypass_mode": "always"}`), and confirm the exact `actor_type`/`bypass_mode` shape against current docs before scripting it — this is the newest, still-evolving part of the payload.
 - `required_linear_history` forces every merge through squash or rebase, not a merge commit — pair it with step 2's repo-level merge setting or the two disagree about what history should look like. The `pull_request` rule also supports an `allowed_merge_methods` parameter that enforces the same restriction at ruleset scope rather than repo-wide; useful when different branches need different merge-method rules, but verify its exact shape against current docs before relying on it, same caveat as `bypass_actors`.
+- `required_signatures` ships in [`RULESET-PAYLOAD.json`](RULESET-PAYLOAD.json) as the house default (commits sign everywhere by default), and it takes no parameters. It's the one rule type here that isn't part of the required-check chain: it enforces supply-chain provenance rather than gating a merge, and it rides this same ruleset payload instead of needing an endpoint of its own (contrast Immutable releases below, which is independent _and_ separate). What makes it cheap is also what makes it sharp — with `bypass_actors: []` it binds repo admins too, so an unsigned commit is unpushable for you and for a contributor alike. So audit what pushes to the branch: GitHub API-created commits are signed by GitHub's web-flow key and show Verified, so the `github-app-token`/release-please path survives it; a commit pushed from a CI runner with a plain token and no signing key does not — for that repo, drop this rule from the payload rather than leaving it half-enforced.
 
 ## 2. Repo merge settings — squash-only, auto-delete branches
 
@@ -94,6 +95,7 @@ gh api -X PUT repos/<owner>/<repo>/immutable-releases
 - **Set `strict_required_status_checks_policy: true`** — leaving it unset or `false` lets a PR merge on a check result from a now-stale base branch.
 - **Disable `allow_merge_commit` whenever `required_linear_history` is enabled** — see step 2.
 - **Confirm `bypass_actors` is empty (or explicitly set) rather than assuming admin exemption** — classic protection's `enforce_admins` defaulted to exempting admins; rulesets do not. See step 1's `bypass_actors` bullet.
+- **Enable `required_signatures` without auditing what pushes to the branch** — See step 1's `required_signatures` bullet.
 - **Migrate fully from classic branch protection to rulesets** — running both simultaneously produces the most-restrictive combination, which is confusing to reason about and audit. Remove the classic rule once the ruleset covers the same ground.
 - **Pin every action to the commit SHA the tag points to, not the annotated tag's own object SHA** — see Security hardening's SHA-pinning bullet.
 - **Keep auto-merge scoped to Dependabot only by default** — avoid general-purpose "auto-merge for write access" workflows; see step 4.
@@ -102,4 +104,4 @@ gh api -X PUT repos/<owner>/<repo>/immutable-releases
 
 ## Completion criterion
 
-Ruleset is active on the target branch; required check `context` matches the CI job's `name:` field; merge settings disable merge commits and enable auto-merge; Dependabot config and auto-merge workflow are present; every third-party action in every workflow is pinned to a commit SHA with a `# vX.Y.Z` comment.
+Ruleset is active on the target branch; required check `context` matches the CI job's `name:` field; merge settings disable merge commits and enable auto-merge; Dependabot config and auto-merge workflow are present; every third-party action in every workflow is pinned to a commit SHA with a `# vX.Y.Z` comment; signed commits are required on the target branch.
