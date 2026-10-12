@@ -6,8 +6,9 @@
 # lazygit was a Homebrew formula, so `brew uninstall` is the whole story.
 # Tailscale came from the Mac App Store (`mas`), so there is no cask to zap:
 # this deletes the app, its pkg receipt, the "Tailscale" VPN network service
-# and the sandbox leftovers listed in Tailscale's macOS (App Store) uninstall
-# docs. Their keychain items (tailscale-machinekey, tailscale-logdata,
+# and the sandbox leftovers from Tailscale's macOS (App Store) uninstall docs,
+# plus the widget container those docs predate. Their keychain items
+# (tailscale-machinekey, tailscale-logdata,
 # tailscale-preferences) are deliberately left behind: dropping them needs a
 # keychain authorization prompt, and nothing reads them once the app is gone.
 #
@@ -37,10 +38,23 @@ if [ -d /Applications/Tailscale.app ]; then
 fi
 
 # The app registers itself as a VPN network service, which survives deleting
-# the app itself.
-if networksetup -listallnetworkservices 2>/dev/null | grep -qE '^\*?Tailscale$'; then
+# the app itself. `networksetup` exits non-zero with "You cannot remove
+# Tailscale because there aren't any other network services on IPv4." even
+# when the service does go away, so judge the removal by the resulting state
+# rather than by its exit code.
+tailscale_service_present() {
+    networksetup -listallnetworkservices 2>/dev/null | grep -qE '^\*?Tailscale$'
+}
+
+if tailscale_service_present; then
     echo "Removing the Tailscale VPN network service..."
     sudo networksetup -removenetworkservice Tailscale
+    if tailscale_service_present; then
+        echo "WARNING: the Tailscale network service is still registered. Remove it"
+        echo "in System Settings > Network > VPN, then reboot to clear its state."
+    else
+        echo "Tailscale network service removed."
+    fi
 fi
 
 if pkgutil --pkgs 2>/dev/null | grep -qx io.tailscale.ipn.macos; then
@@ -58,6 +72,7 @@ rm -rf \
     ~/Library/Containers/io.tailscale.ipn.macos.login-item-helper \
     ~/Library/Containers/io.tailscale.ipn.macos.network-extension \
     ~/Library/Containers/io.tailscale.ipn.macos.share-extension \
+    ~/Library/Containers/io.tailscale.ipn.macos.widgets \
     ~/Library/Containers/Tailscale \
     ~/Library/Group\ Containers/*.io.tailscale.ipn.macos \
     ~/Library/HTTPStorages/io.tailscale.ipn.macos \
