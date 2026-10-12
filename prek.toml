@@ -12,7 +12,7 @@ exclude_tags = [
 [[repos]]
 hooks = [{ id = "md-toc", args = ["--in-place", "--skip-lines=1", "github"] }]
 repo = "https://github.com/frnmst/md-toc"
-rev = "9.0.1"
+rev = "9.1.0"
 
 [[repos]]
 hooks = [{ id = "codespell", args = ["--ignore-words-list=protols,flate"] }]
