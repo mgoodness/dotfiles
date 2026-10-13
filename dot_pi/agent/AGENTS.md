@@ -12,6 +12,10 @@ update. To change how a skill behaves, in preference order:
 3. Add it to this file, if it holds in every project.
 4. Package it as a skill in your dotfiles under `dot_agents/skills/<name>/`.
 
+Then run `/writing-for-agents` over the edit before committing. Its levers — one meaning
+in one place, positive framing, a checkable completion criterion — are what make a skill
+fire reliably, and no linter catches any of them.
+
 Upstream it only when it is generally useful and you will maintain it.
 
 ## Subagent dispatch
@@ -51,7 +55,8 @@ Then **state the wave as it actually is** — "one ticket alone, then two in
 parallel" — not as it appears by domain. Claimed three-way parallelism that is
 really one-plus-two invites worktree collisions.
 
-For the full checklist and worked examples, read the repo's
+For the full checklist and worked examples, see the `fan-out` skill's
+`TICKET-SLICING.md`. A repo with its own slicing conventions overrides it at
 `docs/agents/ticket-slicing.md`.
 
 ## Release automation (shared GitHub App)

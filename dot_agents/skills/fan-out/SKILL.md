@@ -27,6 +27,10 @@ Record each remedy as a real blocking edge, so the tracker's own frontier query 
 
 A third pattern doesn't gate this step. An additive registry built for exactly this — a list or struct a caller assembles once and callees register into, so no ticket creates a foundation — still has one call site that wires every registration in: the constructor or builder literal that hands the assembled value to its caller. Two tickets in the wave each adding one field or line there will conflict when the second merges, purely from landing near the same lines (a formatter realigning the literal is enough). Unlike the two collisions above, this is a cheap `git rebase` for whichever PR lands second, not a design decision — note it when you present the wave rather than fixing the tracker to dodge it.
 
+For the checks beyond these two — shared verification resources, discovery order, ticket
+self-sufficiency, and edge justification — plus a worked example of each remedy, see
+[`TICKET-SLICING.md`](TICKET-SLICING.md).
+
 **Done when** every ticket you are about to fan out has no open blocker, and every ticket you are holding back carries an edge naming its blocker.
 
 ## 2. Cut a worktree per ticket
