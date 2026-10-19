@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# shellcheck shell=bash
+
+if [ -n "${CI:-}" ]; then
+    echo "Skipping due to \$CI"
+    exit
+fi
+
+if ! command -v pi &>/dev/null; then
+    echo "Skipping: pi not found"
+    exit
+fi
+
+# Reconciles pi's installed packages with .chezmoidata/pi-packages.toml.
+#
+# Retired first: dropping an id from [[piPackages]] only stops *declaring*
+# it. modify_settings.json unions declared ids into settings.json's
+# `packages` and never prunes, so a machine that already installed a package
+# keeps a settings entry pointing at ~/.pi/agent/npm/, and pi keeps loading
+# the extension. `pi remove` clears both; the rm afterwards only catches the
+# case where a machine had already lost the settings entry by other means
+# (pi then exits non-zero with "No matching package found", hence `|| true`).
+#
+# Then installed: `pi install` is what actually fetches an npm/git package
+# into ~/.pi/agent/npm/. Auto-install-on-startup is documented for
+# project-scoped packages after trust, not user-scoped ones, so a settings
+# entry alone would name a package that was never fetched.
+
+# Pi packages config hash: {{ list .piPackages .retiredPiPackages | toJson | sha256sum }}
+
+{{ range .retiredPiPackages -}}
+if pi list 2>/dev/null | grep -qF '{{ .id }}'; then
+    echo "Removing retired pi package {{ .id }}"
+    pi remove {{ .id }} || true
+fi
+{{ if hasPrefix "npm:" .id -}}
+rm -rf "${HOME}/.pi/agent/npm/node_modules/{{ trimPrefix "npm:" .id }}"
+{{ end -}}
+{{ end -}}
+{{ range .piPackages -}}
+pi install {{ .id }}
+{{ end -}}

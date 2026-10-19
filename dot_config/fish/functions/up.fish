@@ -164,7 +164,7 @@ function __up_pi --description "Update pi packages"
     # directory or brew's receipt — `brew list --versions` then lies about
     # what's actually running, and the drift is invisible to `up homebrew`'s
     # delta diff. --extensions still refreshes installed packages
-    # (pi-anthropic-auth, context7-pi, pi-exa, pi-usage-live) and reconciles
+    # (context7-pi, pi-exa, pi-usage-live) and reconciles
     # pinned git refs, which is all this was ever meant to do.
     pi update --extensions >/dev/null
 end

@@ -1,6 +1,6 @@
-[[piPackages]]
-id = "npm:@gotgenes/pi-anthropic-auth"
-
+# Packages `pi` should have installed (read by
+# run_onchange_after_13-reconcile-pi-packages.sh.tmpl and unioned into
+# settings.json's `packages` by dot_pi/agent/modify_settings.json).
 [[piPackages]]
 id = "npm:@upstash/context7-pi"
 
@@ -9,3 +9,13 @@ id = "npm:pi-exa"
 
 [[piPackages]]
 id = "npm:pi-usage-live"
+
+# Packages removed from [[piPackages]] above. Deleting an entry there only
+# stops *declaring* it: modify_settings.json never prunes settings.json's
+# `packages`, so a machine that already installed the package keeps loading
+# it. Listing the id here makes the reconcile script uninstall it and delete
+# the leftover files instead. Once every machine has applied past the change,
+# delete the entry; while it is listed, a manual `pi install` of that id is
+# undone by the next apply.
+[[retiredPiPackages]]
+id = "npm:@gotgenes/pi-anthropic-auth"

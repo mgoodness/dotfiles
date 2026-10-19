@@ -27,9 +27,11 @@ Scripts in `.chezmoiscripts/` run in alphanumeric order after `chezmoi apply`. `
 | `run_once_after_10-homebrew.sh`                       | Installs Homebrew if absent, then `brew bundle install`                    |
 | `run_onchange_after_11-build-bat-cache.sh.tmpl`       | Rebuilds bat theme cache after theme changes                               |
 | `run_onchange_after_12-install-gh-extensions.sh.tmpl` | Installs `gh` extensions (e.g. `gh-poi`)                                   |
-| `run_onchange_after_13-install-pi-packages.sh.tmpl`   | Runs `pi install` for each package in `.chezmoidata/pi-packages.toml`      |
-| `run_onchange_after_15-install-agent-skills.sh.tmpl`  | Installs agent skills via `skills` (vercel-labs/skills)                    |
+| `run_onchange_after_13-reconcile-pi-packages.sh.tmpl` | Uninstalls retired, then installs declared, pi packages                    |
+| `run_once_after_14-remove-claude.sh`                  | One-time removal of Claude, its Claude Code data and ClaudeBar             |
 | `run_once_after_15-bootstrap-mattpocock-skills.sh`    | One-time install of mattpocock/skills' engineering + productivity skills   |
+| `run_onchange_after_15-install-agent-skills.sh.tmpl`  | Installs agent skills via `skills` (vercel-labs/skills)                    |
+| `run_once_after_16-remove-tailscale-lazygit.sh`       | One-time removal of lazygit and Tailscale (app, receipt, VPN service)      |
 | `run_onchange_after_20-macos.sh`                      | Sets macOS defaults, Dock layout, Touch ID sudo                            |
 | `run_after_21-remote-login.sh.tmpl`                   | Enables Remote Login on the Mac mini only (hostname-gated)                 |
 | `run_after_22-authorized-keys.sh.tmpl`                | Authorizes the MacBook Pro's SSH key on the Mac mini only (hostname-gated) |
