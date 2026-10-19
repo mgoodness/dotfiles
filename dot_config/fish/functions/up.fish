@@ -281,8 +281,22 @@ function __up_skills --description "Update agent skills"
     # the discovered set (renamed or removed upstream). `skills remove` is
     # lock-aware, unlike a bare `rm -rf` — it can't leave a stale lock entry
     # behind the way removing the directory by hand can.
+    #
+    # Deliberately NOT scoped with `--agent $agents`, unlike the `add` above.
+    # `skills remove --agent universal` is a silent no-op for global installs:
+    # `universal` and ~20 other agent types all resolve to the same canonical
+    # ~/.agents/skills/<name> path, so the CLI's "still used by another agent?"
+    # check sees that path via the remaining agents, keeps both the directory
+    # and the lock entry, and still prints "Successfully removed 1 skill(s)".
+    # Omitting --agent targets every agent, which is the only scope that
+    # actually deletes the canonical copy. It still exits 0 on failure, so
+    # re-check the directory rather than trusting the exit status.
     for name in $installed
-        contains -- $name $names || npx --yes "skills@$skills_version" remove $name -g --agent $agents -y &>/dev/null
+        contains -- $name $names && continue
+        npx --yes "skills@$skills_version" remove $name -g -y &>/dev/null
+        if test -d ~/.agents/skills/$name
+            fish_log -w "dotfiles: failed to prune retired skill '$name' (still present in ~/.agents/skills)"
+        end
     end
 end
 
