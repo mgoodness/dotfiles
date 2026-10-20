@@ -18,7 +18,9 @@ brew "sops"
 brew "tcptraceroute"
 
 cask "akuity"
-cask "slack"
+# slack is deliberately not brew-managed: its own updater installs a root-owned
+# pkg over /Applications/Slack.app, so brew's Caskroom symlink can't coexist
+# with it. See AGENTS.md (Homebrew).
 
 mas "1Password for Safari", id: 0
 mas "Okta Extension App", id: 1439967473
