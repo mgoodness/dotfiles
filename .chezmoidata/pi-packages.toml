@@ -19,3 +19,7 @@ id = "npm:pi-usage-live"
 # undone by the next apply.
 [[retiredPiPackages]]
 id = "npm:@gotgenes/pi-anthropic-auth"
+
+# Dropped without a replacement; the GEMINI_API_KEY stays in fnox for ad-hoc use.
+[[retiredPiPackages]]
+id = "npm:@amaster.ai/pi-image-gen"
