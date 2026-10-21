@@ -4,6 +4,7 @@
 
 tap "mgoodness/tap", "git@github.com:mgoodness/homebrew-tap.git", trusted: true
 
+cask "discord"
 cask "mgoodness/tap/shortcircuit", trusted: true
 cask "rectangle"
 
