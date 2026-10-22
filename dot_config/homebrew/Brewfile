@@ -3,6 +3,7 @@
 # rubocop:disable Style/StringLiterals
 
 tap "beeftornado/rmtree", trusted: true
+tap "mgoodness/tap", "git@github.com:mgoodness/homebrew-tap.git", trusted: true
 tap "thdxg/tap", trusted: true
 
 brew "bash"
