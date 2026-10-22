@@ -14,10 +14,18 @@ packages added with `pi install`.
   colors stretched across the same roles) over `system`'s single
   source-of-truth appeal.
 - `defaultProvider`/`defaultModel`/`defaultThinkingLevel` are machine seeds:
-  they only fill in when absent, so a Ctrl+S change is never reverted. Both
-  profiles seed the same provider/model now (opencode-go/deepseek-v4.1-flash);
-  see `Code/github.com/mise.toml.tmpl` for the one remaining divergence this
-  leaves behind.
+  they only fill in when absent, so a Ctrl+S change is never reverted. The
+  seed is profile-scoped — `.mlb` machines seed
+  `github-copilot`/`claude-sonnet-5.5` (work billed to Copilot), everything
+  else seeds `deepseek`/`deepseek-flash`. It is per-machine, not per-repo, and
+  because it only fills gaps an already-seeded machine keeps whatever model it
+  last saved.
+- The mlb seed pins a concrete model id on purpose: the Copilot catalog has no
+  `claude-sonnet` alias (ids are `claude-sonnet-4.6`, `claude-sonnet-5`,
+  `claude-sonnet-5.5`, …) and `findInitialModel` resolves the saved default by
+  exact id, so an alias would silently fall through to the first available
+  model instead of erroring. Bump it when a newer Sonnet lands
+  (`pi --list-models sonnet` on an mlb box).
 - Packages declared in `.chezmoidata/pi-packages.toml` are unioned into
   `packages`. A companion run_onchange script actually installs them
   (`pi install`), since declaring a package here only makes pi load it if
@@ -28,7 +36,10 @@ packages added with `pi install`.
 {{- if trim .chezmoi.stdin -}}
 {{-   $current = fromJson .chezmoi.stdin -}}
 {{- end -}}
-{{- $seeds := dict "defaultThinkingLevel" "high" "defaultProvider" "opencode-go" "defaultModel" "deepseek-v4.1-flash" -}}
+{{- $seeds := dict "defaultThinkingLevel" "high" "defaultProvider" "deepseek" "defaultModel" "deepseek-flash" -}}
+{{- if .mlb -}}
+{{-   $seeds = dict "defaultThinkingLevel" "high" "defaultProvider" "github-copilot" "defaultModel" "claude-sonnet-5.5" -}}
+{{- end -}}
 {{- $current = merge $current $seeds -}}
 {{- $_ := set $current "theme" "catppuccin-latte/catppuccin-frappe" -}}
 {{- $packages := index $current "packages" | default list -}}

@@ -1,8 +1,10 @@
 {{ if .mlb -}}
 [secrets]
-# OPENCODE_API_KEY is now declared globally (dot_config/fnox/config.toml.tmpl)
-# since opencode-go is the default provider on both profiles. These remain
-# scoped to this tree for manual, non-default personal-provider use on an MLB box.
+# Personal-billed providers stay scoped to this tree, so they are exported only
+# inside personal repos on an MLB box and never while working in an
+# emu.github.com or github.mlbam.net tree. OPENCODE_API_KEY and
+# OPENROUTER_API_KEY are manual-use only; DEEPSEEK_API_KEY is the
+# personal-profile pi default.
 DEEPSEEK_API_KEY = { provider = "onepass_personal", value = "op://Private/DeepSeek API Key/credential" }
 OPENROUTER_API_KEY = { provider = "onepass_personal", value = "op://Private/OpenRouter API Key/credential" }
 GEMINI_API_KEY = { provider = "onepass_personal", value = "op://Private/Gemini API Key/credential" }
