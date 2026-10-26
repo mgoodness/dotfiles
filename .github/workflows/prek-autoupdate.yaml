@@ -1,12 +1,3 @@
-name: prek auto-update
-
-on:
-  schedule:
-    - cron: "0 0 * * 1"
-  workflow_dispatch:
-
-permissions: {}
-
 jobs:
   auto-update:
     permissions:
@@ -25,4 +16,11 @@ jobs:
           branch: prek-autoupdate
           commit-message: "chore(prek): autoupdate hook revisions"
           delete-branch: true
+          sign-commits: true
           title: "chore(prek): autoupdate hook revisions"
+name: prek auto-update
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+permissions: {}
