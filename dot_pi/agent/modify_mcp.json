@@ -1,0 +1,40 @@
+# chezmoi:modify-template
+{{- /*
+Merge the managed MCP server entry into Pi's existing ~/.pi/agent/mcp.json
+instead of replacing it, so servers added with `pi mcp add` survive
+`chezmoi apply`.
+
+- `mcpServers.home-assistant` is chezmoi-managed and always wins, the same way
+  `theme` wins in settings.json. Runtime changes to *this* entry (exposure
+  toggled from `/mcp`) are therefore reverted on the next apply; change the
+  entry here instead. Other servers, and any top-level keys, are preserved
+  untouched.
+- The URL is the Home Assistant Cloud remote UI host, not the
+  home.opsgoodness.net custom domain. HA only advertises a canonical external
+  URL for the instance whose host matches its own configuration, and for any
+  other host its OAuth metadata comes back with relative endpoints and no
+  `issuer`, which a conforming client must reject ("Invalid authorization
+  server issuer"). Cloud is also reachable from anywhere, so the server needs
+  no LAN access and no macOS Local Network permission for Macterm.
+- `clientRegistration: "cimd"` is required: HA advertises
+  `client_id_metadata_document_supported` and has no RFC 7591 dynamic client
+  registration, so Pi's default registration fails.
+- `exposure: "direct"` declares HA's ~22 tools to the model instead of
+  reaching them through codemode scripts, which suits a server used for
+  one-step device control.
+- OAuth credentials live in ~/.pi/agent/mcp-auth.json, which stays unmanaged:
+  they are per-machine, and `pi mcp login home-assistant` is how a machine
+  gets them.
+*/ -}}
+{{- $current := dict -}}
+{{- if trim .chezmoi.stdin -}}
+{{-   $current = fromJson .chezmoi.stdin -}}
+{{- end -}}
+{{- $servers := index $current "mcpServers" | default dict -}}
+{{- $_ := set $servers "home-assistant" (dict
+      "url" "https://nlnxn14gitl4kd5tloexvihlfzxnewdb.ui.nabu.casa/api/mcp"
+      "description" "Home Assistant: query and control lights, switches, climate, scenes, media players and all other exposed entities."
+      "exposure" "direct"
+      "oauth" (dict "clientRegistration" "cimd")) -}}
+{{- $_ := set $current "mcpServers" $servers -}}
+{{- toPrettyJson $current -}}
