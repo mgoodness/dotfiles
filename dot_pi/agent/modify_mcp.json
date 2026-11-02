@@ -15,7 +15,7 @@ instead of replacing it, so servers added with `pi mcp add` survive
   other host its OAuth metadata comes back with relative endpoints and no
   `issuer`, which a conforming client must reject ("Invalid authorization
   server issuer"). Cloud is also reachable from anywhere, so the server needs
-  no LAN access and no macOS Local Network permission for Macterm.
+  no LAN access and no macOS Local Network permission for Rex.
 - `clientRegistration: "cimd"` is required: HA advertises
   `client_id_metadata_document_supported` and has no RFC 7591 dynamic client
   registration, so Pi's default registration fails.

@@ -8,7 +8,7 @@ packages added with `pi install`.
 - `theme` is chezmoi-managed and always wins. Evaluated against pi v1's
   `system` theme (colors derived live from the terminal's own ANSI
   palette) via a side-by-side `/theme-table` role-swatch comparison in two
-  Macterm panes; kept the hand-maintained Catppuccin Frappe/Latte files for
+  terminal panes; kept the hand-maintained Catppuccin Frappe/Latte files for
   their per-role variety (26 distinct Catppuccin hues feeding syntax
   highlighting, thinking-level borders, etc., vs. `system`'s 16 ANSI
   colors stretched across the same roles) over `system`'s single

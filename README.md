@@ -13,7 +13,7 @@ secrets through [fnox](https://fnox.jdx.dev/), and [Catppuccin](https://catppucc
   via `fnox activate fish`; a daemon caches resolved values in memory only.
 - **Env & tools** — [mise](https://mise.jdx.dev/) scopes tools and environment variables by directory.
 - **Themes** — Catppuccin for bat, eza, ghostty, and Helix, fetched from upstream archives
-  (`.chezmoiexternal.toml`, 168h refresh). Macterm and Helix follow the system light/dark appearance.
+  (`.chezmoiexternal.toml`, 168h refresh). Rex and Helix follow the system light/dark appearance.
 - **pi** — the [pi](https://pi.dev/) coding agent: homegrown skills (`~/.agents/skills`), global
   extensions, subagent definitions, and npm packages.
 
@@ -47,8 +47,10 @@ Repos live under `~/Code/` by git host — `github.com/`, `emu.github.com/`, and
 install` yourself for a plain clone).
 
 Parallel work happens in git worktrees via [worktrunk](https://worktrunk.dev) (`wt`), run inside
-Macterm. A fresh `chezmoi init --apply` installs `worktrunk` and the `macterm` cask, and
-`run_after_31-worktrunk-setup.sh` wires up worktrunk's fish integration and pi activity extension.
+[Rex](https://www.superlogical.com/rex/docs) (one session per repo, one tab per worktree). A fresh
+`chezmoi init --apply` installs `worktrunk`; Rex Beta is installed by hand. `run_after_31-worktrunk-setup.sh`
+wires up worktrunk's fish integration and pi activity extension, and `run_after_23-rex-skill.sh` installs
+Rex's agent skill.
 The `pre-start` hook in `~/.config/worktrunk/config.toml` preps env (mise → direnv) on
 `wt switch --create <branch>`, so each new worktree is ready to go.
 
