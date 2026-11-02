@@ -1,11 +1,11 @@
 ---
 name: cleanup-branch
-description: Clean up a branch and everything around it — its worktree, its Macterm tab, its remote ref, and its local branch. Use when the user wants to clean up after a PR is merged, or mentions "delete worktree" or "delete branch".
+description: Clean up a branch and everything around it — its worktree, its Rex tab, its remote ref, and its local branch. Use when the user wants to clean up after a PR is merged, or mentions "delete worktree" or "delete branch".
 ---
 
 # Cleanup Branch
 
-Remove a branch once its PR is merged: its worktree, its Macterm tab, the local branch, and the remote ref.
+Remove a branch once its PR is merged: its worktree, its Rex tab, the local branch, and the remote ref.
 
 ## Workflow
 
@@ -90,24 +90,33 @@ Show the user exactly what will be removed:
 
 - Branch: `<headRefName>`
 - Worktree path: `<path>` (or "none")
-- Macterm tab: the tab rooted at `<path>` (or "none")
+- Rex tab: the tab labelled `<branch>` in the repo's session, or failing that the tab with a pane running at `<path>` (or "none")
 
 Ask: "Delete branch `<branch>`[and remove worktree at `<path>`]? (y/N)"
 
 Abort if the user declines.
 
-### 7. Close its Macterm tab
+### 7. Close its Rex tab
 
-Close the worktree's tab before the directory goes away (the `macterm` skill has the CLI mechanics). Find the tab whose pane's `cwd` is the worktree path in `macterm pane list`, then quit its agent and close the tab by id:
+Close the worktree's tab before the directory goes away. The Rex layout is in the global `AGENTS.md`; the `rex` skill has the CLI mechanics. Closing a tab closes all its panes with no `busy` refusal, so the checks below are yours to run. `$repo` is the session's label, the repo's name.
+
+Find the tab by its label. If none matches (a hand-made or renamed tab), fall back to the tab holding a pane whose foreground process runs under the worktree path (`rex block call -b <block> process`, `.foreground.cwd`, compared against `pwd -P` of the worktree; the `pwd` method is empty for programs launched directly).
 
 ```sh
-macterm pane key --session <session> ctrl+d   # quit the agent gracefully
-macterm tab close <tab-id>
+tab=$(rex session inspect "$repo" --json | jq -r --arg b "<branch>" '.windows[] | select(.label == $b) | .window_id')
+for b in $(rex block ls -s "$repo" --json | jq -r --arg w "$tab" '.blocks[] | select(.window_id == $w) | .block_id'); do
+  echo "$b $(rex block call -s "$repo" -b "$b" program_status | jq -c '[.records[].state]')"
+done
 ```
 
-The agent is usually still resident, and a close with a running program is refused as `busy`. Quitting first avoids it: pi exits on Ctrl-D (its `app.exit`, when the input is empty), which hands the pane back to its shell. If the input held text, Ctrl-D edits instead, so send Ctrl-C once to clear it, then Ctrl-D. A close that still reports `busy` means the agent is mid-turn — surface that to the user rather than forcing the close, which kills the pane's session.
+Then, in order:
 
-Close verbs always need an explicit target.
+1. **A pane is `working` or `blocked`** → the agent is mid-turn or waiting on the user. Surface that and stop; do not close. A pane running the agent (`process` → `.foreground.argv0` is `pi`) that reports no records at all is unknown, not idle: `rex capture -s "$repo" -b <block> --trim | tail` and ask the user if it isn't plainly at its prompt.
+2. **`$REX_BLOCK` is one of the tab's panes** → this agent lives in the tab being closed. Skip the close, tell the user to close it themselves, and carry on with the remaining steps.
+3. **Keep the `main` tab**, the trunk worktree's.
+4. Otherwise close it: `rex window close -s "$repo" "$tab"`.
+
+An agent resting at its prompt (`idle`, or `done` once its turn finished) is safe to close without a graceful quit. Closing the last tab leaves the session alive and empty.
 
 ### 8. Remove the worktree and/or branch
 
@@ -155,4 +164,4 @@ Note the branch deleted, and the worktree and tab removed (if applicable).
 
 ## Completion criterion
 
-The branch is gone locally and from `origin`, its worktree no longer appears in `git worktree list`, and no Macterm tab is rooted at its path.
+The branch is gone locally and from `origin`, its worktree no longer appears in `git worktree list`, and no tab in the repo's Rex session is labelled with it or has a pane running at its path.

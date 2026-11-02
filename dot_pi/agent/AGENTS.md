@@ -38,6 +38,21 @@ Upstream it only when it is generally useful and you will maintain it.
   content — the protocol (worktree checks, `tdd`, merge-before-reporting) is
   already baked into each agent.
 
+## Rex sessions
+
+Rex is the terminal multiplexer. Layout: one **session** per repo, labelled
+with the repo's name; one **tab** per worktree, labelled with its branch name;
+**panes** (shells, the agent, test runners) inside the tab. The CLI calls a tab
+a `window` (`rex window new`, `window_id`); the macOS app's own windows are
+frames that no agent touches.
+
+- **Session labels stay as they are.** The `rex` skill tells agents to rename
+  their session after the task; here several agents share one session and the
+  label is how skills find it, so target by label and ignore that step. A new
+  tab is named for its branch.
+- **Close tabs; sessions close only when the user asks** (`rex kill`,
+  `rex session kill`).
+
 ## Ticket slicing
 
 Before presenting or publishing tickets — and before calling any group parallel

@@ -1,11 +1,13 @@
 ---
 name: fan-out
-description: Fan a batch of tickets out into parallel agent tabs — one git worktree per ticket, each opened in a Macterm tab with the agent's /implement command staged. Use when the user asks whether tickets can be worked in parallel, wants worktrees or agent tabs for several tickets at once, or says to fan out / spin up a batch.
+description: Fan a batch of tickets out into parallel agent tabs — one git worktree per ticket, each opened in a Rex tab with the agent's /implement command staged. Use when the user asks whether tickets can be worked in parallel, wants worktrees or agent tabs for several tickets at once, or says to fan out / spin up a batch.
 ---
 
 # Fan Out
 
-Stand each parallel ticket up as its own agent tab: an isolated worktree, a Macterm tab rooted there, and the agent's `/implement` for that ticket staged in its input box. This session stays put and never enters a worktree.
+Stand each parallel ticket up as its own agent tab: an isolated worktree, a Rex tab rooted there, and the agent's `/implement` for that ticket staged in its input box. This session stays put and never enters a worktree.
+
+The Rex layout (session per repo, tab per worktree, panes inside) is in the global `AGENTS.md`; the `rex` skill has the CLI mechanics.
 
 A fan-out is only as good as its set. Two tickets that must share a file, a path, or a name are not parallel, however independent they look; fan them out anyway and the collision surfaces later as a merge rather than now as a decision. So the job is three moves: prove the set is parallel, cut a worktree per ticket, open an agent tab per worktree.
 
@@ -47,27 +49,38 @@ wt switch --create issue-<n>-<slug> --base <trunk> --no-cd
 
 ## 3. Open an agent tab per worktree
 
-In the repo's Macterm project, per worktree: open a tab rooted at the worktree, name it for the ticket, launch the agent, and stage that ticket's `/implement`.
+In the repo's Rex session, per worktree: open a tab rooted at the worktree, label it with the branch name (`cleanup-branch` finds the tab by that label), launch the agent, and stage that ticket's `/implement`.
+
+First make sure the repo's session exists. Look it up by label rather than trusting `$REX_SESSION`: this session may belong to another repo.
 
 ```sh
-macterm tab new --project <project> --run "cd <worktree-path>"
-macterm pane focus --project <project>                    # spawn the tab's terminal
-macterm tab rename <tab-id> "#<n> · <short title>"        # after the spawn: it resets the title
-macterm pane run --project <project> --session <session> "pi"                             # launch the agent
-macterm pane run --project <project> --session <session> --no-submit "/implement #<n>"    # stage, don't submit
+repo=<repo-name>   # the session label; use <owner>/<repo> if a session by this name is rooted at another repo
+rex ls --json | jq -e --arg r "$repo" '.sessions[] | select(.label == $r)' >/dev/null \
+  || rex new "$repo" -c <trunk-path> --window main
 ```
 
-Three rules make the targeting reliable (the `macterm` skill has the CLI's own mechanics):
+Then, per worktree:
 
-- **Target by session, not by pane index.** `--session macterm-…` survives a Macterm relaunch; `pane:N` means the _focused_ tab's Nth pane, so a command aimed that way can land in a tab you were not aiming at.
-- **Name the project alongside the session.** `--session` resolves inside the active project, so a fan-out run while another project is focused misses the tab; pass `--project <project>`, the same name `tab new` took.
-- **Put the selector flags before the command.** `pane run <command> …` treats everything after the command as more command, so `pane run "pi" --session <s>` self-targets the calling pane and types `pi --session <s>` into it. Write `pane run --session <s> "pi"`.
+```sh
+created=$(rex window new -s "$repo" "<branch>" -c <worktree-path> --focus=false --json -- pi) || exit
+agent=$(jq -er '.block_ids[0]' <<<"$created") || exit
+until rex block call -s "$repo" -b "$agent" program_status | jq -e '.records[0].state == "idle"' >/dev/null; do sleep 0.5; done
+rex send -s "$repo" -b "$agent" '/implement #<n>'     # no Enter, so it stays staged
+```
 
-Wait for the agent's own footer before staging: poll `macterm pane dump` for the line naming the worktree. That footer is the readiness signal — `pane list`'s `process` field can lag the agent's start by half a minute, so treat it as advisory. A tab whose terminal never spawned answers `pane dump`
-with _the pane's terminal isn't live yet_ instead — focus it and retry; the
-`macterm` skill's tab rule has the why.
+Three rules make it reliable:
 
-**Done when** each ticket has exactly one tab, titled for it, with the agent idle at its worktree and `/implement #<n>` staged but unsubmitted. Leave the commands staged: the human pressing Enter in each tab is what starts the work, which keeps the fan-out itself from writing any code.
+- **`--focus=false` on every tab.** This agent usually runs in the repo's own session, and a focused new tab would pull the user off it.
+- **The agent is the tab's first pane, started directly (`-- pi`).** Target the `block_ids[0]` it returns.
+- **`rex send` stages.** It types the text without Enter; the human's Enter starts the work.
+
+The readiness signal is pi's own `program_status` going `idle`: pi reports it over OSC 7501 once its input box is up, so there is nothing to scrape. Cap the wait at about 30 seconds; past that, `rex capture -s "$repo" -b "$agent" --trim` and show the user what the pane holds instead of staging into it.
+
+For a shell under the agent: `rex split -s "$repo" -b "$agent" --split=below --ratio 30 -c <worktree-path> --focus=false`. Shells, test runners and log tails are splits of the ticket's tab.
+
+To show the user the first ticket, ask the app: `rex -C <client> do session.select session_id=<session> window_id=<tab-id>` (`rex client ls` lists clients; the tab's ID is `.window_id` from `window new`).
+
+**Done when** each ticket has exactly one tab in the repo's session, labelled with its branch, with the agent idle at its worktree and `/implement #<n>` staged but unsubmitted. Leave the commands staged: the human pressing Enter in each tab is what starts the work, which keeps the fan-out itself from writing any code.
 
 ## Teardown
 
