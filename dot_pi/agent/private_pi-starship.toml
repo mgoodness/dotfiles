@@ -1,0 +1,59 @@
+# Balanced Pi footer with Nerd Font symbols.
+format = "$provider$model$thinking$directory$git_worktree$git_branch$git_status$activity$context$tokens$cost$fill$extension_status"
+
+[model]
+symbol = "󰚩"
+
+[thinking]
+symbol = "󰔟"
+
+[directory]
+format = "[$symbol $path ]($style)"
+symbol = "󰉋"
+
+[git_branch]
+format = "[$symbol $branch ]($style)"
+symbol = ""
+
+[activity]
+format = "[$text ]($style)"
+symbol = "󰑮"
+
+[context]
+symbol = "󰍛"
+
+[provider]
+format = "[$provider ]($style)"
+
+[tokens]
+format = "([↑$input ↓$output ]($style))"
+
+[cost]
+format = "([\\$$cost( $subscription) ]($style))"
+
+[extension_status]
+format = "([$statuses]($style))"
+icons = { fallback = "" }
+
+[git_worktree]
+format = "[$symbol $name ]($style)"
+
+[[context.display]]
+hidden = false
+style = "bold green"
+threshold = 0
+
+[[context.display]]
+hidden = false
+style = "bold green"
+threshold = 30
+
+[[context.display]]
+hidden = false
+style = "bold yellow"
+threshold = 60
+
+[[context.display]]
+hidden = false
+style = "bold red"
+threshold = 80
