@@ -41,10 +41,6 @@ set -gx GOPATH $XDG_DATA_HOME/go
 # Jira
 set -gx JIRA_CONFIG_FILE $XDG_CONFIG_HOME/jira/config.yaml
 
-# Krew
-set -gx HOMEBREW_KREW_ROOT $XDG_DATA_HOME/krew
-set -gx KREW_ROOT $XDG_DATA_HOME/krew
-
 # K8s
 set -gx KUBECONFIG $XDG_DATA_HOME/kube/config.yaml
 set -gx KUBECACHEDIR $XDG_CACHE_HOME/kube
@@ -107,7 +103,7 @@ set -gxp MANPATH : # defer to $PATH
 # /usr/bin at all.
 if status is-interactive
     fish_add_path -g --move --path $HOMEBREW_PREFIX/{,s}bin
-    fish_add_path -g $KREW_ROOT/bin
+    fish_add_path -g $HOME/.krew/bin
     fish_add_path -g $GCLOUD_SDK_DIR/bin
     fish_add_path -g $HOMEBREW_PREFIX/opt/ruby/bin
     fish_add_path -g $GEM_HOME/bin
