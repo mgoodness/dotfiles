@@ -46,9 +46,17 @@ repo = "https://github.com/betterleaks/betterleaks"
 rev = "v1.9.0"
 
 [[repos]]
-hooks = [{ id = "zizmor", args = ["--no-progress", "--fix=all"] }]
+# --gh-hostname pinned to github.com: zizmor's online audits resolve third-party action
+# pins (actions/checkout, etc.) against github.com regardless of repo host, but it reads
+# --gh-hostname from GH_HOST by default — which day-to-day gh CLI use sets to an enterprise
+# host. Left alone, zizmor sends a github.com-scoped token to the enterprise host instead and
+# gets a 401 ("Bad credentials") on every online audit.
 repo = "https://github.com/zizmorcore/zizmor-pre-commit"
 rev = "v1.31.1"
+
+[[repos.hooks]]
+args = ["--no-progress", "--fix=all", "--gh-hostname=github.com"]
+id = "zizmor"
 
 [[repos]]
 hooks = [{ id = "actionlint" }]
