@@ -1,7 +1,7 @@
 function __up_defaults --description "Report macOS/app settings that drift from .chezmoidata/defaults.toml"
     # Compares live `defaults` settings against the declared ones
     # ([defaults."<domain>"] tables in .chezmoidata/defaults.toml) and reports the
-    # difference;
+    # difference, staying silent when everything matches;
     # it never writes. Domains listed under [defaultsDiscover] are also scanned
     # for undeclared keys (minus their `ignore` globs), so a change made in an
     # app's UI surfaces with a paste-ready entry. Only top-level scalar values
@@ -118,10 +118,7 @@ function __up_defaults --description "Report macOS/app settings that drift from 
         end
     end
 
-    if test $drift -eq 0
-        fish_log -i "dotfiles: defaults match .chezmoidata/defaults.toml"
-        return 0
-    end
+    test $drift -eq 0 && return 0
 
     if set -q snippet[1]
         echo >&2
