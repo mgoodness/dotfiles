@@ -1,4 +1,7 @@
 status is-login || exit
+# Non-interactive logins (e.g. `rex run`) only need what conf.d sets up; skip
+# fnox (a 1Password round trip) and the rest of the interactive setup.
+status is-interactive || exit
 
 # fnox: automatically load/unload secrets per directory (replaces opah)
 fnox activate fish | source

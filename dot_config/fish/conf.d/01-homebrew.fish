@@ -1,4 +1,4 @@
-status is-interactive || return
+status is-interactive || status is-login || return
 
 # Faster `brew shellenv`
 if test -e /opt/homebrew/bin/brew

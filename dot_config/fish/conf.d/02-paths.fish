@@ -96,12 +96,13 @@ set -gx ZDOTDIR $XDG_CONFIG_HOME/zsh
 set -gxp MANPATH : # defer to $PATH
 
 # PATH
-# is-interactive, not is-login: 01-homebrew.fish already sets HOMEBREW_PREFIX
-# etc. for any interactive shell (login or not), so this needs to match or a
-# non-login interactive shell — e.g. a remote/SSH session, which has no
-# login shell to inherit PATH from — never gets Homebrew moved ahead of
-# /usr/bin at all.
-if status is-interactive
+# Interactive *or* login: 01-homebrew.fish already sets HOMEBREW_PREFIX etc.
+# for both, so this needs to match. Interactive covers a non-login shell —
+# e.g. a remote/SSH session, which has no login shell to inherit PATH from.
+# Login covers a non-interactive login shell — e.g. `rex run -- cmd`, which
+# runs through the login shell's environment but not its interactive
+# config — whose server-supplied PATH has no Homebrew in it.
+if status is-interactive || status is-login
     fish_add_path -g --move --path $HOMEBREW_PREFIX/{,s}bin
     fish_add_path -g $HOME/.krew/bin
     fish_add_path -g $GCLOUD_SDK_DIR/bin
