@@ -62,10 +62,6 @@ cask "font-fira-code-nerd-font"
 cask "font-fira-code"
 cask "gcloud-cli"
 
-# krew "config-cleanup"
-# krew "get-all"
-# krew "support-bundle"
-
 mas "1Blocker", id: 1365531024
 mas "Developer", id: 640199958
 mas "Keynote", id: 361285480

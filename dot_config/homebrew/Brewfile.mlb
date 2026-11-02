@@ -22,6 +22,10 @@ cask "akuity"
 # pkg over /Applications/Slack.app, so brew's Caskroom symlink can't coexist
 # with it. See AGENTS.md (Homebrew).
 
+krew "config-cleanup"
+krew "get-all"
+krew "support-bundle"
+
 mas "1Password for Safari", id: 0
 mas "Okta Extension App", id: 1439967473
 mas "Okta Verify", id: 490179405
