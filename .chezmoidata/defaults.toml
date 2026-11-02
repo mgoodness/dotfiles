@@ -1,8 +1,11 @@
 # `defaults` settings, applied by .chezmoiscripts/run_onchange_after_19-defaults.sh.tmpl
 # and checked for drift by `up defaults` (functions/__up_defaults.fish).
 #
-# [[defaults]]: domain, key, type (a `defaults` type flag: bool, string, int,
-# float) and value. `up defaults` compares each against the live setting.
+# [defaults."<domain>"]: one table per `defaults` domain, one `key = value`
+# per setting. The value's TOML type picks the `defaults` type flag (bool,
+# integer → int, float, string), so write a float with a decimal point
+# (`12.0`). Quote a key that contains a dot. `up defaults` compares each
+# setting against the live one.
 #
 # [defaultsDiscover."<domain>"]: also report live keys in that domain that
 # aren't declared here, so a change made in an app's UI shows up with a
@@ -28,211 +31,106 @@ ignore = [
 ]
 
 # --- General ---
+[defaults.NSGlobalDomain]
 
 # Prefer tabs
-[[defaults]]
-domain = "NSGlobalDomain"
-key = "AppleWindowTabbingMode"
-type = "string"
-value = "always"
+AppleWindowTabbingMode = "always"
 
 # Max trackpad speed
-[[defaults]]
-domain = "NSGlobalDomain"
-key = "com.apple.trackpad.scaling"
-type = "int"
-value = 3
+"com.apple.trackpad.scaling" = 3
 
 # --- Dock ---
+[defaults."com.apple.dock"]
 
 # Place at bottom
-[[defaults]]
-domain = "com.apple.dock"
-key = "orientation"
-type = "string"
-value = "bottom"
+orientation = "bottom"
 
 # Hide recent apps
-[[defaults]]
-domain = "com.apple.dock"
-key = "show-recents"
-type = "bool"
-value = false
+show-recents = false
 
 # Minimize apps into itself
-[[defaults]]
-domain = "com.apple.dock"
-key = "minimize-to-application"
-type = "int"
-value = 1
+minimize-to-application = 1
 
 # Enable magnification
-[[defaults]]
-domain = "com.apple.dock"
-key = "magnification"
-type = "int"
-value = 1
+magnification = 1
 
-[[defaults]]
-domain = "com.apple.dock"
-key = "largesize"
-type = "int"
-value = 80
+# Magnified icon size
+largesize = 80
 
 # Don't reorder Spaces by recent use
-[[defaults]]
-domain = "com.apple.dock"
-key = "mru-spaces"
-type = "bool"
-value = false
+mru-spaces = false
 
 # Hot corner, top left: Display sleep
-[[defaults]]
-domain = "com.apple.dock"
-key = "wvous-tl-corner"
-type = "int"
-value = 10
+wvous-tl-corner = 10
 
 # Hot corner, top right: Notification center
-[[defaults]]
-domain = "com.apple.dock"
-key = "wvous-tr-corner"
-type = "int"
-value = 12
+wvous-tr-corner = 12
 
 # --- Finder ---
+[defaults."com.apple.finder"]
 
 # Set default path to $HOME
-[[defaults]]
-domain = "com.apple.finder"
-key = "NewWindowTarget"
-type = "string"
-value = "PfHm"
+NewWindowTarget = "PfHm"
 
 # Use column view
-[[defaults]]
-domain = "com.apple.finder"
-key = "FXPreferredViewStyle"
-type = "string"
-value = "clmv"
+FXPreferredViewStyle = "clmv"
 
 # Sort folders first
-[[defaults]]
-domain = "com.apple.finder"
-key = "_FXSortFoldersFirst"
-type = "int"
-value = 1
+_FXSortFoldersFirst = 1
 
 # Enable copy from quicklook
-[[defaults]]
-domain = "com.apple.finder"
-key = "QLEnableTextSelection"
-type = "bool"
-value = true
+QLEnableTextSelection = true
 
 # Don't warn when emptying trash
-[[defaults]]
-domain = "com.apple.finder"
-key = "WarnOnEmptyTrash"
-type = "bool"
-value = false
+WarnOnEmptyTrash = false
 
 # Don't warn when changing an extension
-[[defaults]]
-domain = "com.apple.finder"
-key = "FXEnableExtensionChangeWarning"
-type = "bool"
-value = false
+FXEnableExtensionChangeWarning = false
 
 # --- Software Update ---
+[defaults."com.apple.SoftwareUpdate"]
 
 # Check for updates daily
-[[defaults]]
-domain = "com.apple.SoftwareUpdate"
-key = "ScheduleFrequency"
-type = "int"
-value = 1
+ScheduleFrequency = 1
 
 # --- Rex ---
+[defaults."com.superlogical.rex"]
+
+# Allow agents to control the app (rex -C … do)
+"rex.client.remoteControl" = true
 
 # Copy selection to clipboard
-[[defaults]]
-domain = "com.superlogical.rex"
-key = "Workspace.terminalCopyOnSelect"
-type = "bool"
-value = true
+"Workspace.terminalCopyOnSelect" = true
 
 # Smooth scrolling
-[[defaults]]
-domain = "com.superlogical.rex"
-key = "Workspace.terminalSmoothScrolling"
-type = "bool"
-value = true
+"Workspace.terminalSmoothScrolling" = true
 
 # No glass behind panes
-[[defaults]]
-domain = "com.superlogical.rex"
-key = "Workspace.usesPaneGlass"
-type = "bool"
-value = false
+"Workspace.usesPaneGlass" = false
 
 # Chrome follows the theme
-[[defaults]]
-domain = "com.superlogical.rex"
-key = "Workspace.interfaceStyle"
-type = "string"
-value = "useTheme"
+"Workspace.interfaceStyle" = "useTheme"
 
 # Fade inactive panes
-[[defaults]]
-domain = "com.superlogical.rex"
-key = "Workspace.inactivePaneFadeMode"
-type = "string"
-value = "both"
+"Workspace.inactivePaneFadeMode" = "both"
 
 # Don't tint tab icons
-[[defaults]]
-domain = "com.superlogical.rex"
-key = "Workspace.tabIconTintMode"
-type = "string"
-value = "off"
+"Workspace.tabIconTintMode" = "off"
 
 # Standard inactive-window pane styles
-[[defaults]]
-domain = "com.superlogical.rex"
-key = "Workspace.usesStandardInactiveWindowPaneStyles"
-type = "bool"
-value = true
+"Workspace.usesStandardInactiveWindowPaneStyles" = true
 
 # Agents don't name sessions: a session is a repo (labelled with its name)
 # shared by several agents. Pi has no Rex hook, so this toggle can't stop it
 # alone; the "Rex sessions" rule in dot_pi/agent/AGENTS.md covers the rest.
-[[defaults]]
-domain = "com.superlogical.rex"
-key = "rex.agents.names-sessions"
-type = "bool"
-value = false
+"rex.agents.names-sessions" = false
 
-[[defaults]]
-domain = "com.superlogical.rex"
-key = "Workspace.lightThemeID"
-type = "string"
-value = "merino-light"
+# Themes follow system appearance
+"Workspace.lightThemeID" = "merino-light"
 
-[[defaults]]
-domain = "com.superlogical.rex"
-key = "Workspace.darkThemeID"
-type = "string"
-value = "merino-dark"
+"Workspace.darkThemeID" = "merino-dark"
 
-[[defaults]]
-domain = "com.superlogical.rex"
-key = "Workspace.terminalFontName"
-type = "string"
-value = "FiraCode Nerd Font Mono"
+# Terminal font
+"Workspace.terminalFontName" = "FiraCode Nerd Font Mono"
 
-[[defaults]]
-domain = "com.superlogical.rex"
-key = "Workspace.terminalFontPointSize"
-type = "float"
-value = 12
+"Workspace.terminalFontPointSize" = 12.0

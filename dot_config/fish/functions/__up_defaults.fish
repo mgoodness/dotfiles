@@ -1,6 +1,7 @@
 function __up_defaults --description "Report macOS/app settings that drift from .chezmoidata/defaults.toml"
     # Compares live `defaults` settings against the declared ones
-    # ([[defaults]] in .chezmoidata/defaults.toml) and reports the difference;
+    # ([defaults."<domain>"] tables in .chezmoidata/defaults.toml) and reports the
+    # difference;
     # it never writes. Domains listed under [defaultsDiscover] are also scanned
     # for undeclared keys (minus their `ignore` globs), so a change made in an
     # app's UI surfaces with a paste-ready entry. Only top-level scalar values
@@ -15,17 +16,18 @@ function __up_defaults --description "Report macOS/app settings that drift from 
     set -l decl_domains
     set -l decl_keys
     set -l decl_vals
-    for line in (printf %s $data | jq -r '.defaults[]? | [.domain, .key, (.value | tostring)] | @tsv')
+    for line in (printf %s $data | jq -r '(.defaults // {}) | to_entries[] | .key as $d | .value | to_entries[] | [$d, .key, (.value | tostring)] | @tsv')
         set -l f (string split \t -- $line)
         set -a decl_domains $f[1]
         set -a decl_keys $f[2]
         set -a decl_vals $f[3]
     end
 
-    set -l domains (printf %s $data | jq -r '([.defaults[]?.domain] + ((.defaultsDiscover // {}) | keys)) | unique[]')
+    set -l domains (printf %s $data | jq -r '(((.defaults // {}) | keys) + ((.defaultsDiscover // {}) | keys)) | unique[]')
 
     set -l drift 0
     set -l snippet
+    set -l snippet_domains
     for domain in $domains
         set -l plist (defaults export $domain - 2>/dev/null | plutil -p - 2>/dev/null)
 
@@ -106,7 +108,13 @@ function __up_defaults --description "Report macOS/app settings that drift from 
             end
             set -l tv $live_vals[$i]
             test $type = string && set tv '"'$tv'"'
-            set -a snippet "[[defaults]]" "domain = \"$domain\"" "key = \"$live_keys[$i]\"" "type = \"$type\"" "value = $tv" ""
+            # TOML types a float by its decimal point; plutil drops it from 12.0.
+            test $type = float && not string match -q '*.*' -- $tv && set tv $tv.0
+            contains -- $domain $snippet_domains || begin
+                set -a snippet "[defaults.\"$domain\"]"
+                set -a snippet_domains $domain
+            end
+            set -a snippet "\"$live_keys[$i]\" = $tv"
         end
     end
 
@@ -117,7 +125,7 @@ function __up_defaults --description "Report macOS/app settings that drift from 
 
     if set -q snippet[1]
         echo >&2
-        echo "Add to .chezmoidata/defaults.toml to adopt the new settings (or add a glob to that domain's ignore list):" >&2
+        echo "Add to .chezmoidata/defaults.toml, under the domain's existing table, to adopt the new settings (or add a glob to that domain's ignore list):" >&2
         printf '%s\n' $snippet >&2
     end
     echo "Edit .chezmoidata/defaults.toml (chezmoi cd) to adopt a changed value; 'chezmoi apply' re-applies the declared ones." >&2

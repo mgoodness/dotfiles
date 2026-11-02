@@ -11,8 +11,12 @@ if [ -n "${CI:-}" ]; then
 fi
 
 echo "Updating defaults..."
-{{ range .defaults -}}
-defaults write {{ .domain | quote }} {{ .key | quote }} -{{ .type }} {{ .value | quote }}
+{{ range $domain, $settings := .defaults -}}
+{{ range $key, $value := $settings -}}
+{{ $type := "int" -}}
+{{ if kindIs "bool" $value }}{{ $type = "bool" }}{{ else if kindIs "string" $value }}{{ $type = "string" }}{{ else if kindIs "float64" $value }}{{ $type = "float" }}{{ end -}}
+defaults write {{ $domain | quote }} {{ $key | quote }} -{{ $type }} {{ $value | quote }}
+{{ end -}}
 {{ end }}
 # Apps read these at launch, so restart the ones whose settings changed.
 for app in Dock Finder; do

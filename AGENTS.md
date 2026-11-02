@@ -42,7 +42,7 @@ Scripts in `.chezmoiscripts/` run in alphanumeric order after `chezmoi apply`. `
 
 ## Declared `defaults` settings
 
-macOS and app preferences (Dock, Finder, Rex, …) are data in `.chezmoidata/defaults.toml`, written by `run_onchange_after_19-defaults.sh.tmpl`. `up defaults` (`dot_config/fish/functions/__up_defaults.fish`) reports live settings that have drifted from the declared ones, and for domains under `[defaultsDiscover]` (Rex) also surfaces undeclared keys with a paste-ready entry. Change a value by editing the TOML, not the script. Settings that aren't `defaults` values stay in `run_onchange_after_20-macos.sh.tmpl`.
+macOS and app preferences (Dock, Finder, Rex, …) are data in `.chezmoidata/defaults.toml`, written by `run_onchange_after_19-defaults.sh.tmpl`. One `[defaults."<domain>"]` table per domain, one `key = value` per setting; the TOML type picks the `defaults` flag. `up defaults` (`dot_config/fish/functions/__up_defaults.fish`) reports live settings that have drifted from the declared ones (and prints nothing when they match), and for domains under `[defaultsDiscover]` (Rex) also surfaces undeclared keys with a paste-ready entry. Change a value by editing the TOML, not the script. Settings that aren't `defaults` values stay in `run_onchange_after_20-macos.sh.tmpl`.
 
 ## Git hooks (prek)
 
