@@ -53,7 +53,7 @@ name = "sort-toml"
 types = ["toml"]
 
 [[repos.hooks]]
-entry = "bash -c 'for f in \"$@\"; do echo \"==> $f\"; chezmoi execute-template <\"$f\" >/dev/null || exit 1; done' --"
+entry = "bash -c 'for f in \"$@\"; do echo \"==> $f\"; chezmoi --source \"$PWD\" execute-template <\"$f\" >/dev/null || exit 1; done' --"
 exclude = "^\\.chezmoi\\.toml\\.tmpl$"
 files = "\\.tmpl$"
 id = "chezmoi-templates"

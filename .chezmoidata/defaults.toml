@@ -1,0 +1,214 @@
+# `defaults` settings, applied by .chezmoiscripts/run_onchange_after_19-defaults.sh.tmpl
+# and checked for drift by `up defaults` (functions/__up_defaults.fish).
+#
+# [[defaults]]: domain, key, type (a `defaults` type flag: bool, string, int,
+# float) and value. `up defaults` compares each against the live setting.
+#
+# [defaultsDiscover."<domain>"]: also report live keys in that domain that
+# aren't declared here, so a change made in an app's UI shows up with a
+# paste-ready entry. `ignore` globs mark runtime state that is never
+# reported. Only worth it for a small, app-owned domain; macOS's own domains
+# hold far too many keys to enumerate, so they get the declared-only check.
+#
+# Dock layout (dockutil), Touch ID for sudo and login items stay in
+# run_onchange_after_20-macos.sh.tmpl: they aren't `defaults` values.
+
+[defaultsDiscover."com.superlogical.rex"]
+ignore = [
+  "NSWindow*",
+  "NSSplitView*",
+  "SU*",
+  "Onboarding.*",
+  "RexSync.*",
+  "rex.local-server.*",
+  "rex.server.*",
+  "rex.sync.*",
+  "Workspace.lastFocusedSession",
+  "Workspace.programActivitySeen",
+  "Workspace.lightThemeID",
+  "Workspace.darkThemeID",
+]
+
+# --- General ---
+
+# Prefer tabs
+[[defaults]]
+domain = "NSGlobalDomain"
+key = "AppleWindowTabbingMode"
+type = "string"
+value = "always"
+
+# Max trackpad speed
+[[defaults]]
+domain = "NSGlobalDomain"
+key = "com.apple.trackpad.scaling"
+type = "int"
+value = 3
+
+# --- Dock ---
+
+# Place at bottom
+[[defaults]]
+domain = "com.apple.dock"
+key = "orientation"
+type = "string"
+value = "bottom"
+
+# Hide recent apps
+[[defaults]]
+domain = "com.apple.dock"
+key = "show-recents"
+type = "bool"
+value = false
+
+# Minimize apps into itself
+[[defaults]]
+domain = "com.apple.dock"
+key = "minimize-to-application"
+type = "int"
+value = 1
+
+# Enable magnification
+[[defaults]]
+domain = "com.apple.dock"
+key = "magnification"
+type = "int"
+value = 1
+
+[[defaults]]
+domain = "com.apple.dock"
+key = "largesize"
+type = "int"
+value = 80
+
+# Don't reorder Spaces by recent use
+[[defaults]]
+domain = "com.apple.dock"
+key = "mru-spaces"
+type = "bool"
+value = false
+
+# Hot corner, top left: Display sleep
+[[defaults]]
+domain = "com.apple.dock"
+key = "wvous-tl-corner"
+type = "int"
+value = 10
+
+# Hot corner, top right: Notification center
+[[defaults]]
+domain = "com.apple.dock"
+key = "wvous-tr-corner"
+type = "int"
+value = 12
+
+# --- Finder ---
+
+# Set default path to $HOME
+[[defaults]]
+domain = "com.apple.finder"
+key = "NewWindowTarget"
+type = "string"
+value = "PfHm"
+
+# Use column view
+[[defaults]]
+domain = "com.apple.finder"
+key = "FXPreferredViewStyle"
+type = "string"
+value = "clmv"
+
+# Sort folders first
+[[defaults]]
+domain = "com.apple.finder"
+key = "_FXSortFoldersFirst"
+type = "int"
+value = 1
+
+# Enable copy from quicklook
+[[defaults]]
+domain = "com.apple.finder"
+key = "QLEnableTextSelection"
+type = "bool"
+value = true
+
+# Don't warn when emptying trash
+[[defaults]]
+domain = "com.apple.finder"
+key = "WarnOnEmptyTrash"
+type = "bool"
+value = false
+
+# Don't warn when changing an extension
+[[defaults]]
+domain = "com.apple.finder"
+key = "FXEnableExtensionChangeWarning"
+type = "bool"
+value = false
+
+# --- Software Update ---
+
+# Check for updates daily
+[[defaults]]
+domain = "com.apple.SoftwareUpdate"
+key = "ScheduleFrequency"
+type = "int"
+value = 1
+
+# --- Rex (theme and font deliberately not declared yet) ---
+
+# Copy selection to clipboard
+[[defaults]]
+domain = "com.superlogical.rex"
+key = "Workspace.terminalCopyOnSelect"
+type = "bool"
+value = true
+
+# Smooth scrolling
+[[defaults]]
+domain = "com.superlogical.rex"
+key = "Workspace.terminalSmoothScrolling"
+type = "bool"
+value = true
+
+# No glass behind panes
+[[defaults]]
+domain = "com.superlogical.rex"
+key = "Workspace.usesPaneGlass"
+type = "bool"
+value = false
+
+# Chrome follows the theme
+[[defaults]]
+domain = "com.superlogical.rex"
+key = "Workspace.interfaceStyle"
+type = "string"
+value = "useTheme"
+
+# Fade inactive panes
+[[defaults]]
+domain = "com.superlogical.rex"
+key = "Workspace.inactivePaneFadeMode"
+type = "string"
+value = "both"
+
+# Don't tint tab icons
+[[defaults]]
+domain = "com.superlogical.rex"
+key = "Workspace.tabIconTintMode"
+type = "string"
+value = "off"
+
+# Standard inactive-window pane styles
+[[defaults]]
+domain = "com.superlogical.rex"
+key = "Workspace.usesStandardInactiveWindowPaneStyles"
+type = "bool"
+value = true
+
+# Agents may name sessions
+[[defaults]]
+domain = "com.superlogical.rex"
+key = "rex.agents.names-sessions"
+type = "bool"
+value = true

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# shellcheck shell=bash
+
+# Write the `defaults` settings declared in .chezmoidata/defaults.toml
+# (macOS and app preferences). `up defaults` reports settings that have since
+# drifted from them. Reruns whenever a declared value changes.
+
+if [ -n "${CI:-}" ]; then
+    echo "Skipping due to \$CI"
+    exit
+fi
+
+echo "Updating defaults..."
+{{ range .defaults -}}
+defaults write {{ .domain | quote }} {{ .key | quote }} -{{ .type }} {{ .value | quote }}
+{{ end }}
+# Apps read these at launch, so restart the ones whose settings changed.
+for app in Dock Finder; do
+    killall "$app" 2>/dev/null || true
+done

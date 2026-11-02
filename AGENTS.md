@@ -33,11 +33,16 @@ Scripts in `.chezmoiscripts/` run in alphanumeric order after `chezmoi apply`. `
 | `run_onchange_after_15-install-agent-skills.sh.tmpl`  | Installs agent skills via `skills` (vercel-labs/skills)                    |
 | `run_once_after_16-remove-tailscale-lazygit.sh`       | One-time removal of lazygit and Tailscale (app, receipt, VPN service)      |
 | `run_once_after_18-prune-pi-anthropic-oauth.sh`       | One-time removal of the retired Anthropic OAuth credential                 |
-| `run_onchange_after_20-macos.sh`                      | Sets macOS defaults, Dock layout, Touch ID sudo                            |
+| `run_onchange_after_19-defaults.sh.tmpl`              | Writes the `defaults` settings declared in `.chezmoidata/defaults.toml`    |
+| `run_onchange_after_20-macos.sh.tmpl`                 | Dock layout, Touch ID sudo, login items (the non-`defaults` macOS setup)   |
 | `run_after_21-remote-login.sh.tmpl`                   | Enables Remote Login on the Mac mini only (hostname-gated)                 |
 | `run_after_22-authorized-keys.sh.tmpl`                | Authorizes the MacBook Pro's SSH key on the Mac mini only (hostname-gated) |
 | `run_after_30-fish.sh`                                | Adds fish to `/etc/shells` and sets it as login shell                      |
 | `run_after_31-worktrunk-setup.sh`                     | Worktrunk: fish shell integration + Pi extension                           |
+
+## Declared `defaults` settings
+
+macOS and app preferences (Dock, Finder, Rex, …) are data in `.chezmoidata/defaults.toml`, written by `run_onchange_after_19-defaults.sh.tmpl`. `up defaults` (`dot_config/fish/functions/__up_defaults.fish`) reports live settings that have drifted from the declared ones, and for domains under `[defaultsDiscover]` (Rex) also surfaces undeclared keys with a paste-ready entry. Change a value by editing the TOML, not the script. Settings that aren't `defaults` values stay in `run_onchange_after_20-macos.sh.tmpl`.
 
 ## Git hooks (prek)
 
