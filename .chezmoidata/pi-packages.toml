@@ -10,6 +10,9 @@ id = "npm:pi-exa"
 [[piPackages]]
 id = "npm:@narumitw/pi-usage"
 
+[[piPackages]]
+id = "npm:@narumitw/pi-starship"
+
 # Packages removed from [[piPackages]] above. Deleting an entry there only
 # stops *declaring* it: modify_settings.json never prunes settings.json's
 # `packages`, so a machine that already installed the package keeps loading
