@@ -204,12 +204,14 @@ key = "Workspace.usesStandardInactiveWindowPaneStyles"
 type = "bool"
 value = true
 
-# Agents may name sessions
+# Agents don't name sessions: a session is a repo (labelled with its name)
+# shared by several agents. Pi has no Rex hook, so this toggle can't stop it
+# alone; the "Rex sessions" rule in dot_pi/agent/AGENTS.md covers the rest.
 [[defaults]]
 domain = "com.superlogical.rex"
 key = "rex.agents.names-sessions"
 type = "bool"
-value = true
+value = false
 
 [[defaults]]
 domain = "com.superlogical.rex"
