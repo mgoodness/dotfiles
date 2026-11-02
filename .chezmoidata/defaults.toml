@@ -25,8 +25,6 @@ ignore = [
   "rex.sync.*",
   "Workspace.lastFocusedSession",
   "Workspace.programActivitySeen",
-  "Workspace.lightThemeID",
-  "Workspace.darkThemeID",
 ]
 
 # --- General ---
@@ -155,7 +153,7 @@ key = "ScheduleFrequency"
 type = "int"
 value = 1
 
-# --- Rex (theme and font deliberately not declared yet) ---
+# --- Rex ---
 
 # Copy selection to clipboard
 [[defaults]]
@@ -212,3 +210,15 @@ domain = "com.superlogical.rex"
 key = "rex.agents.names-sessions"
 type = "bool"
 value = true
+
+[[defaults]]
+domain = "com.superlogical.rex"
+key = "Workspace.lightThemeID"
+type = "string"
+value = "merino-light"
+
+[[defaults]]
+domain = "com.superlogical.rex"
+key = "Workspace.darkThemeID"
+type = "string"
+value = "merino-dark"
