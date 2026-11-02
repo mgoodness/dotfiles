@@ -28,4 +28,13 @@ if [ ! -x "$rex_bin" ]; then
     exit
 fi
 
-"$rex_bin" --autostart=false skill setup --agent pi
+# Silent unless something happens: a failure prints Rex's own error, and a
+# step that changed something (anything but "unchanged"/"skipped") prints one
+# line. --json keeps the output parseable, as in the skills-install scripts.
+if ! out=$("$rex_bin" --autostart=false skill setup --agent pi --json 2>&1); then
+    printf '%s\n' "$out" >&2
+    exit 1
+fi
+if command -v jq &>/dev/null; then
+    printf '%s\n' "$out" | jq -r '.steps[] | select(.change != "unchanged" and .change != "skipped") | "Rex agent skill: \(.change) \(.kind) \(.path // "")"'
+fi
