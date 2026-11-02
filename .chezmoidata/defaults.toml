@@ -21,6 +21,7 @@ ignore = [
   "NSWindow*",
   "NSSplitView*",
   "SU*",
+  "NSStatusItem*",
   "Onboarding.*",
   "RexSync.*",
   "rex.local-server.*",
@@ -95,6 +96,11 @@ ScheduleFrequency = 1
 
 # --- Rex ---
 [defaults."com.superlogical.rex"]
+
+# Rex owns the Dock/menu bar icon question: no status item while no
+# window is open. Control Center's own NSStatusItem record is macOS's,
+# not Rex's, so it is ignored rather than declared.
+"Workspace.appIconVisibility" = "dockOnly"
 
 # Allow agents to control the app (rex -C … do)
 "rex.client.remoteControl" = true
