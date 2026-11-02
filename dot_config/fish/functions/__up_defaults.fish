@@ -91,9 +91,22 @@ function __up_defaults --description "Report macOS/app settings that drift from 
 
             printf '%s+ %s %s%s = %s\n' (set_color green) $domain $live_keys[$i] (set_color normal) $live_vals[$i] >&2
             set drift 1
+            # plutil -p prints a float like 12.0 as "12", so ask `defaults` for
+            # the real type rather than trusting the guess made while parsing.
+            set -l type $live_types[$i]
+            switch (defaults read-type $domain $live_keys[$i] 2>/dev/null)
+                case '*boolean'
+                    set type bool
+                case '*integer'
+                    set type int
+                case '*float'
+                    set type float
+                case '*string'
+                    set type string
+            end
             set -l tv $live_vals[$i]
-            test $live_types[$i] = string && set tv '"'$tv'"'
-            set -a snippet "[[defaults]]" "domain = \"$domain\"" "key = \"$live_keys[$i]\"" "type = \"$live_types[$i]\"" "value = $tv" ""
+            test $type = string && set tv '"'$tv'"'
+            set -a snippet "[[defaults]]" "domain = \"$domain\"" "key = \"$live_keys[$i]\"" "type = \"$type\"" "value = $tv" ""
         end
     end
 

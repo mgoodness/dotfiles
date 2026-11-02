@@ -228,3 +228,9 @@ domain = "com.superlogical.rex"
 key = "Workspace.terminalFontName"
 type = "string"
 value = "FiraCode Nerd Font Mono"
+
+[[defaults]]
+domain = "com.superlogical.rex"
+key = "Workspace.terminalFontPointSize"
+type = "float"
+value = 12
