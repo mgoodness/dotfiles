@@ -77,6 +77,12 @@ gh api -X PUT repos/<owner>/<repo>/immutable-releases
 ## Security hardening (what zizmor will flag)
 
 - **Pin every third-party action to a commit SHA with a trailing `# vX.Y.Z` comment**, never a bare tag. The version comment is what lets Dependabot's `github-actions` ecosystem keep bumping it — a bare SHA with no comment is a pin nothing can track. Resolve the SHA from the tag's **commit**, not an annotated tag's own object: the GitHub API's `git/refs/tags/<tag>` returns an `object.sha` that, for an annotated tag, names a tag object (`type: "tag"`), one level short of the commit — dereference it (`git/tags/<that-sha>`) or use `git rev-parse <tag>` with the `^{commit}` suffix locally. Pinning the tag object's SHA instead still resolves (Actions accepts it), so nothing fails until zizmor's `ref-version-mismatch` audit flags the mismatch between the comment's version and what the hash actually points to.
+- **Enforce the pin with `sha_pinning_required`.** The pinning bullet is a convention until GitHub refuses to run a workflow whose `uses:` names a tag or branch. Turn the setting on after every workflow in the repo is pinned, so no existing workflow breaks. Read-modify-write the permissions endpoint, since the `PUT` also carries `enabled` and `allowed_actions`, which a bare body would reset:
+  ```sh
+  gh api repos/<owner>/<repo>/actions/permissions --jq '. + {sha_pinning_required: true}' \
+    | gh api -X PUT repos/<owner>/<repo>/actions/permissions --input -
+  ```
+  An org admin sets the same field on `orgs/<org>/actions/permissions`. The setting covers every step-level action, GitHub-owned and same-org ones included. A reusable workflow (job-level `uses:`) may still name a tag, so zizmor's `unpinned-uses` stays the check for those.
 - **`persist-credentials: false`** on any `actions/checkout` step that doesn't need the default token to push afterward, and always on the step that checks out untrusted PR code.
 - **Bot-identity checks**: use `github.event.pull_request.user.login`, never `github.actor` — `actor` is spoofable (zizmor's `bot-conditions` audit).
 - **`pull_request_target` is flagged on principle** (`dangerous-triggers`): the usual failure mode is checking out and running the PR's own code under a write-scoped token. Suppress only when you can name, in the same comment, why _this_ workflow is immune — no checkout of PR code, and no PR-derived value interpolated directly into a `run:` script (only ever passed through `env:`):
@@ -98,10 +104,11 @@ gh api -X PUT repos/<owner>/<repo>/immutable-releases
 - **Enable `required_signatures` without auditing what pushes to the branch** — See step 1's `required_signatures` bullet.
 - **Migrate fully from classic branch protection to rulesets** — running both simultaneously produces the most-restrictive combination, which is confusing to reason about and audit. Remove the classic rule once the ruleset covers the same ground.
 - **Pin every action to the commit SHA the tag points to, not the annotated tag's own object SHA** — see Security hardening's SHA-pinning bullet.
+- **Pin every workflow before enabling `sha_pinning_required`** — see Security hardening's enforcement bullet.
 - **Keep auto-merge scoped to Dependabot only by default** — avoid general-purpose "auto-merge for write access" workflows; see step 4.
 - **Rebase stale Dependabot PRs with `@dependabot rebase`** — merging a fix to the base branch doesn't retroactively re-run an already-open PR's checks.
 - **Switch a release-please + GoReleaser pipeline to draft-first before enabling immutable releases** — see the Immutable releases section above.
 
 ## Completion criterion
 
-Ruleset is active on the target branch; required check `context` matches the CI job's `name:` field; merge settings disable merge commits and enable auto-merge; Dependabot config and auto-merge workflow are present; every third-party action in every workflow is pinned to a commit SHA with a `# vX.Y.Z` comment; signed commits are required on the target branch.
+Ruleset is active on the target branch; required check `context` matches the CI job's `name:` field; merge settings disable merge commits and enable auto-merge; Dependabot config and auto-merge workflow are present; every third-party action in every workflow is pinned to a commit SHA with a `# vX.Y.Z` comment; `gh api repos/<owner>/<repo>/actions/permissions --jq .sha_pinning_required` prints `true`; signed commits are required on the target branch.
