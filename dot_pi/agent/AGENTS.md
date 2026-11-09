@@ -29,6 +29,11 @@ Upstream it only when it is generally useful and you will maintain it.
   the question and any constraints (trusted sources, destination path, output
   format) as the task. It leaves one cited Markdown artefact, reports the path,
   and writes nothing else in the worktree.
+- **Survey.** Dispatch to the `survey` agent with the `subagent` tool for breadth
+  over proof: general web searching and ideation, in any directory. Pass the
+  topic, the angle, and today's date as the task; dispatch several in parallel
+  for different angles. It returns a dated, source-labelled digest and writes
+  nothing. Use **Research** when every claim needs a primary source.
 - **`/implement-spec`.** Its **exploration subagent** is the `research` agent —
   dispatch it the same way. Its **implementer** and **merger** subagents are
   `implement-spec-implementer` and `implement-spec-merger`: dispatch one
