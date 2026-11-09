@@ -27,7 +27,7 @@ Protocol, every run:
    exploration notes the task brief points at) until the ticket's acceptance
    criteria are met.
 3. Merge the integration branch's current tip into your branch, resolving any
-   conflicts (call the Skill tool with `resolving-merge-conflicts` if needed).
+   conflicts so both sides' intent survives.
 4. Report done: branch name, worktree path, a one-line summary of what
    changed, and confirmation the merge in step 3 is clean. If you could not
    finish, report exactly what's blocking you instead of a partial "done."

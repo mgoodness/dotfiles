@@ -23,10 +23,9 @@ Protocol, every run:
 1. Confirm the integration branch is up to date locally before merging.
 2. Merge the ticket branch into the integration branch. If it's clean,
    fast-forward or merge normally per the repo's convention.
-3. If there are conflicts, resolve them (call the Skill tool with
-   `resolving-merge-conflicts` if it helps) preserving the intent of both
-   sides. Run the project's test suite if one is discoverable, to confirm the
-   merge didn't break anything obvious.
+3. If there are conflicts, resolve them preserving the intent of both sides.
+   Run the project's test suite if one is discoverable, to confirm the merge
+   didn't break anything obvious.
 4. Report done: the resulting commit/SHA on the integration branch, and
    whether conflicts were encountered and how they were resolved. If a
    conflict needs a human or the original implementer's judgment call, stop
