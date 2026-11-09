@@ -20,7 +20,7 @@ Nothing here is language-specific. What the required CI job builds, tests, and l
 Apply the tier the repo has earned:
 
 - **Baseline**, every repo: [Repo security settings](#repo-security-settings), step 3 (updater config), and [Security hardening](#security-hardening-what-zizmor-will-flag).
-- **Gated**, a repo with a required CI job: Baseline plus steps 1, 2, and 4. A repo with no CI job takes a light ruleset instead: keep `deletion`, `non_fast_forward`, and `required_signatures` from [`RULESET-PAYLOAD.json`](RULESET-PAYLOAD.json), and drop `pull_request`, `required_status_checks`, and `required_linear_history`.
+- **Gated**, a repo with a required CI job: Baseline plus steps 1, 2, and 4 (a merge queue is an opt-in extra inside step 1). A repo with no CI job takes a light ruleset instead: keep `deletion`, `non_fast_forward`, and `required_signatures` from [`RULESET-PAYLOAD.json`](RULESET-PAYLOAD.json), and drop `pull_request`, `required_status_checks`, and `required_linear_history`.
 - **Publishing**, a repo that cuts GitHub Releases: Gated plus [Immutable releases](#immutable-releases--locking-published-tags-and-assets).
 
 ## 1. Repository ruleset — turning the required check on
@@ -38,12 +38,40 @@ Without it the CI job still runs and reports a status; it blocks nothing.
 - `conditions.ref_name.include` is a glob (`refs/heads/main`, or `refs/heads/release/*` for several branches).
 - `deletion`, `non_fast_forward`, `required_linear_history`, and `required_signatures` are rule _types_, each opted into by inclusion. Omitting a type leaves that constraint unenforced.
 - `required_status_checks`: `context` matches the CI job's `name:` field, not its `jobs.<id>` key. `integration_id: 15368` (the GitHub Actions app) pins the check's source, so another app or a plain commit status cannot satisfy it.
-- `strict_required_status_checks_policy: true` requires the PR branch be current with the base. The cost is rebases: every merged Dependabot PR makes its siblings stale (see Common Mistakes). Keep it on by default; set it `false` on a repo where Dependabot volume makes rebases the dominant cost.
+- `strict_required_status_checks_policy: true` requires the PR branch be current with the base. The cost is rebases: every merged Dependabot PR makes its siblings stale (see Common Mistakes). Keep it on by default; set it `false` on a repo where Dependabot volume makes rebases the dominant cost, or adopt the merge queue below, which makes it redundant.
 - `pull_request` replaces classic `required_pull_request_reviews`. `required_approving_review_count: 0` is the solo-maintainer choice: the PR and its checks stay required, a second human does not. Raise it to 1 or more once a second maintainer exists.
 - **`bypass_actors: []` is the load-bearing line.** Rulesets carry no implicit admin exemption, so an empty list binds everyone, repo and org admins included. Add an entry only for a bypass you want (e.g. `{"actor_type": "OrganizationAdmin", "bypass_mode": "always"}`) and confirm its exact shape against current docs; this is the newest part of the payload.
 - `required_linear_history` forces squash or rebase; pair it with step 2's repo setting. The `pull_request` rule's `allowed_merge_methods` enforces the same restriction at ruleset scope for per-branch differences; verify its shape against current docs first.
 - `required_signatures` is the house default and takes no parameters. It binds admins too when `bypass_actors` is empty, so audit what pushes to the branch: GitHub API-created commits carry GitHub's web-flow signature and show Verified, so the `github-app-token`/release-please path survives; a CI runner pushing with a plain token and no signing key does not. For that repo, drop the rule from the payload.
 - Rollout: on GitHub Enterprise, `"enforcement": "evaluate"` records would-be violations in Rule Insights without blocking. Use it on an existing repo before switching to `active`. Other plans start at `active`.
+
+### Merge queue (opt-in)
+
+A queue tests each PR against the latest base plus the PRs queued ahead of it, so authors stop rebasing and re-running CI by hand; the strict policy above becomes redundant (set it `false`). Adopt one on a branch that sees several merges a day from multiple authors, or where Dependabot/Renovate volume makes stale-PR rebases the main cost. A low-traffic repo keeps the strict policy and skips the queue. Availability: public repos owned by an organization, and private repos on GitHub Enterprise Cloud; personal-account repos have none.
+
+- Every workflow that reports a required check also triggers on `merge_group` (`on:` with both `pull_request:` and `merge_group:`). Without it the queue waits on a check that never runs. A required check skipped by a `paths:` filter stalls the queue the same way.
+- The rule lives in repository-level rulesets only, and `ref_name.include` names the branch literally; a wildcard pattern is incompatible with a queue.
+- Automation that enqueues (`gh pr merge --auto`, step 4) needs an App token; the built-in `GITHUB_TOKEN` cannot add a PR to the queue.
+- Each queue entry re-runs the required checks, so `max_entries_to_build` also caps load on self-hosted runners.
+
+Add this to the ruleset's `rules` (all seven parameters are required):
+
+```json
+{
+  "type": "merge_queue",
+  "parameters": {
+    "check_response_timeout_minutes": 60,
+    "grouping_strategy": "ALLGREEN",
+    "max_entries_to_build": 5,
+    "max_entries_to_merge": 5,
+    "merge_method": "SQUASH",
+    "min_entries_to_merge": 1,
+    "min_entries_to_merge_wait_minutes": 5
+  }
+}
+```
+
+`merge_method` follows step 2's choice. `ALLGREEN` requires every entry's merge commit to pass; `HEADGREEN` checks only the group's head, which costs less and is slower to diagnose when a group fails. Set `check_response_timeout_minutes` near twice the CI runtime.
 
 ## 2. Repo merge settings — no merge commits, auto-delete branches
 
@@ -98,7 +126,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-This is safe only with steps 1 and 2 in place (a ruleset requiring the CI job's check, and the repo's "Allow auto-merge"); without either, "enable auto-merge" merges on PR open with zero verification. A merge queue changes one thing: the built-in `GITHUB_TOKEN` cannot enqueue, so mint an App token for the `gh pr merge` step (`github-app-token`).
+This is safe only with steps 1 and 2 in place (a ruleset requiring the CI job's check, and the repo's "Allow auto-merge"); without either, "enable auto-merge" merges on PR open with zero verification. A merge queue (step 1) changes one thing: the built-in `GITHUB_TOKEN` cannot enqueue, so mint an App token for the `gh pr merge` step (`github-app-token`).
 
 Keep auto-merge scoped to Dependabot. Mechanical, high-volume dependency bumps are worth automating; auto-merging human-authored PRs is a per-repo call a maintainer makes explicitly, per PR.
 
@@ -166,6 +194,7 @@ Symptom → cause, for diagnosing a repo that looks hardened and is not:
 - **Renovate merges a PR whose tests fail** → `platformAutomerge` is on and the ruleset has no `required_status_checks` rule.
 - **Dependabot PRs keep failing checks after a fix lands on the base branch** → merging the fix does not re-run open PRs; comment `@dependabot rebase`.
 - **`gh pr merge` 403s in the auto-merge workflow** → the `permissions:` block is missing or too narrow, so Dependabot's default read-only token applies.
+- **A queued PR waits forever, or its merge fails on a required check that never reported** → the workflow providing that check has no `merge_group` trigger, or a `paths:` filter skipped it.
 - **Unsigned commit cannot be pushed, even by an admin** → `required_signatures` is on and `bypass_actors` is empty; audit the pusher.
 - **The next tag push fails after enabling immutable releases** → release-please still publishes before assets are attached; switch the pipeline to draft-first.
 - **zizmor `ref-version-mismatch`** → the pin names an annotated tag's own object SHA, not its commit.
