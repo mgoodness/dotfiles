@@ -114,12 +114,13 @@ gh api -X PUT repos/<owner>/<repo>/automated-security-fixes
 gh api -X PATCH repos/<owner>/<repo> \
   -f 'security_and_analysis[secret_scanning][status]=enabled' \
   -f 'security_and_analysis[secret_scanning_push_protection][status]=enabled'
-# public repos: hold first-run workflows from any outside contributor for approval
+# public repos, once a bot PR's checks are confirmed to still run (see below)
 gh api -X PUT repos/<owner>/<repo>/actions/permissions/fork-pr-contributor-approval \
   -f approval_policy=all_external_contributors
 ```
 
 - `default_workflow_permissions=read` makes every workflow ask for what it writes; `can_approve_pull_request_reviews=false` keeps a workflow token from approving PRs, which would otherwise satisfy a required-review rule.
+- `all_external_contributors` is the strictest fork-PR policy and may also gate PRs opened by an App or `github-actions[bot]` (`github-app-token`'s gate-trap, observed only under the default policy). Open one bot PR and confirm its checks run before settling on it; `first_time_contributors` is the default.
 - Secret scanning and push protection are free on public repos; private repos need GitHub Secret Protection.
 - An org policy that owns a setting answers with a 409; set it at org level instead.
 - Code scanning (CodeQL) and the "require code scanning results" ruleset rule are worth adding on repos with application code, and a ruleset rule can block PRs that introduce secret-scanning alerts (public preview as of Sep 2026).
