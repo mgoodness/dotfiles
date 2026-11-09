@@ -26,6 +26,11 @@ packages added with `pi install`.
   exact id, so an alias would silently fall through to the first available
   model instead of erroring. Bump it when a newer Sonnet lands
   (`pi --list-models sonnet` on an mlb box).
+- `enabledModels` (the Ctrl+P cycle list, with fixed thinking levels) is seeded
+  on `.mlb` machines only, and only when absent, so edits made in pi's model
+  selector survive. Order is the cycle order: default Sonnet 5.5 medium, then
+  Sonnet 5.5 high (hard debugging), Opus 5.5 medium (planning/design), Haiku
+  5.5 low (sweeps/Q&A). Delete the key to re-seed after changing the list here.
 - Packages declared in `.chezmoidata/pi-packages.toml` are unioned into
   `packages`. A companion run_onchange script actually installs them
   (`pi install`), since declaring a package here only makes pi load it if
@@ -41,6 +46,11 @@ packages added with `pi install`.
 {{-   $seeds = dict "defaultThinkingLevel" "medium" "defaultProvider" "github-copilot" "defaultModel" "claude-sonnet-5.5" -}}
 {{- end -}}
 {{- $current = merge $current $seeds -}}
+{{- if .mlb -}}
+{{-   if not (hasKey $current "enabledModels") -}}
+{{-     $_ := set $current "enabledModels" (list "github-copilot/claude-sonnet-5.5:medium" "github-copilot/claude-sonnet-5.5:high" "github-copilot/claude-opus-5.5:medium" "github-copilot/claude-haiku-5.5:low") -}}
+{{-   end -}}
+{{- end -}}
 {{- $_ := set $current "theme" "catppuccin-latte/catppuccin-frappe" -}}
 {{- $packages := index $current "packages" | default list -}}
 {{- range .piPackages -}}
