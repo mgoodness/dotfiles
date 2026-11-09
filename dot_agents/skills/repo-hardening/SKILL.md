@@ -2,9 +2,9 @@
 name: repo-hardening
 description: >
   Harden a GitHub repo so required checks and automated merges actually bite: rulesets, merge
-  settings, Dependabot with auto-merge, immutable releases, signed commits, repo security
-  settings, and Actions security practices (SHA pinning, token scoping, injection). Use when
-  auditing an existing ruleset or merge settings, or when zizmor/actionlint flags a workflow.
+  settings, Dependabot or Renovate with auto-merge, immutable releases, signed commits, repo
+  security settings, and Actions security practices (SHA pinning, token scoping, injection). Use
+  when auditing an existing ruleset or merge settings, or when zizmor/actionlint flags a workflow.
   Defers CI content to a language skill (e.g. `go-ci`), release-please to `release-please`, and
   App-token mechanics to `github-app-token`.
 ---
@@ -19,7 +19,7 @@ Nothing here is language-specific. What the required CI job builds, tests, and l
 
 Apply the tier the repo has earned:
 
-- **Baseline**, every repo: [Repo security settings](#repo-security-settings), step 3 (Dependabot config), and [Security hardening](#security-hardening-what-zizmor-will-flag).
+- **Baseline**, every repo: [Repo security settings](#repo-security-settings), step 3 (updater config), and [Security hardening](#security-hardening-what-zizmor-will-flag).
 - **Gated**, a repo with a required CI job: Baseline plus steps 1, 2, and 4. A repo with no CI job takes a light ruleset instead: keep `deletion`, `non_fast_forward`, and `required_signatures` from [`RULESET-PAYLOAD.json`](RULESET-PAYLOAD.json), and drop `pull_request`, `required_status_checks`, and `required_linear_history`.
 - **Publishing**, a repo that cuts GitHub Releases: Gated plus [Immutable releases](#immutable-releases--locking-published-tags-and-assets).
 
@@ -62,13 +62,17 @@ gh api -X PATCH repos/<owner>/<repo> \
 - `delete_branch_on_merge=true` removes merged head branches so stale ones do not pile up.
 - `allow_auto_merge=true` is the prerequisite for step 4: without it `gh pr merge --auto` is unavailable.
 
-## 3. Dependabot config
+## 3. Dependency updater config
+
+Dependabot is the default: built in, no infrastructure. Switch to Renovate (see [`RENOVATE.md`](RENOVATE.md)) where an org ships a shared Renovate workflow or the repo needs private registries, Helm, or custom managers. Run one updater per ecosystem.
+
+Dependabot config:
 
 `gomod`/`npm`/`pip`/etc. plus `github-actions` ecosystems, weekly schedule, `cooldown.default-days >= 7` (shorter trips zizmor's `dependabot-cooldown` audit). Cooldown delays version updates only; security updates arrive immediately. `groups` batches an ecosystem's updates into one PR, cutting the rebase churn step 1 describes.
 
-## 4. Dependabot auto-merge
+## 4. Auto-merge dependency updates
 
-Gate on `dependabot/fetch-metadata`'s `update-type` output: auto-merge `semver-minor` and `semver-patch`, leave `semver-major` for manual review, since every major bump is a real compatibility question.
+Dependabot has no native auto-merge, so a workflow requests it; Renovate merges natively (see [`RENOVATE.md`](RENOVATE.md)). For Dependabot, gate on `dependabot/fetch-metadata`'s `update-type` output: auto-merge `semver-minor` and `semver-patch`, leave `semver-major` for manual review, since every major bump is a real compatibility question.
 
 Use plain `pull_request` with an explicit `permissions:` block. GitHub's docs say Dependabot-triggered `pull_request` runs start with a read-only token and that the `permissions:` key raises it; the `contents: write` and `pull-requests: write` grants below suffice, so the privileged `pull_request_target` event is unnecessary here. Allowlisting the two update types in the `if:` makes an empty or unexpected output skip the merge:
 
@@ -158,6 +162,7 @@ Symptom → cause, for diagnosing a repo that looks hardened and is not:
 
 - **Auto-merge fires with nothing gating it** → no ruleset, or its `context` does not match the CI job's `name:`.
 - **Required check stuck on "Expected — Waiting for status"** → `context` names the `jobs.<id>` key, or `integration_id` does not match the app that reports the check.
+- **Renovate merges a PR whose tests fail** → `platformAutomerge` is on and the ruleset has no `required_status_checks` rule.
 - **Dependabot PRs keep failing checks after a fix lands on the base branch** → merging the fix does not re-run open PRs; comment `@dependabot rebase`.
 - **`gh pr merge` 403s in the auto-merge workflow** → the `permissions:` block is missing or too narrow, so Dependabot's default read-only token applies.
 - **Unsigned commit cannot be pushed, even by an admin** → `required_signatures` is on and `bypass_actors` is empty; audit the pusher.
@@ -168,6 +173,6 @@ Symptom → cause, for diagnosing a repo that looks hardened and is not:
 
 Each claim is checkable with one call:
 
-- **Baseline:** `gh api repos/<owner>/<repo>/actions/permissions/workflow` prints `default_workflow_permissions: read` and `can_approve_pull_request_reviews: false`; `gh api repos/<owner>/<repo>/actions/permissions --jq .sha_pinning_required` prints `true`; secret scanning, push protection, and Dependabot security updates are enabled (repo-level `security_and_analysis`); the Dependabot config sets `cooldown`; every third-party action in every workflow carries a SHA pin with a `# vX.Y.Z` comment.
+- **Baseline:** `gh api repos/<owner>/<repo>/actions/permissions/workflow` prints `default_workflow_permissions: read` and `can_approve_pull_request_reviews: false`; `gh api repos/<owner>/<repo>/actions/permissions --jq .sha_pinning_required` prints `true`; secret scanning, push protection, and Dependabot security updates are enabled (repo-level `security_and_analysis`); the Dependabot config sets `cooldown`, or the Renovate config sets `minimumReleaseAge`; every third-party action in every workflow carries a SHA pin with a `# vX.Y.Z` comment.
 - **Gated:** the ruleset is active on the target branch; its required-check `context` matches the CI job's `name:`; merge settings disable merge commits and enable auto-merge; the auto-merge workflow is present and runs on `pull_request`; signed commits are required on the target branch.
 - **Publishing:** `gh api repos/<owner>/<repo>/immutable-releases --jq .enabled` prints `true`, with the release pipeline draft-first.
