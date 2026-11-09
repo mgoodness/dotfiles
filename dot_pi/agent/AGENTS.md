@@ -95,3 +95,12 @@ under the `release-please` item (Private vault); copy the PEM file's secret
 reference ("Copy Secret Reference" in the 1Password app) for `--key-file`
 and nothing needs manual pasting. See the `release-please` and
 `github-app-token` skills for the wiring.
+
+`mlb-systems` repos use the org-owned App `mlb-systems-automation` instead:
+`vars.AUTOMATION_APP_CLIENT_ID` and `secrets.AUTOMATION_APP_PRIVATE_KEY`, both
+provided by the org. An org owner installs it per repo (org Settings → GitHub
+Apps → `mlb-systems-automation` → Configure), so `setup-release-please-app`
+does not apply there. Scope each mint with `permission-*`, and keep the App out
+of every ruleset's bypass list: its private key is an org secret readable by any
+writer's workflow. `mlb-renovate` is the Renovate-only App behind the shared
+`mlb-systems/renovate` workflow; use it for nothing else.

@@ -46,6 +46,8 @@ Fix: mint a short-lived token from a GitHub App installation via `actions/create
     token: ${{ steps.app-token.outputs.token }}
 ```
 
+In `mlb-systems` repos the org App replaces this one: use `vars.AUTOMATION_APP_CLIENT_ID` and `secrets.AUTOMATION_APP_PRIVATE_KEY`, and skip creating an App (global `AGENTS.md`, Release automation).
+
 The downstream release workflow does **not** need this token — it only uploads artifacts to a release the tag-authoring workflow already created, so the default `GITHUB_TOKEN` is enough there.
 
 Creating the App, and pulling its Client ID and private key into the repo's variable/secret, is one-time work only a human can click through — script it with the `wizard` skill rather than writing it as prose steps to follow by hand. In this dotfiles setup, `setup-release-please-app` already is that script: it pauses for the one truly manual step (installing the App on the repo in a browser), then wires the variable and secret itself. Its `--client-id`/`--key-file` flags accept an `op://vault/item/field` reference, so when those values live in 1Password — as they do for the shared personal App, see the global AGENTS.md's Release automation section — nothing needs manual pasting.
