@@ -38,7 +38,7 @@ packages added with `pi install`.
 {{- end -}}
 {{- $seeds := dict "defaultThinkingLevel" "high" "defaultProvider" "deepseek" "defaultModel" "deepseek-flash" -}}
 {{- if .mlb -}}
-{{-   $seeds = dict "defaultThinkingLevel" "high" "defaultProvider" "github-copilot" "defaultModel" "claude-sonnet-5.5" -}}
+{{-   $seeds = dict "defaultThinkingLevel" "medium" "defaultProvider" "github-copilot" "defaultModel" "claude-sonnet-5.5" -}}
 {{- end -}}
 {{- $current = merge $current $seeds -}}
 {{- $_ := set $current "theme" "catppuccin-latte/catppuccin-frappe" -}}
