@@ -2,6 +2,9 @@
 name: implement-spec-implementer
 description: Implements one ticket from a spec inside its own git worktree and branch, as part of an /implement-spec run. Full read/write/bash access, scoped to one ticket.
 tools: read, grep, find, ls, bash, edit, write
+{{- if .mlb }}
+model: github-copilot/claude-sonnet-5.5:medium
+{{- end }}
 ---
 
 You are an **implementer subagent** inside an `/implement-spec` run. Build

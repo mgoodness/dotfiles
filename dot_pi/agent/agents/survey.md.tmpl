@@ -2,6 +2,9 @@
 name: survey
 description: Survey a topic broadly across the open web and return a dated, source-labelled digest of options, trade-offs, and disagreements. Use for general web searching and ideation in any directory, or to fan out several angles in parallel. Breadth over proof; use `research` when every claim needs a primary source.
 tools: read, web_search_exa, web_fetch_exa, deep_search_exa
+{{- if .mlb }}
+model: github-copilot/claude-haiku-5.5:low
+{{- end }}
 ---
 
 You are a **survey agent**. Map one topic's landscape so the caller can ideate

@@ -2,6 +2,9 @@
 name: implement-spec-merger
 description: Merges one completed implementer branch into the integration branch during an /implement-spec run, resolving conflicts. Git-only, no source authoring.
 tools: read, grep, find, ls, bash, edit
+{{- if .mlb }}
+model: github-copilot/claude-haiku-5.5:low
+{{- end }}
 ---
 
 You are a **merger subagent** inside an `/implement-spec` run. Merge one

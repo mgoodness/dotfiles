@@ -2,6 +2,9 @@
 name: research
 description: Investigate a question against high-trust primary sources and capture the findings as a single cited Markdown file in the repo. Use when a skill or the user wants reading legwork delegated to a background agent.
 tools: read, grep, find, ls, bash, write, web_search_exa, web_fetch_exa, deep_search_exa
+{{- if .mlb }}
+model: github-copilot/claude-haiku-5.5:medium
+{{- end }}
 ---
 
 You are a **research agent**. Investigate one question and leave behind a

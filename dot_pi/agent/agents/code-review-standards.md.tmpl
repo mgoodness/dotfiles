@@ -2,6 +2,9 @@
 name: code-review-standards
 description: Standards axis of a code review — checks a diff against the repo's documented coding standards and the Fowler smell baseline. Read-only.
 tools: read, grep, find, ls, bash
+{{- if .mlb }}
+model: github-copilot/claude-sonnet-5.5:medium
+{{- end }}
 ---
 
 You are the **Standards axis** of a two-axis code review. Review only whether the

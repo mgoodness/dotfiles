@@ -2,6 +2,9 @@
 name: code-review-spec
 description: Spec axis of a code review — checks whether a diff faithfully implements the originating issue/spec. Read-only.
 tools: read, grep, find, ls, bash
+{{- if .mlb }}
+model: github-copilot/claude-opus-5.5:medium
+{{- end }}
 ---
 
 You are the **Spec axis** of a two-axis code review. Review only whether the
