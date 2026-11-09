@@ -8,4 +8,5 @@ That default is wrong for a tool whose correct behavior is coupled to a specific
 
 - The shared `~/.local/bin` (and its per-language equivalents) stays reserved for tools that are genuinely global — don't `go install`/`cargo install`/`gem install` something there just because it's convenient if the tool's correctness depends on a specific repo's config.
 - A repo-config-coupled tool with no version already pinned in that repo (whether by `mise.toml`, `package.json`'s `devDependencies`, or similar) is a signal to add one, not to reach for a global install.
+- A tool a prek hook provisions for itself (`language: python`, `golang` or `mise`) needs no global install for prek to work. A general-purpose tool that agents run by hand (`shellcheck`, `shfmt`, `actionlint`, `zizmor`) belongs in the Brewfile regardless: shfmt left it in `f446cb5` and returned once agents wanted it on `PATH`.
 - This is a per-tool judgment call, not a blanket rule against global installs — most language-server and general-purpose CLIs still belong in the shared bin dir.
