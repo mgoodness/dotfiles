@@ -5,6 +5,7 @@
 tap "beeftornado/rmtree", trusted: true
 tap "mgoodness/tap", "git@github.com:mgoodness/homebrew-tap.git", trusted: true
 
+brew "actionlint"
 brew "bash"
 brew "bat"
 brew "bun"
@@ -42,6 +43,8 @@ brew "ptpython"
 brew "ripgrep"
 brew "ruby"
 brew "sd"
+brew "shellcheck"
+brew "shfmt"
 brew "sponge"
 brew "taplo"
 brew "trash"
@@ -52,6 +55,7 @@ brew "vivid"
 brew "wget"
 brew "worktrunk"
 brew "yq"
+brew "zizmor"
 brew "zoxide"
 
 cask "1password-cli"
