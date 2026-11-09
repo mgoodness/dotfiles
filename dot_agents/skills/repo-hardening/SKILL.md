@@ -2,41 +2,55 @@
 name: repo-hardening
 description: >
   Harden a GitHub repo so required checks and automated merges actually bite: rulesets, merge
-  settings, Dependabot with auto-merge, immutable releases, signed commits, and Actions security
-  practices (SHA pinning, `pull_request_target` hygiene, token scoping). Use when auditing an
-  existing ruleset or merge settings, or when zizmor/actionlint flags a workflow. Defers CI content
-  to a language skill (e.g. `go-ci`), release-please to `release-please`, and App-token mechanics
-  to `github-app-token`.
+  settings, Dependabot with auto-merge, immutable releases, signed commits, repo security
+  settings, and Actions security practices (SHA pinning, token scoping, injection). Use when
+  auditing an existing ruleset or merge settings, or when zizmor/actionlint flags a workflow.
+  Defers CI content to a language skill (e.g. `go-ci`), release-please to `release-please`, and
+  App-token mechanics to `github-app-token`.
 ---
 
 # Repo Hardening: Making Required Checks and Auto-Merge Actually Bite
 
-A required-check status and an "auto-merge" button are both easy to turn on and easy to leave toothless. This skill is the dependency chain that makes them real: name the check correctly, gate on it with a ruleset, back that with repo-wide merge settings that agree with the ruleset, then layer Dependabot and its auto-merge on top — each step here produces something the next one needs, so skipping the order reproduces exactly the failure this skill exists to prevent: an auto-merge that fires with nothing actually gating it.
+A required-check status and an "auto-merge" button are both easy to turn on and easy to leave toothless. This skill is the dependency chain that makes them real: name the check correctly, gate on it with a ruleset, back that with repo-wide merge settings that agree with the ruleset, then layer Dependabot and its auto-merge on top. Each step produces something the next one needs, so skipping the order reproduces the failure this skill exists to prevent: an auto-merge that fires with nothing gating it.
 
-Nothing here is language-specific. What the required CI job itself builds, tests, and lints is owned by a language skill (`go-ci` for Go), which points back here for the ruleset, Dependabot, and hardening. Cutting a versioned release from that same repo's commit history is a separate concern, owned by the `release-please` skill.
+Nothing here is language-specific. What the required CI job builds, tests, and lints belongs to a language skill (`go-ci` for Go), which points back here for the ruleset, Dependabot, and hardening. Cutting a versioned release from the commit history belongs to `release-please`.
+
+## Tiers
+
+Apply the tier the repo has earned:
+
+- **Baseline**, every repo: [Repo security settings](#repo-security-settings), step 3 (Dependabot config), and [Security hardening](#security-hardening-what-zizmor-will-flag).
+- **Gated**, a repo with a required CI job: Baseline plus steps 1, 2, and 4. A repo with no CI job takes a light ruleset instead: keep `deletion`, `non_fast_forward`, and `required_signatures` from [`RULESET-PAYLOAD.json`](RULESET-PAYLOAD.json), and drop `pull_request`, `required_status_checks`, and `required_linear_history`.
+- **Publishing**, a repo that cuts GitHub Releases: Gated plus [Immutable releases](#immutable-releases--locking-published-tags-and-assets).
 
 ## 1. Repository ruleset — turning the required check on
 
-Whatever job gates merges (a language skill's CI workflow, e.g. `go-ci`) is what the ruleset and auto-merge (step 4) both key off. Name it deliberately: the ruleset's `required_status_checks` rule matches the job on its `name:` field, not its `jobs.<id>` key.
+Whatever job gates merges (a language skill's CI workflow, e.g. `go-ci`) is what the ruleset and auto-merge (step 4) both key off. Rulesets are the current mechanism; an existing repo with classic branch protection migrates, and the classic rule comes off once the ruleset covers the same ground, since two systems at once yield a most-restrictive combination that is hard to audit.
 
-GitHub's **repository rulesets** are the current mechanism for this — classic branch protection (the single `PUT .../branches/{branch}/protection` call) is the predecessor API, still supported but no longer where new capability lands: rulesets let more than one ruleset apply to a branch at once (most-restrictive rule wins), target several branches with one glob pattern, and target tags/pushes too. Start new repos here; an existing repo with classic protection should migrate rather than run both indefinitely (see Common Mistakes).
-
-This is the step that makes the required check and auto-merge (step 4) load-bearing rather than decorative: skip it and the CI job still runs and reports a status, it just blocks nothing. Not a CI step — creating a ruleset needs repo-admin permissions the default `GITHUB_TOKEN` doesn't carry — so this is a one-time, admin-run `gh api` call. The payload is in [`RULESET-PAYLOAD.json`](RULESET-PAYLOAD.json); adapt the `context` value to the CI job's actual `name:` field.
-
-- `conditions.ref_name.include` is a glob pattern (`refs/heads/main`, or `refs/heads/release/*` to cover several branches with one ruleset) — the ruleset's equivalent of classic protection being scoped to a single named branch.
-- `deletion`, `non_fast_forward`, and `required_linear_history` are separate rule _types_, each opted into by including it, rather than boolean fields on one object — the inverse polarity from classic protection's `allow_deletions`/`allow_force_pushes: false`. Omitting a rule type means that constraint isn't enforced at all, the same as leaving the classic boolean at its permissive default.
-- The `pull_request` rule replaces `required_pull_request_reviews`; `required_review_thread_resolution` is its `required_conversation_resolution` equivalent. `required_approving_review_count: 0` is still valid and common for a solo-maintainer repo: a PR and its checks are still required, just not a second human reviewer.
-- The `required_status_checks` rule's own `required_status_checks` array (yes, the rule type and its parameter share a name) takes `context` values matching the CI job's `name:` field — the same mismatch step 1 warns about, made concrete here. `strict_required_status_checks_policy: true` is `strict` renamed: it requires the PR branch be up to date with the base before merging.
-- **`bypass_actors: []` is not optional to reason about — it's the load-bearing line.** Rulesets have no implicit admin exemption: unlike classic protection's `enforce_admins`, which defaults to _not_ enforcing against admins until you flip it on, an empty (or omitted) `bypass_actors` list means the ruleset binds literally everyone, repo and org admins included. Classic protection's `enforce_admins: true` closed an escape hatch that existed by default; a ruleset with no bypass actors has no escape hatch to close in the first place. Add an entry only for a bypass you actually want (e.g. `{"actor_type": "OrganizationAdmin", "bypass_mode": "always"}`), and confirm the exact `actor_type`/`bypass_mode` shape against current docs before scripting it — this is the newest, still-evolving part of the payload.
-- `required_linear_history` forces every merge through squash or rebase, not a merge commit — pair it with step 2's repo-level merge setting or the two disagree about what history should look like. The `pull_request` rule also supports an `allowed_merge_methods` parameter that enforces the same restriction at ruleset scope rather than repo-wide; useful when different branches need different merge-method rules, but verify its exact shape against current docs before relying on it, same caveat as `bypass_actors`.
-- `required_signatures` ships in [`RULESET-PAYLOAD.json`](RULESET-PAYLOAD.json) as the house default (commits sign everywhere by default), and it takes no parameters. It's the one rule type here that isn't part of the required-check chain: it enforces supply-chain provenance rather than gating a merge, and it rides this same ruleset payload instead of needing an endpoint of its own (contrast Immutable releases below, which is independent _and_ separate). What makes it cheap is also what makes it sharp — with `bypass_actors: []` it binds repo admins too, so an unsigned commit is unpushable for you and for a contributor alike. So audit what pushes to the branch: GitHub API-created commits are signed by GitHub's web-flow key and show Verified, so the `github-app-token`/release-please path survives it; a commit pushed from a CI runner with a plain token and no signing key does not — for that repo, drop this rule from the payload rather than leaving it half-enforced.
-
-## 2. Repo merge settings — squash-only, auto-delete branches
-
-Two repo-level settings (`Settings → General → Pull Requests`, or `gh api -X PATCH repos/<owner>/<repo>`), not part of the ruleset at all, but load-bearing alongside it:
+Creating a ruleset needs repo-admin permissions the default `GITHUB_TOKEN` lacks, so this is a one-time, admin-run call. Adapt the `context` value in [`RULESET-PAYLOAD.json`](RULESET-PAYLOAD.json) to the CI job's `name:` field, then:
 
 ```sh
-gh api -X PATCH repos/<owner>/<repo>` \
+gh api -X POST repos/<owner>/<repo>/rulesets --input RULESET-PAYLOAD.json
+```
+
+Without it the CI job still runs and reports a status; it blocks nothing.
+
+- `conditions.ref_name.include` is a glob (`refs/heads/main`, or `refs/heads/release/*` for several branches).
+- `deletion`, `non_fast_forward`, `required_linear_history`, and `required_signatures` are rule _types_, each opted into by inclusion. Omitting a type leaves that constraint unenforced.
+- `required_status_checks`: `context` matches the CI job's `name:` field, not its `jobs.<id>` key. `integration_id: 15368` (the GitHub Actions app) pins the check's source, so another app or a plain commit status cannot satisfy it.
+- `strict_required_status_checks_policy: true` requires the PR branch be current with the base. The cost is rebases: every merged Dependabot PR makes its siblings stale (see Common Mistakes). Keep it on by default; set it `false` on a repo where Dependabot volume makes rebases the dominant cost.
+- `pull_request` replaces classic `required_pull_request_reviews`. `required_approving_review_count: 0` is the solo-maintainer choice: the PR and its checks stay required, a second human does not. Raise it to 1 or more once a second maintainer exists.
+- **`bypass_actors: []` is the load-bearing line.** Rulesets carry no implicit admin exemption, so an empty list binds everyone, repo and org admins included. Add an entry only for a bypass you want (e.g. `{"actor_type": "OrganizationAdmin", "bypass_mode": "always"}`) and confirm its exact shape against current docs; this is the newest part of the payload.
+- `required_linear_history` forces squash or rebase; pair it with step 2's repo setting. The `pull_request` rule's `allowed_merge_methods` enforces the same restriction at ruleset scope for per-branch differences; verify its shape against current docs first.
+- `required_signatures` is the house default and takes no parameters. It binds admins too when `bypass_actors` is empty, so audit what pushes to the branch: GitHub API-created commits carry GitHub's web-flow signature and show Verified, so the `github-app-token`/release-please path survives; a CI runner pushing with a plain token and no signing key does not. For that repo, drop the rule from the payload.
+- Rollout: on GitHub Enterprise, `"enforcement": "evaluate"` records would-be violations in Rule Insights without blocking. Use it on an existing repo before switching to `active`. Other plans start at `active`.
+
+## 2. Repo merge settings — no merge commits, auto-delete branches
+
+Repo-level settings (`Settings → General → Pull Requests`, or the call below), separate from the ruleset and load-bearing beside it:
+
+```sh
+gh api -X PATCH repos/<owner>/<repo> \
   -F allow_merge_commit=false \
   -F allow_squash_merge=true \
   -F allow_rebase_merge=true \
@@ -44,71 +58,116 @@ gh api -X PATCH repos/<owner>/<repo>` \
   -F allow_auto_merge=true
 ```
 
-- `allow_merge_commit=false` disables merge commits repo-wide, so squash or rebase are the only options left — this is what actually enforces step 1's `required_linear_history`; setting one without the other leaves them disagreeing about what history should look like.
-- `delete_branch_on_merge=true` deletes a PR's head branch automatically once merged, so a repo doesn't accumulate a long tail of stale merged branches that every `git branch -a` and every branch-selection prompt has to wade through.
-- `allow_auto_merge=true` is the other prerequisite step 4 needs — without it, `gh pr merge --auto` (or "enable auto-merge" in the UI) simply isn't available to request.
+- `allow_merge_commit=false` is what enforces step 1's `required_linear_history`; either one alone leaves the two disagreeing about history.
+- `delete_branch_on_merge=true` removes merged head branches so stale ones do not pile up.
+- `allow_auto_merge=true` is the prerequisite for step 4: without it `gh pr merge --auto` is unavailable.
 
 ## 3. Dependabot config
 
-`gomod`/`npm`/`pip`/etc. plus `github-actions` ecosystems, weekly schedule, `cooldown.default-days >= 7` — anything shorter trips zizmor's `dependabot-cooldown` audit.
+`gomod`/`npm`/`pip`/etc. plus `github-actions` ecosystems, weekly schedule, `cooldown.default-days >= 7` (shorter trips zizmor's `dependabot-cooldown` audit). Cooldown delays version updates only; security updates arrive immediately. `groups` batches an ecosystem's updates into one PR, cutting the rebase churn step 1 describes.
 
 ## 4. Dependabot auto-merge
 
-Gate on `dependabot/fetch-metadata`'s `update-type` output: auto-merge `semver-minor`/`semver-patch`, leave `semver-major` for manual review — every major bump is a real compatibility question, not busywork.
+Gate on `dependabot/fetch-metadata`'s `update-type` output: auto-merge `semver-minor` and `semver-patch`, leave `semver-major` for manual review, since every major bump is a real compatibility question.
 
-This only fires safely because of the prerequisites steps 1 and 2 cover (the ruleset requiring the CI job's check, and the repo's own "Allow auto-merge") — configure those there, not here; skip either and "enable auto-merge" merges on PR open with zero verification.
+Use plain `pull_request` with an explicit `permissions:` block. GitHub's docs say Dependabot-triggered `pull_request` runs start with a read-only token and that the `permissions:` key raises it; the `contents: write` and `pull-requests: write` grants below suffice, so the privileged `pull_request_target` event is unnecessary here. Allowlisting the two update types in the `if:` makes an empty or unexpected output skip the merge:
 
-This workflow runs on `pull_request_target`, for the write-scoped token Dependabot's own `pull_request` event never gets (regardless of the workflow's `permissions:` block). That's the one place `pull_request_target` is safe to use here, and only because the workflow never checks out PR code and only ever calls `gh pr merge` against the PR's URL — see Security hardening below for how to justify it to a linter.
+```yaml
+on: pull_request
+permissions: {}
+jobs:
+  automerge:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - id: metadata
+        uses: dependabot/fetch-metadata@<sha> # vX.Y.Z
+      - if: >-
+          steps.metadata.outputs.update-type == 'version-update:semver-minor' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-patch'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
 
-Keep auto-merge scoped to Dependabot only by default. Auto-merging mechanical, high-volume dependency bumps is worth automating; auto-merging human-authored PRs is a per-repo call each maintainer should make explicitly (e.g. enabling per-PR by hand), not something to generate speculatively alongside the Dependabot piece.
+This is safe only with steps 1 and 2 in place (a ruleset requiring the CI job's check, and the repo's "Allow auto-merge"); without either, "enable auto-merge" merges on PR open with zero verification. A merge queue changes one thing: the built-in `GITHUB_TOKEN` cannot enqueue, so mint an App token for the `gh pr merge` step (`github-app-token`).
+
+Keep auto-merge scoped to Dependabot. Mechanical, high-volume dependency bumps are worth automating; auto-merging human-authored PRs is a per-repo call a maintainer makes explicitly, per PR.
+
+## Repo security settings
+
+One-time, admin-run calls, the Baseline tier's repo-level half:
+
+```sh
+gh api -X PUT repos/<owner>/<repo>/actions/permissions/workflow \
+  -f default_workflow_permissions=read -F can_approve_pull_request_reviews=false
+gh api -X PUT repos/<owner>/<repo>/vulnerability-alerts
+gh api -X PUT repos/<owner>/<repo>/automated-security-fixes
+gh api -X PATCH repos/<owner>/<repo> \
+  -f 'security_and_analysis[secret_scanning][status]=enabled' \
+  -f 'security_and_analysis[secret_scanning_push_protection][status]=enabled'
+# public repos: hold first-run workflows from any outside contributor for approval
+gh api -X PUT repos/<owner>/<repo>/actions/permissions/fork-pr-contributor-approval \
+  -f approval_policy=all_external_contributors
+```
+
+- `default_workflow_permissions=read` makes every workflow ask for what it writes; `can_approve_pull_request_reviews=false` keeps a workflow token from approving PRs, which would otherwise satisfy a required-review rule.
+- Secret scanning and push protection are free on public repos; private repos need GitHub Secret Protection.
+- An org policy that owns a setting answers with a 409; set it at org level instead.
+- Code scanning (CodeQL) and the "require code scanning results" ruleset rule are worth adding on repos with application code, and a ruleset rule can block PRs that introduce secret-scanning alerts (public preview as of Sep 2026).
 
 ## Immutable releases — locking published tags and assets
 
-A repo-admin, one-time `gh api` call like step 1's ruleset, but independent of the required-check/auto-merge chain above: it hardens the repo's _release_ supply chain instead, and neither depends on nor is depended on by steps 1–4.
+A repo-admin, one-time `gh api` call independent of steps 1–4; it hardens the _release_ supply chain.
 
 ```sh
 gh api -X PUT repos/<owner>/<repo>/immutable-releases
 ```
 
-- Once a release is published under this setting, its Git tag is locked to the commit it was created at — can't be moved, retargeted, or deleted while the release exists, and the tag name can't be reused even if the repo itself is deleted and recreated (protection against repository-resurrection attacks). Every asset already attached is protected from modification or deletion. Title, release notes, and the prerelease/latest flags stay editable. Publishing also mints a release attestation (a cryptographically verifiable record binding the tag, commit SHA, and asset list) as a byproduct — nothing extra to configure for it.
-- **Publish as late as possible: draft, attach every asset, then publish.** GitHub's docs are explicit about the previous bullet's asset lock, not merely recommending this as best practice: it's a hard blocker for the default release-please + GoReleaser pipeline (pipeline specifics are `release-please`/`go-ci` territory, not this skill's): release-please's action publishes the GitHub Release immediately when it creates the tag, with only changelog notes attached; GoReleaser then attaches build artifacts to that _already-published_ release on the later tag-push trigger — exactly the second pass GitHub's guidance forbids. The fix is holding the release as a draft until every artifact is attached, then publishing it once: release-please's own `draft`/`force-tag-creation` config (see `release-please`'s draft-mode trap) plus the downstream tool finding and publishing that same draft rather than creating a separate release (GoReleaser's `use_existing_draft` — see `go-ci`'s GoReleaser recipe). Enabling immutable releases without confirming that reorder is in place breaks the very next tag push.
-- An org admin can also mandate this repo-wide (`PUT /orgs/{org}/settings/immutable-releases` with `enforced_repositories: all`/`none`/`selected`) — if the org already enforces `all`, the per-repo call above just confirms existing state rather than creating new state.
+- A published release's Git tag locks to its commit: it cannot be moved, retargeted, or deleted while the release exists, and the name cannot be reused even if the repo is deleted and recreated. Attached assets are protected from modification or deletion; title, notes, and the prerelease/latest flags stay editable. Publishing mints a release attestation (a verifiable record binding tag, commit SHA, and asset list) at no extra configuration.
+- **Publish as late as possible: draft, attach every asset, then publish.** The default release-please + GoReleaser pipeline breaks on this: release-please publishes the Release the moment it creates the tag, and GoReleaser then attaches artifacts to that already-published release, which GitHub forbids. Hold the release as a draft until every artifact is attached (release-please's `draft`/`force-tag-creation` config, see `release-please`'s draft-mode trap), and have the downstream tool finish that same draft (GoReleaser's `use_existing_draft`, see `go-ci`). Confirm the reorder before enabling the setting, or the next tag push fails.
+- An org admin can mandate it repo-wide (`PUT /orgs/{org}/settings/immutable-releases` with `enforced_repositories: all`/`none`/`selected`); if the org enforces `all`, the per-repo call only confirms existing state.
 
 ## Security hardening (what zizmor will flag)
 
-- **Pin every third-party action to a commit SHA with a trailing `# vX.Y.Z` comment**, never a bare tag. The version comment is what lets Dependabot's `github-actions` ecosystem keep bumping it — a bare SHA with no comment is a pin nothing can track. Resolve the SHA from the tag's **commit**, not an annotated tag's own object: the GitHub API's `git/refs/tags/<tag>` returns an `object.sha` that, for an annotated tag, names a tag object (`type: "tag"`), one level short of the commit — dereference it (`git/tags/<that-sha>`) or use `git rev-parse <tag>` with the `^{commit}` suffix locally. Pinning the tag object's SHA instead still resolves (Actions accepts it), so nothing fails until zizmor's `ref-version-mismatch` audit flags the mismatch between the comment's version and what the hash actually points to.
-- **Enforce the pin with `sha_pinning_required`.** The pinning bullet is a convention until GitHub refuses to run a workflow whose `uses:` names a tag or branch. Turn the setting on after every workflow in the repo is pinned, so no existing workflow breaks. Read-modify-write the permissions endpoint, since the `PUT` also carries `enabled` and `allowed_actions`, which a bare body would reset:
+- **Pin every third-party action to a commit SHA with a trailing `# vX.Y.Z` comment.** The comment is what lets Dependabot's `github-actions` ecosystem keep bumping it. Resolve the SHA from the tag's **commit**: for an annotated tag, `git/refs/tags/<tag>` returns the tag object's SHA (`type: "tag"`), one level short. Dereference it (`git/tags/<that-sha>`) or run `git rev-parse <tag>^{commit}`. Actions accepts the tag object's SHA, so nothing fails until zizmor's `ref-version-mismatch` audit flags it.
+- **Enforce the pin with `sha_pinning_required`**, switched on after every workflow in the repo is pinned. Read-modify-write the permissions endpoint, since the `PUT` also carries `enabled` and `allowed_actions`, which a bare body would reset:
   ```sh
   gh api repos/<owner>/<repo>/actions/permissions --jq '. + {sha_pinning_required: true}' \
     | gh api -X PUT repos/<owner>/<repo>/actions/permissions --input -
   ```
-  An org admin sets the same field on `orgs/<org>/actions/permissions`. The setting covers every step-level action, GitHub-owned and same-org ones included. A reusable workflow (job-level `uses:`) may still name a tag, so zizmor's `unpinned-uses` stays the check for those.
-- **`persist-credentials: false`** on any `actions/checkout` step that doesn't need the default token to push afterward, and always on the step that checks out untrusted PR code.
-- **Bot-identity checks**: use `github.event.pull_request.user.login`, never `github.actor` — `actor` is spoofable (zizmor's `bot-conditions` audit).
-- **`pull_request_target` is flagged on principle** (`dangerous-triggers`): the usual failure mode is checking out and running the PR's own code under a write-scoped token. Suppress only when you can name, in the same comment, why _this_ workflow is immune — no checkout of PR code, and no PR-derived value interpolated directly into a `run:` script (only ever passed through `env:`):
+  An org admin sets the same field on `orgs/<org>/actions/permissions`. It covers every step-level action, GitHub-owned and same-org included; a reusable workflow (job-level `uses:`) may still name a tag, so zizmor's `unpinned-uses` covers those.
+- **Declare `permissions: {}` at the top of each workflow and grant per job** the scopes that job needs (zizmor's `excessive-permissions`).
+- **`persist-credentials: false`** on any `actions/checkout` step that does not push afterward, and on every step that checks out untrusted PR code.
+- **Pass untrusted context through `env:`.** Values like a PR title, branch name, or `head.ref` reach a `run:` script as `"$VAR"`, never as an interpolated `${{ }}` expression (zizmor's `template-injection`).
+- **Bot identity**: key checks on `github.event.pull_request.user.login`. `github.actor` is spoofable (zizmor's `bot-conditions`).
+- **Prefer `pull_request`.** `pull_request_target` and `workflow_run` run with a write token and secrets, which is why zizmor flags them (`dangerous-triggers`). A workflow that genuinely needs one says why in the suppression, naming both facts: no checkout of PR code, and PR-derived values flow only through `env:`:
   ```yaml
-  on: pull_request_target # zizmor: ignore[dangerous-triggers] no checkout of PR code; PR-derived values only flow through env:, never interpolated into run: scripts
+  on: pull_request_target # zizmor: ignore[dangerous-triggers] no checkout of PR code; PR-derived values only flow through env:
   ```
-- **Scope minted App tokens down** with `permission-*` inputs; never let a job's token inherit an App's full installation grant when it only needs to push a tag and open a PR. See the `github-app-token` skill for minting mechanics, reusing one App across a repo's automation, and a workflow-run approval gate that same pattern also happens to clear.
+- **Scope minted App tokens down** with `permission-*` inputs so a job that pushes a tag and opens a PR holds only those grants. Mechanics, one App across a repo's automation, and the workflow-run approval gate live in `github-app-token`.
+- **Authenticate to clouds and registries with OIDC** (short-lived tokens, `id-token: write` on the one job that needs it) in place of long-lived secrets, and publish build provenance with `actions/attest`. The recipe belongs to the language skill (`go-ci`).
 
 ## Common Mistakes
 
-- **Key bot-identity checks on `github.event.pull_request.user.login`** — `github.actor` is spoofable; see Security hardening's bot-identity bullet.
-- **Use `pull_request_target` only on workflows that never check out PR code** — see Security hardening's `pull_request_target` bullet.
-- **Scope every minted App token down with `permission-*` inputs** — see Security hardening's token-scoping bullet.
-- **Name the required-check ruleset rule after the job's `name:` field, not its `id`** — see step 1.
-- **Wire the ruleset requiring the CI check before Dependabot auto-merge** — see step 4's prerequisites.
-- **Set `strict_required_status_checks_policy: true`** — leaving it unset or `false` lets a PR merge on a check result from a now-stale base branch.
-- **Disable `allow_merge_commit` whenever `required_linear_history` is enabled** — see step 2.
-- **Confirm `bypass_actors` is empty (or explicitly set) rather than assuming admin exemption** — classic protection's `enforce_admins` defaulted to exempting admins; rulesets do not. See step 1's `bypass_actors` bullet.
-- **Enable `required_signatures` without auditing what pushes to the branch** — See step 1's `required_signatures` bullet.
-- **Migrate fully from classic branch protection to rulesets** — running both simultaneously produces the most-restrictive combination, which is confusing to reason about and audit. Remove the classic rule once the ruleset covers the same ground.
-- **Pin every action to the commit SHA the tag points to, not the annotated tag's own object SHA** — see Security hardening's SHA-pinning bullet.
-- **Pin every workflow before enabling `sha_pinning_required`** — see Security hardening's enforcement bullet.
-- **Keep auto-merge scoped to Dependabot only by default** — avoid general-purpose "auto-merge for write access" workflows; see step 4.
-- **Rebase stale Dependabot PRs with `@dependabot rebase`** — merging a fix to the base branch doesn't retroactively re-run an already-open PR's checks.
-- **Switch a release-please + GoReleaser pipeline to draft-first before enabling immutable releases** — see the Immutable releases section above.
+Symptom → cause, for diagnosing a repo that looks hardened and is not:
+
+- **Auto-merge fires with nothing gating it** → no ruleset, or its `context` does not match the CI job's `name:`.
+- **Required check stuck on "Expected — Waiting for status"** → `context` names the `jobs.<id>` key, or `integration_id` does not match the app that reports the check.
+- **Dependabot PRs keep failing checks after a fix lands on the base branch** → merging the fix does not re-run open PRs; comment `@dependabot rebase`.
+- **`gh pr merge` 403s in the auto-merge workflow** → the `permissions:` block is missing or too narrow, so Dependabot's default read-only token applies.
+- **Unsigned commit cannot be pushed, even by an admin** → `required_signatures` is on and `bypass_actors` is empty; audit the pusher.
+- **The next tag push fails after enabling immutable releases** → release-please still publishes before assets are attached; switch the pipeline to draft-first.
+- **zizmor `ref-version-mismatch`** → the pin names an annotated tag's own object SHA, not its commit.
 
 ## Completion criterion
 
-Ruleset is active on the target branch; required check `context` matches the CI job's `name:` field; merge settings disable merge commits and enable auto-merge; Dependabot config and auto-merge workflow are present; every third-party action in every workflow is pinned to a commit SHA with a `# vX.Y.Z` comment; `gh api repos/<owner>/<repo>/actions/permissions --jq .sha_pinning_required` prints `true`; signed commits are required on the target branch.
+Each claim is checkable with one call:
+
+- **Baseline:** `gh api repos/<owner>/<repo>/actions/permissions/workflow` prints `default_workflow_permissions: read` and `can_approve_pull_request_reviews: false`; `gh api repos/<owner>/<repo>/actions/permissions --jq .sha_pinning_required` prints `true`; secret scanning, push protection, and Dependabot security updates are enabled (repo-level `security_and_analysis`); the Dependabot config sets `cooldown`; every third-party action in every workflow carries a SHA pin with a `# vX.Y.Z` comment.
+- **Gated:** the ruleset is active on the target branch; its required-check `context` matches the CI job's `name:`; merge settings disable merge commits and enable auto-merge; the auto-merge workflow is present and runs on `pull_request`; signed commits are required on the target branch.
+- **Publishing:** `gh api repos/<owner>/<repo>/immutable-releases --jq .enabled` prints `true`, with the release pipeline draft-first.
