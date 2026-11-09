@@ -10,4 +10,3 @@ GH_TOKEN = { value = "{{ exec(cache_duration='7d', cache_key='emu-gh-token', com
 
 [tools]
 terraform = "latest"
-terraform-docs = "latest"

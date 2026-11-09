@@ -5,6 +5,7 @@
 tap "hashicorp/tap", trusted: true
 
 brew "argocd"
+brew "goreleaser"
 brew "hashicorp/tap/vault", trusted: true
 brew "helm"
 brew "jfrog-cli"
@@ -16,6 +17,7 @@ brew "kustomize"
 brew "podman"
 brew "sops"
 brew "tcptraceroute"
+brew "terraform-docs"
 
 cask "akuity"
 # slack is deliberately not brew-managed: its own updater installs a root-owned
