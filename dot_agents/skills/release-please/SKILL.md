@@ -3,15 +3,16 @@ name: release-please
 description: >
   Wire release-please to cut versioned releases automatically from Conventional Commits. Use
   when setting up or reviewing `release-please-config.json`, `.release-please-manifest.json`, or
-  the release-please workflow. Covers the tag-trap (component in tag), the loop-trap
-  (`GITHUB_TOKEN`-authored push), and the draft-trap (draft releases without forced tag
-  creation). Defers App-token mechanics to `github-app-token`, hardening to `repo-hardening`,
-  and build recipes to a language skill (e.g. `go-ci`).
+  the release-please workflow, or when linting PR titles for it. Covers the tag-trap (component
+  in tag), the loop-trap (`GITHUB_TOKEN`-authored push), and the draft-trap (draft releases
+  without forced tag creation). Also covers the squash-trap (PR title). Defers App-token mechanics to
+  `github-app-token`, hardening to `repo-hardening`, and build recipes to a language skill
+  (e.g. `go-ci`).
 ---
 
 # release-please: Cutting Releases from Conventional Commits
 
-release-please reads Conventional Commits history and opens (then, on merge, tags) a release PR. Three traps stop that tag from ever doing anything, or from ever finishing: a config mismatch that changes what the tag looks like, GitHub's own loop prevention that can silently swallow the push that creates it, and (when the release must stay a draft) GitHub deferring the tag itself until publish.
+release-please reads Conventional Commits history and opens (then, on merge, tags) a release PR. Four traps stop that tag from ever doing anything, or from ever finishing: a config mismatch that changes what the tag looks like, GitHub's own loop prevention that can silently swallow the push that creates it, (when the release must stay a draft) GitHub deferring the tag itself until publish, and a PR title that is not a Conventional Commit, which skips or mis-bumps the release.
 
 ## When to Activate
 
@@ -69,12 +70,26 @@ A repo with `repo-hardening`'s immutable releases enabled can't let release-plea
 
 Finding that same draft release by tag, attaching every artifact, and publishing it is the downstream tool's responsibility, not release-please's — see `go-ci`'s GoReleaser recipe for the GoReleaser side of this pairing.
 
+## 4. PR titles — the squash-trap
+
+On a squash-merging repo the squash commit's subject is what release-please reads, so set it to the PR title (`repo-hardening` step 2 has the call) and lint that title. A title like `Update ci` produces no release, and `fix:` where `feat:` was meant produces the wrong bump, with no failed run to show for it.
+
+Lint the title in CI as one job, `pr-title`, inside the repo's single `CI` workflow: workflow `CI` in `ci.yaml`, whose final job, also named `CI`, `needs:` every other job and is the one required check. A separate title workflow would add a second required check to keep in step with the first.
+
+- Run `amannn/action-semantic-pull-request` pinned to a commit, with `permissions: pull-requests: read`.
+- A repo that must keep `COMMIT_OR_PR_TITLE` sets the action's `validateSingleCommit: true`, so a single-commit PR's message is linted too.
+- Trigger the workflow on `pull_request` types `[opened, reopened, edited, synchronize]`, so retitling re-runs the check.
+- Guard the job with `if: github.event_name == 'pull_request'`; have the `CI` job treat `skipped` as a pass, so push runs on the default branch still succeed.
+
+A rebase merge keeps each commit's own message, so the PR title never reaches history: allow squash only (`repo-hardening`, merge settings), or lint commit messages instead.
+
 ## Common Mistakes
 
 - **Leave `package-name` unset in single-package configs** — setting it silently mismatches the tag the release workflow is watching for.
 - **Scope the minted App token with `permission-*` inputs** — see `repo-hardening`'s Security hardening section.
 - **Pair `draft: true` with `force-tag-creation: true`** — GitHub defers tag creation on a draft release until it's published, so a tag-triggered downstream workflow never fires; same silent-failure shape as the tag-trap.
+- **Lint PR titles in the `CI` workflow on squash-merging repos** — a non-Conventional title silently skips or mis-bumps the release.
 
 ## Completion criterion
 
-Config files (`release-please-config.json`, manifest) are present and valid; the workflow mints an App token and passes it to `release-please-action`; if immutable releases are enabled, `draft: true` and `force-tag-creation: true` are both set.
+Config files (`release-please-config.json`, manifest) are present and valid; the workflow mints an App token and passes it to `release-please-action`; if immutable releases are enabled, `draft: true` and `force-tag-creation: true` are both set; a squash-merging repo has `squash_merge_commit_title: PR_TITLE` (read back with `gh api repos/<owner>/<repo>`) and a `pr-title` job that `CI` `needs:`, and rebase merge is disabled or covered by a commit-message lint.

@@ -83,11 +83,15 @@ gh api -X PATCH repos/<owner>/<repo> \
   -F allow_squash_merge=true \
   -F allow_rebase_merge=true \
   -F delete_branch_on_merge=true \
-  -F allow_auto_merge=true
+  -F allow_auto_merge=true \
+  -f squash_merge_commit_title=PR_TITLE \
+  -f squash_merge_commit_message=COMMIT_MESSAGES
 ```
 
 - `allow_merge_commit=false` is what enforces step 1's `required_linear_history`; either one alone leaves the two disagreeing about history.
 - `delete_branch_on_merge=true` removes merged head branches so stale ones do not pile up.
+- `squash_merge_commit_title=PR_TITLE` makes the PR title the squash commit's subject, so a title lint covers what `release-please` reads; GitHub takes the two squash fields together, so send the message field with it.
+- A repo that runs `release-please` sets `allow_rebase_merge=false`: a rebase merge keeps each commit's own message, so the PR title never reaches history.
 - `allow_auto_merge=true` is the prerequisite for step 4: without it `gh pr merge --auto` is unavailable.
 
 ## 3. Dependency updater config
