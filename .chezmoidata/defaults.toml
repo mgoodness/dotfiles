@@ -25,6 +25,7 @@ ignore = [
   "Onboarding.*",
   "RexSync.*",
   "rex.local-server.*",
+  "rex.server.tailnet-hostname",
   "rex.sync.*",
   "Workspace.lastFocusedSession",
   "Workspace.programActivitySeen",
