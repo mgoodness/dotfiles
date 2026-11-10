@@ -37,6 +37,7 @@ icons = { fallback = "" }
 
 [git_worktree]
 format = "[$symbol $name ]($style)"
+symbol = "󰙅"
 
 [[context.display]]
 hidden = false
