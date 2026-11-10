@@ -25,7 +25,6 @@ ignore = [
   "Onboarding.*",
   "RexSync.*",
   "rex.local-server.*",
-  "rex.server.*",
   "rex.sync.*",
   "Workspace.lastFocusedSession",
   "Workspace.programActivitySeen",
@@ -104,6 +103,28 @@ ScheduleFrequency = 1
 
 # Allow agents to control the app (rex -C … do)
 "rex.client.remoteControl" = true
+
+# --- Rex's server ---
+# The server's own settings, sitting alongside the client's below.
+
+# Run the server bundled with the app
+"rex.server.run-mode" = "bundled"
+
+# Restart the server if it dies
+"rex.server.automatic-restart-enabled" = true
+
+# Don't reload block plugins when their source changes
+"rex.server.block-plugin-reload-enabled" = false
+
+# Serve the API over an embedded Tailscale node (tsnet), so other devices
+# reach Rex without the Tailscale app installed anywhere. Only this switch
+# is declared: the node's own identity (machine key, hostname, ts.net
+# certificate) is runtime state under ~/Library/Application Support/rex/
+# tsnet, enrolled once by `rex server tailscale login`, and the tailnet's
+# ACLs live in Tailscale's admin console. This is per-machine in effect —
+# every Mac that applies these dotfiles runs Rex with its own tsnet node
+# and needs its own login.
+"rex.server.tailnet-enabled" = true
 
 # Copy selection to clipboard
 "Workspace.terminalCopyOnSelect" = true
