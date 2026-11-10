@@ -137,6 +137,19 @@ ScheduleFrequency = 1
 "Workspace.darkThemeID" = "merino-dark"
 
 # Terminal font
-"Workspace.terminalFontName" = "FiraCode Nerd Font Mono"
+"Workspace.terminalFontName" = "Menlo"
 
 "Workspace.terminalFontPointSize" = 12.0
+
+# No font smoothing
+"Workspace.terminalFontSmoothing" = false
+
+# Terminal colours follow the theme
+"Workspace.terminalUseThemePalette" = true
+
+# Sidebar on the left, collapsed, tabs stacked vertically
+"Workspace.sidebarCollapsed" = false
+
+"Workspace.sidebarPosition" = "left"
+
+"Workspace.tabStyle" = "vertical"
