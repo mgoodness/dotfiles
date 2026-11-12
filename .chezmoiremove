@@ -22,3 +22,4 @@ Library/LaunchAgents/dev.herdr.server.plist
 Code/github.com/mgoodness/AGENTS.md
 .agents/skills/macterm
 .pi/agent/extensions/desktop-notify.ts
+.pi/agent/extensions/directory-default-model.ts
