@@ -10,6 +10,7 @@ Code/emu.github.com/**
 Code/github.mlbam.net/**
 .config/homebrew/Brewfile.mlb
 .agents/skills/argocd-akuity
+.agents/skills/jira
 Code/github.com/fnox.toml
 {{ end -}}
 {{ if not .personal }}
