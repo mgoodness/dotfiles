@@ -18,6 +18,13 @@ fire reliably, and no linter catches any of them.
 
 Upstream it only when it is generally useful and you will maintain it.
 
+## Editing files
+
+Change existing files with the `edit` tool, one `edits[]` entry per site, repeated replacements
+included: the user reads an inline diff, and a missing or ambiguous match fails loudly. Keep `sed`
+and scripts for tooling that runs unattended; macOS ships BSD `sed`, so write
+`sed -i.bak ... && rm file.bak`.
+
 ## Subagent dispatch
 
 - **Code review.** `/code-review` splits into two axes. Dispatch both in parallel
