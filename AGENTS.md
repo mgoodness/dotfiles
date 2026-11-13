@@ -34,7 +34,7 @@ Scripts in `.chezmoiscripts/` run in alphanumeric order after `chezmoi apply`. `
 | `run_once_after_16-remove-tailscale-lazygit.sh`       | One-time removal of lazygit and Tailscale (app, receipt, VPN service)      |
 | `run_once_after_18-prune-pi-anthropic-oauth.sh`       | One-time removal of the retired Anthropic OAuth credential                 |
 | `run_onchange_after_19-defaults.sh.tmpl`              | Writes the `defaults` settings declared in `.chezmoidata/defaults.toml`    |
-| `run_onchange_after_20-macos.sh.tmpl`                 | Dock layout, Touch ID sudo, login items (the non-`defaults` macOS setup)   |
+| `run_onchange_after_20-macos.sh.tmpl`                 | Dock layout, Touch ID sudo (the non-`defaults` macOS setup)                |
 | `run_after_21-remote-login.sh.tmpl`                   | Enables Remote Login on the Mac mini only (hostname-gated)                 |
 | `run_after_22-authorized-keys.sh.tmpl`                | Authorizes the MacBook Pro's SSH key on the Mac mini only (hostname-gated) |
 | `run_after_30-fish.sh`                                | Adds fish to `/etc/shells` and sets it as login shell                      |

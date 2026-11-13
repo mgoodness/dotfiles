@@ -55,16 +55,6 @@ chflags nohidden ~/Library
 # echo "Disabling Siri..."
 # defaults write com.apple.assistant.support "Assistant Enabled" -bool false
 
-### Login Items ###
-# Requires Automation permission for the terminal app under
-# System Settings > Privacy & Security > Automation > System Events.
-if [ -d "/Applications/Magic Switch.app" ]; then
-    echo "Adding Magic Switch to login items..."
-    if ! osascript -e 'tell application "System Events" to get the path of every login item' 2>/dev/null | grep -q "Magic Switch"; then
-        osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Magic Switch.app", hidden:false}'
-    fi
-fi
-
 # Restart affected apps
 echo "Restarting Dock applications..."
 for app in Dock Finder; do

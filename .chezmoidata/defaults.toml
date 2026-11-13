@@ -13,7 +13,7 @@
 # reported. Only worth it for a small, app-owned domain; macOS's own domains
 # hold far too many keys to enumerate, so they get the declared-only check.
 #
-# Dock layout (dockutil), Touch ID for sudo and login items stay in
+# Dock layout (dockutil) and Touch ID for sudo stay in
 # run_onchange_after_20-macos.sh.tmpl: they aren't `defaults` values.
 
 [defaultsDiscover."com.superlogical.rex"]
