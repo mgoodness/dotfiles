@@ -43,7 +43,7 @@ repo = "meta"
 [[repos]]
 hooks = [{ id = "betterleaks", priority = 0 }]
 repo = "https://github.com/betterleaks/betterleaks"
-rev = "v1.9.0"
+rev = "v1.10.1"
 
 [[repos]]
 # --gh-hostname pinned to github.com: zizmor's online audits resolve third-party action
@@ -52,7 +52,7 @@ rev = "v1.9.0"
 # host. Left alone, zizmor sends a github.com-scoped token to the enterprise host instead and
 # gets a 401 ("Bad credentials") on every online audit.
 repo = "https://github.com/zizmorcore/zizmor-pre-commit"
-rev = "v1.31.1"
+rev = "v1.32.0"
 
 [[repos.hooks]]
 args = ["--no-progress", "--fix=all", "--gh-hostname=github.com"]
