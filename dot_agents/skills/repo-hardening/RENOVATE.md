@@ -33,7 +33,7 @@ module.exports = {
 
 ## Shared setups
 
-In `mlb-systems`, call the shared workflow and copy the template from the `mlb-systems/renovate` README. Its caller spec pins the call by full SHA with a trailing `# main`, passes the four named secrets explicitly (no `secrets: inherit`), and sets `permissions: contents: read`.
+In `mlb-systems`, call the shared workflow and copy the template from the `mlb-systems/renovate` README. Its caller spec pins the call by full SHA with a trailing release tag (`# vX.Y.Z`), passes the four named secrets explicitly (no `secrets: inherit`), and sets `permissions: contents: read`.
 
 ## Alerts
 
