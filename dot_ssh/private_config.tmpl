@@ -1,3 +1,7 @@
+{{ if .mlb -}}
+Include {{ .chezmoi.homeDir }}/.config/colima/ssh_config
+
+{{ end -}}
 # Ref: https://github.com/drduh/config/blob/master/ssh_config
 
 Match host github.com exec "pwd | grep -qF $HOME/Code/emu.github.com"
