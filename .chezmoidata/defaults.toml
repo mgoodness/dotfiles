@@ -175,3 +175,12 @@ ScheduleFrequency = 1
 "Workspace.sidebarPosition" = "left"
 
 "Workspace.tabStyle" = "vertical"
+
+# Group the sidebar's activity by priority
+"Workspace.activityGrouping" = "priority"
+
+# Return to priority grouping when the grouping is reset
+"Workspace.activityGroupingResetToPriority" = true
+
+# Don't show activity in the sidebar
+"Workspace.sidebarShowsActivity" = false
