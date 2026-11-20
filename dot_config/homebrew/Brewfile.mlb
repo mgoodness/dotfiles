@@ -5,6 +5,8 @@
 tap "hashicorp/tap", trusted: true
 
 brew "argocd"
+brew "colima"
+brew "docker"
 brew "hashicorp/tap/vault", trusted: true
 brew "helm"
 brew "jfrog-cli"
@@ -13,7 +15,6 @@ brew "krew"
 brew "ksops"
 brew "kubernetes-cli"
 brew "kustomize"
-brew "podman"
 brew "sops"
 brew "tcptraceroute"
 brew "terraform-docs"
