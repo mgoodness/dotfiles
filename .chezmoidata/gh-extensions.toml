@@ -3,3 +3,6 @@ id = "dlvhdr/gh-dash"
 
 [[ghExtensions]]
 id = "seachicken/gh-poi"
+
+[[ghExtensions]]
+id = "github/gh-stack"
