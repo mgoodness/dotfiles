@@ -1,0 +1,43 @@
+{
+  "name": "protect-default-branch-strict",
+  "target": "branch",
+  "enforcement": "active",
+  "bypass_actors": [
+    {
+      "actor_id": 5,
+      "actor_type": "RepositoryRole",
+      "bypass_mode": "pull_request"
+    }
+  ],
+  "conditions": {
+    "ref_name": {
+      "include": ["~DEFAULT_BRANCH"],
+      "exclude": []
+    },
+    "repository_property": {
+      "include": [
+        {
+          "name": "require-up-to-date",
+          "source": "custom",
+          "property_values": ["true"]
+        }
+      ],
+      "exclude": []
+    }
+  },
+  "rules": [
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "strict_required_status_checks_policy": true,
+        "do_not_enforce_on_create": false,
+        "required_status_checks": [
+          {
+            "context": "CI",
+            "integration_id": 15368
+          }
+        ]
+      }
+    }
+  ]
+}

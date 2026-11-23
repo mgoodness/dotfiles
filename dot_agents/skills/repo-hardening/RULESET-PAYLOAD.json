@@ -3,11 +3,11 @@
   "conditions": {
     "ref_name": {
       "exclude": [],
-      "include": ["refs/heads/main"]
+      "include": ["~DEFAULT_BRANCH"]
     }
   },
   "enforcement": "active",
-  "name": "main",
+  "name": "protect-default-branch",
   "rules": [
     {
       "type": "deletion"
@@ -19,15 +19,13 @@
       "type": "required_linear_history"
     },
     {
-      "type": "required_signatures"
-    },
-    {
       "parameters": {
         "dismiss_stale_reviews_on_push": false,
         "require_code_owner_review": false,
         "require_last_push_approval": false,
         "required_approving_review_count": 0,
-        "required_review_thread_resolution": true
+        "required_review_thread_resolution": true,
+        "allowed_merge_methods": ["squash"]
       },
       "type": "pull_request"
     },
@@ -35,7 +33,7 @@
       "parameters": {
         "required_status_checks": [
           {
-            "context": "test",
+            "context": "CI",
             "integration_id": 15368
           }
         ],
