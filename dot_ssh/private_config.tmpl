@@ -1,11 +1,18 @@
+# Ref: https://github.com/drduh/config/blob/master/ssh_config
+
 {{ if .mlb -}}
 Include {{ .chezmoi.homeDir }}/.config/colima/ssh_config
 
-{{ end -}}
-# Ref: https://github.com/drduh/config/blob/master/ssh_config
-
 Match host github.com exec "pwd | grep -qF $HOME/Code/emu.github.com"
     IdentityFile ~/.ssh/git@emu.github.com.pub
+
+Match host github.mlbam.net user admin
+    Port 122
+
+Host github.mlbam.net
+    IdentityFile ~/.ssh/git@github.mlbam.net.pub
+
+{{ end -}}
 
 Match host github.com !exec "pwd | grep -qF $HOME/Code/emu.github.com"
     IdentityFile ~/.ssh/git@github.com.pub
