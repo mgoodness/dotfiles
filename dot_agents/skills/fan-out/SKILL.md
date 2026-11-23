@@ -62,16 +62,18 @@ rex ls --json | jq -e --arg r "$repo" '.sessions[] | select(.label == $r)' >/dev
 Then, per worktree:
 
 ```sh
-created=$(rex window new -s "$repo" "<branch>" -c <worktree-path> --focus=false --json -- pi) || exit
+created=$(rex window new -s "$repo" "<branch>" -c <worktree-path> --focus=false --json \
+  --shell /opt/homebrew/bin/fish --interactive -- pi) || exit
 agent=$(jq -er '.block_ids[0]' <<<"$created") || exit
 until rex block call -s "$repo" -b "$agent" program_status | jq -e '.records[0].state == "idle"' >/dev/null; do sleep 0.5; done
 rex send -s "$repo" -b "$agent" '/implement #<n>'     # no Enter, so it stays staged
 ```
 
-Three rules make it reliable:
+Four rules make it reliable:
 
 - **`--focus=false` on every tab.** This agent usually runs in the repo's own session, and a focused new tab would pull the user off it.
-- **The agent is the tab's first pane, started directly (`-- pi`).** Target the `block_ids[0]` it returns.
+- **The agent is the tab's first pane, started as the tab's command (`-- pi`).** Target the `block_ids[0]` it returns.
+- **`--shell /opt/homebrew/bin/fish --interactive` on every tab.** Run bare, the command inherits only the Rex server's environment, which lacks the secrets (`JIRA_API_TOKEN`, `GH_TOKEN`) that fnox loads in interactive fish. The absolute path is needed because the server's `PATH` is `/usr/bin:/bin:/usr/sbin:/sbin`, so a bare `fish` fails to launch; `--interactive` runs `config.fish`, where `fnox activate` lives (a login shell alone skips it). Check it: `rex window new … --keep-open --shell /opt/homebrew/bin/fish --interactive -- sh -c 'test -n "$JIRA_API_TOKEN" && echo SET || echo MISSING'`, then `rex capture` the pane; it must say `SET`.
 - **`rex send` stages.** It types the text without Enter; the human's Enter starts the work.
 
 The readiness signal is pi's own `program_status` going `idle`: pi reports it over OSC 7501 once its input box is up, so there is nothing to scrape. Cap the wait at about 30 seconds; past that, `rex capture -s "$repo" -b "$agent" --trim` and show the user what the pane holds instead of staging into it.
