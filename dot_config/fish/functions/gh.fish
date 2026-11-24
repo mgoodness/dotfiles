@@ -1,5 +1,5 @@
 function gh --wraps=gh
-    set --function clone_host # only set for mlb- clones; overrides GH_HOST for this call only
+    set --function tree # emu, ghes, personal, or empty; see __gh_tree_for_owner/_pwd
     set --function repo_dir # empty unless this is a clone; gates the cd-restore below
     set --function orig_pwd $PWD # cloning temporarily cd's; restore this before returning
     if test "$argv[1]" = repo
@@ -22,7 +22,7 @@ function gh --wraps=gh
         end
 
         # A URL/SSH remote on the default host doesn't need the host segment; dropping it
-        # lets the owner-based emu.github.com routing below apply as usual.
+        # lets the owner-based routing below apply as usual.
         if test "$was_url" = true
             set --function spec_parts (string split / -- "$spec")
             if test (count $spec_parts) = 3 -a "$spec_parts[1]" = github.com
@@ -30,30 +30,75 @@ function gh --wraps=gh
             end
         end
 
-        switch (string split / "$spec" | count)
-            case 1
-                set repo_dir "$GIT_WORKSPACE/github.com/mgoodness/$spec"
-            case 2
-                set --function owner (string split / "$spec")[1]
-                if string match -q 'mlb-*' -- "$owner"; or test "$owner" = Michael-Goodness_mlb
-                    set clone_host "github.com"
-                    set repo_dir "$GIT_WORKSPACE/emu.github.com/$spec"
-                else
-                    set repo_dir "$GIT_WORKSPACE/github.com/$spec"
-                end
-            case 3
-                set repo_dir "$GIT_WORKSPACE/$spec"
+        if test -z "$GIT_WORKSPACE"
+            echo "gh: GIT_WORKSPACE is not set" >&2
+            return 1
         end
 
-        mkdir -p $repo_dir
-        cd $repo_dir/..
+        set --function parts (string split / -- "$spec")
+        switch (count $parts)
+            case 1
+                set tree personal
+                set repo_dir "$GIT_WORKSPACE/github.com/mgoodness/$spec"
+            case 2
+                set tree (__gh_tree_for_owner $parts[1])
+            case 3
+                # emu.github.com/<org>/<repo> is an explicit EMU override: it is a
+                # directory name, not a real host, so gh gets plain <org>/<repo>.
+                # github.mlbam.net/<org>/<repo> is a real host and goes to gh as typed.
+                switch $parts[1]
+                    case emu.github.com
+                        set tree emu
+                        set spec "$parts[2]/$parts[3]"
+                        set repo_dir "$GIT_WORKSPACE/emu.github.com/$spec"
+                    case github.mlbam.net
+                        set tree ghes
+                        set repo_dir "$GIT_WORKSPACE/$spec"
+                    case '*'
+                        set repo_dir "$GIT_WORKSPACE/$spec"
+                end
+        end
+
+        if test -z "$repo_dir"
+            switch $tree
+                case emu
+                    set repo_dir "$GIT_WORKSPACE/emu.github.com/$spec"
+                case ghes
+                    set repo_dir "$GIT_WORKSPACE/github.mlbam.net/$spec"
+                case '*'
+                    set repo_dir "$GIT_WORKSPACE/github.com/$spec"
+            end
+        end
+
+        # Run gh only from inside the destination tree: a failed mkdir/cd must not
+        # clone into whatever directory this was called from.
+        if not mkdir -p $repo_dir; or not cd $repo_dir/..
+            echo "gh: cannot enter $repo_dir/.." >&2
+            cd $orig_pwd
+            return 1
+        end
         set argv[3] $spec
+    else if not contains -- "$argv[1]" auth extension ext
+        # Any other command follows the tree it runs in. gh auth and gh extension
+        # manage gh itself, so a token override would only confuse them.
+        set tree (__gh_tree_for_pwd)
     end
 
-    if set --query clone_host[1]
-        GH_HOST=$clone_host command gh $argv
-    else
-        command gh $argv
+    # Plain gh is the default identity (EMU on an MLB machine, personal elsewhere),
+    # so only the other trees need a wrapper. gh-ghes and gh-personal carry the host
+    # and token for their tree; no command relies on mise's directory hook
+    # swapping GH_TOKEN after a cd. gh-personal exists on MLB machines only.
+    switch "$tree"
+        case ghes
+            gh-ghes $argv
+        case personal
+            if command -q gh-personal
+                gh-personal $argv
+            else
+                command gh $argv
+            end
+        case '*'
+            command gh $argv
     end
     set --local gh_status $status
 
