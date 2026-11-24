@@ -3,6 +3,7 @@
 # rubocop:disable Style/StringLiterals
 
 tap "hashicorp/tap", trusted: true
+tap "sidler/tap", trusted: true
 
 brew "argocd"
 brew "colima"
@@ -20,6 +21,7 @@ brew "tcptraceroute"
 brew "terraform-docs"
 
 cask "akuity"
+cask "sidler/tap/githubmonitor", trusted: true
 # slack is deliberately not brew-managed: its own updater installs a root-owned
 # pkg over /Applications/Slack.app, so brew's Caskroom symlink can't coexist
 # with it. See AGENTS.md (Homebrew).
