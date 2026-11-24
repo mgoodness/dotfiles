@@ -23,7 +23,35 @@ Upstream it only when it is generally useful and you will maintain it.
 Change existing files with the `edit` tool, one `edits[]` entry per site, repeated replacements
 included: the user reads an inline diff, and a missing or ambiguous match fails loudly. Keep `sed`
 and scripts for tooling that runs unattended; macOS ships BSD `sed`, so write
-`sed -i.bak ... && rm file.bak`.
+`sed -i.bak ... && rm file.bak`. Merge edits that touch the same or neighbouring lines into one
+entry, and call `edit` in a later batch than the command that produces its file (checkout, pull,
+build).
+
+## Secrets
+
+- Find a field by listing keys (`jq 'keys'`); print a value only when you know it holds no secret.
+- Choose the `op` account per task and pass `--account`: `mlb.1password.com` for work, the personal
+  account otherwise. A bare `op` reaches the personal account.
+- Hand a secret to a person as a one-time link for one recipient.
+
+## GitHub hosts
+
+The directory under `~/Code/<host>/<owner>/` selects the SSH key, git identity, and signing key.
+
+- **Personal**: `~/Code/github.com/<owner>/`, with its own config.
+- **EMU** (github.com, orgs such as `mlb-systems` and `mlb-nextgen`; more may follow):
+  `~/Code/emu.github.com/<org>/`.
+- **GHES**: `~/Code/github.mlbam.net/`.
+- `gh` on an MLB machine: plain `gh` is the EMU account (`Michael-Goodness_mlb`) on github.com.
+  For personal github.com work use `gh-personal` (account `mgoodness`); for GHES use `gh-ghes`
+  (account `mgoodness` on `github.mlbam.net`). Both wrappers take `gh`'s arguments and work from
+  any directory.
+- `gh` on a personal machine: plain `gh` is `mgoodness`.
+
+## Waiting
+
+You act only on user messages and watcher events. When work waits on a person or a date, name the
+dependency and ask the user to ping you; commit to a check-in only where a watcher will fire it.
 
 ## Subagent dispatch
 
