@@ -18,6 +18,7 @@ One **base** ruleset covers every enrolled repo; each **layer** adds one concern
 - Set values in bulk: `gh api -X PATCH orgs/<org>/properties/values` with `repository_names` and `properties`.
 - Keep code owners and up-to-date as separate layers. They suit different repos: code owners where non-admins commit regularly, up-to-date where a merge deploys. A repo that later gets a per-repo merge queue drops `require-up-to-date` and keeps its code owners.
 - Admin bypass (`RepositoryRole` id 5, `pull_request` mode) skips every rule in the ruleset, required checks included, so treat it as break-glass and list only human roles; Apps (Renovate, release automation) stay off the list. Each ruleset also lists `RepositoryMigration` as `exempt` (`actor_id: null`), so a repository migration can import history without tripping the rules.
+- Update a ruleset with the full body (`PUT`), taking the current bypass list from the live ruleset (`gh api orgs/<org>/rulesets/<id> --jq .bypass_actors`) or the payload files, since the live list can hold entries added in the UI.
 - Code-owner review is what stops an App from approving a writer's PR: an App cannot be a code owner. Enroll a repo in `code-owners` where writers other than admins commit; where only admins commit the gap is moot, since an admin can bypass anyway.
 - A merge queue lives in a repo-level ruleset (see Merge queue in `SKILL.md`), so it sits beside these rulesets, not in them.
 
@@ -28,6 +29,10 @@ One **base** ruleset covers every enrolled repo; each **layer** adds one concern
 - A validated CODEOWNERS file in `code-owners` repos: `gh api repos/<owner>/<repo>/codeowners/errors` is empty, and the owning team has write access (otherwise the review is unsatisfiable).
 - Shared CI actions that use only GitHub-owned actions, so repos with `allowed_actions: selected` can call them (`gh api repos/<owner>/<repo>/actions/permissions` shows which repos restrict).
 - No signed-commit requirement: see the `required_signatures` bullet in step 1.
+
+## When CI is not the whole gate
+
+A repo whose merge depends on more than `CI` (for example a Terraform Enterprise speculative plan that posts a commit status) gets its own repo-level ruleset beside the org ones, with a `required_status_checks` rule that lists the extra context. Take the context string from a real status (`gh api repos/<owner>/<repo>/commits/<sha>/status --jq '.statuses[].context'`) and leave `integration_id` out: a commit status from an external system has no GitHub App. Before requiring it, confirm the status is on the head commit of every recent merged PR, since a required status that some PRs never receive blocks them. Name it for what it requires (`require-terraform-plan`).
 
 ## Rollout
 
@@ -40,5 +45,5 @@ One **base** ruleset covers every enrolled repo; each **layer** adds one concern
 
 ## Done when
 
-- `gh api repos/<owner>/<repo>/rules/branches/<branch>` lists the org rulesets for each enrolled repo, with `CI` as the required check and no repo-level branch ruleset left.
+- `gh api repos/<owner>/<repo>/rules/branches/<branch>` lists the org rulesets for each enrolled repo, with `CI` as the required check and no repo-level branch ruleset left except one that requires an extra status.
 - A PR from a non-admin in an enrolled repo cannot merge without another person's approval. Test with a throwaway PR; Rule Insights alone only shows admin and bot merges.
