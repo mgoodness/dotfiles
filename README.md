@@ -48,7 +48,7 @@ install` yourself for a plain clone).
 
 Parallel work happens in git worktrees via [worktrunk](https://worktrunk.dev) (`wt`), run inside
 [Rex](https://www.superlogical.com/rex/docs) (one session per repo, one tab per worktree). A fresh
-`chezmoi init --apply` installs `worktrunk`; Rex Beta is installed by hand. `run_after_31-worktrunk-setup.sh`
+`chezmoi init --apply` installs `worktrunk`; Rex is installed by hand. `run_after_31-worktrunk-setup.sh`
 wires up worktrunk's fish integration and pi activity extension, and `run_after_23-rex-skill.sh` installs
 Rex's agent skill.
 The `pre-start` hook in `~/.config/worktrunk/config.toml` preps env (mise → direnv) on

@@ -66,7 +66,7 @@ Each directory has `.gitconfig` overriding identity and signing key. Global git 
 
 Parallel git-worktree development via [worktrunk](https://worktrunk.dev) (`wt`, worktree lifecycle), run inside [Rex](https://www.superlogical.com/rex/docs), the terminal multiplexer.
 
-> Rex Beta is installed by hand (no Homebrew cask) and pinned in the mlb Dock; `rex skill setup` for pi is kept current by `run_after_23-rex-skill.sh`, and its app settings are declared in `.chezmoidata/defaults.toml`. It doesn't read the Ghostty config (`dot_config/ghostty/`), which stays for standalone Ghostty.
+> Rex is installed by hand (no Homebrew cask) and pinned in the mlb Dock; `rex skill setup` for pi is kept current by `run_after_23-rex-skill.sh`, and its app settings are declared in `.chezmoidata/defaults.toml`. It doesn't read the Ghostty config (`dot_config/ghostty/`), which stays for standalone Ghostty.
 
 **Rex layout** (terms in `CONTEXT.md`, decisions in ADR-0008): `fan-out` opens a tab per worktree and `cleanup-branch` closes it. Agents are told to leave session labels alone by the "Rex sessions" rule in `dot_pi/agent/AGENTS.md`, backed by `rex.agents.names-sessions = false`.
 

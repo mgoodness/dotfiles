@@ -7,7 +7,7 @@
 # `rex` CLI at use time, so upgrading Rex updates what agents are told and
 # this repo deliberately doesn't vendor a copy. `rex skill setup` is
 # idempotent ("unchanged" when current), so it runs on every apply: Rex
-# Beta is installed by hand, and a run_once would be spent on the first apply
+# Rex is installed by hand, and a run_once would be spent on the first apply
 # that finds it missing.
 #
 # `rex` is only on PATH inside a Rex terminal, so fall back to the CLI inside
