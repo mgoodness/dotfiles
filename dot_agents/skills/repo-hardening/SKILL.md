@@ -180,7 +180,7 @@ gh api -X PUT repos/<owner>/<repo>/immutable-releases
   ```
   An org admin sets the same field on `orgs/<org>/actions/permissions`. It covers every step-level action, GitHub-owned and same-org included; a reusable workflow (job-level `uses:`) may still name a tag, so zizmor's `unpinned-uses` covers those.
 - **Declare `permissions: {}` at the top of each workflow and grant per job** the scopes that job needs (zizmor's `excessive-permissions`).
-- **`persist-credentials: false`** on any `actions/checkout` step that does not push afterward, and on every step that checks out untrusted PR code.
+- **`persist-credentials: false`** on any `actions/checkout` step that does not push afterward, and on every step that checks out untrusted PR code. A checkout that feeds `dorny/paths-filter` on `push` also takes `fetch-depth: 0`: with the credentials gone, the filter cannot fetch the push's before-commit and the job fails.
 - **Pass untrusted context through `env:`.** Values like a PR title, branch name, or `head.ref` reach a `run:` script as `"$VAR"`, never as an interpolated `${{ }}` expression (zizmor's `template-injection`).
 - **Bot identity**: key checks on `github.event.pull_request.user.login`. `github.actor` is spoofable (zizmor's `bot-conditions`).
 - **Prefer `pull_request`.** `pull_request_target` and `workflow_run` run with a write token and secrets, which is why zizmor flags them (`dangerous-triggers`). A workflow that genuinely needs one says why in the suppression, naming both facts: no checkout of PR code, and PR-derived values flow only through `env:`:
