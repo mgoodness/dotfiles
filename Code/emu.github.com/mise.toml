@@ -1,12 +1,11 @@
 [env]
 CLOUDSDK_ACTIVE_CONFIG_NAME = "mlb"
-GH_HOST = "github.com"
+# GH_HOST and GH_TOKEN come from the global mise config: on an MLB box github.com
+# is EMU, so the global GH_TOKEN is already the EMU PAT.
 # No PI_DEFAULT_PROVIDER/PI_DEFAULT_MODEL override here: pi's default is now
 # profile-seeded (dot_pi/agent/modify_settings.json seeds github-copilot on
 # `.mlb`), so corporate work already bills against Copilot without a
-# per-directory override. See dot_config/mise/config.toml.tmpl for why this
-# exec() isn't redundant with fnox's own per-directory activation.
-GH_TOKEN = { value = "{{ exec(cache_duration='7d', cache_key='emu-gh-token', command='/opt/homebrew/bin/fnox get GH_TOKEN') }}" }
+# per-directory override.
 
 [tools]
 terraform = "latest"

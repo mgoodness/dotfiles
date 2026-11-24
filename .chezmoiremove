@@ -23,3 +23,5 @@ Library/LaunchAgents/dev.herdr.server.plist
 .pi/agent/extensions/desktop-notify.ts
 .pi/agent/extensions/directory-default-model.ts
 .config/gh-dash
+.local/bin/gh-emu
+Code/emu.github.com/fnox.toml

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# gh-personal — run gh as the personal account (mgoodness) on github.com.
+#
+# On an MLB machine github.com means EMU: the default GH_TOKEN is the EMU PAT,
+# so plain `gh` acts as Michael-Goodness_mlb. This wrapper reads the personal
+# token (GH_TOKEN_PERSONAL) from fnox and runs gh from the caller's directory,
+# so repo inference (`gh pr view`) still works. Use it from any directory.
+
+set -euo pipefail
+
+token=$(cd "$HOME" && fnox get GH_TOKEN_PERSONAL)
+if [ -z "$token" ]; then
+    echo "gh-personal: no GH_TOKEN_PERSONAL from fnox (is 1Password unlocked?)" >&2
+    exit 1
+fi
+
+GH_HOST=github.com GH_TOKEN=$token exec gh "$@"

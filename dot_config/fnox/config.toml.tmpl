@@ -15,14 +15,19 @@ onepass_mlb = { type = "1password", account = "mlb.1password.com" }
 {{ end -}}
 
 [secrets]
-GH_TOKEN = { provider = "onepass_personal", value = "op://Private/GH CLI PAT/credential" }
 {{ if .mlb -}}
+# On an MLB box github.com means EMU, so the default GH_TOKEN is the EMU PAT and
+# plain `gh` acts as the EMU account everywhere. Personal github.com work goes
+# through `gh-personal`, which reads GH_TOKEN_PERSONAL.
+GH_TOKEN = { provider = "onepass_mlb", value = "op://Employee/EMU GH CLI PAT/credential" }
+GH_TOKEN_PERSONAL = { provider = "onepass_personal", value = "op://Private/GH CLI PAT/credential" }
 CONTEXT7_API_KEY = { provider = "onepass_mlb", value = "op://Employee/Context7/api key" }
 EXA_API_KEY = { provider = "onepass_mlb", value = "op://Employee/Exa API Key/credential" }
 JIRA_API_TOKEN = { provider = "onepass_mlb", value = "op://Employee/Jira CLI Token/credential" }
 SOFTWAREUPDATE_PASSWORD = { provider = "onepass_mlb", value = "op://Employee/Okta/password" }
 TF_TOKEN_terraform_mlbinfra_net = { provider = "onepass_mlb", value = "op://Employee/TFE Token/credential" }
 {{ else if .personal -}}
+GH_TOKEN = { provider = "onepass_personal", value = "op://Private/GH CLI PAT/credential" }
 CONTEXT7_API_KEY = { provider = "onepass_personal", value = "op://Private/Context7 API Key/credential" }
 DEEPSEEK_API_KEY = { provider = "onepass_personal", value = "op://Private/DeepSeek API Key/credential" }
 EXA_API_KEY = { provider = "onepass_personal", value = "op://Private/Exa API Key/credential" }

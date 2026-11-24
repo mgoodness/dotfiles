@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# gh-ghes — run gh as the GHES account (mgoodness) on github.mlbam.net.
+#
+# Reads the token from the github.mlbam.net tree's fnox.toml and runs gh from
+# the caller's directory, so repo inference (`gh pr view`) still works. Use it
+# from any directory.
+
+set -euo pipefail
+
+token=$(cd "$HOME/Code/github.mlbam.net" && fnox get GH_ENTERPRISE_TOKEN)
+if [ -z "$token" ]; then
+    echo "gh-ghes: no GH_ENTERPRISE_TOKEN from fnox (is 1Password unlocked?)" >&2
+    exit 1
+fi
+
+unset GH_TOKEN
+GH_HOST=github.mlbam.net GH_ENTERPRISE_TOKEN=$token exec gh "$@"

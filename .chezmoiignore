@@ -12,6 +12,8 @@ Code/github.mlbam.net/**
 .agents/skills/argocd-akuity
 .agents/skills/jira
 Code/github.com/fnox.toml
+.local/bin/gh-ghes
+.local/bin/gh-personal
 {{ end -}}
 {{ if not .personal }}
 .config/homebrew/Brewfile.personal

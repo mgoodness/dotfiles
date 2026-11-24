@@ -19,8 +19,8 @@ GH_HOST = "github.com"
 #
 # This exec() is not redundant with fnox's own `fnox activate fish` hook,
 # which already delivers this same token directly per-directory in an
-# interactive shell (see Code/emu.github.com/fnox.toml and
-# Code/github.mlbam.net/fnox.toml for the per-host overrides fnox merges in).
+# interactive shell (see Code/github.mlbam.net/fnox.toml for the per-host
+# override fnox merges in; on an MLB box this global value is the EMU PAT).
 # mise needs its own copy because mise eagerly resolves [env] on invocation,
 # including in non-interactive/sanitized callers like the one above, where
 # fnox's shell hook was never sourced. fnox is still the single source of
@@ -28,7 +28,7 @@ GH_HOST = "github.com"
 # it never redeclares the path. The 7d cache_duration here is mirrored by
 # fnox's own daemon idle_timeout (dot_config/fnox/config.toml.tmpl) so both
 # caches expire on roughly the same schedule.
-GH_TOKEN = { value = "{{ `{{ exec(command='PATH=/opt/homebrew/bin:/opt/homebrew/sbin:$PATH /opt/homebrew/bin/fnox get GH_TOKEN', cache_duration='7d', cache_key='personal-gh-token') }}` }}" }
+GH_TOKEN = { value = "{{ `{{ exec(command='PATH=/opt/homebrew/bin:/opt/homebrew/sbin:$PATH /opt/homebrew/bin/fnox get GH_TOKEN', cache_duration='7d', cache_key='gh-token') }}` }}" }
 {{ if .mlb -}}
 CLOUDSDK_ACTIVE_CONFIG_NAME = "mlb"
 {{ else if .personal -}}

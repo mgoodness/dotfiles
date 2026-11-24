@@ -1,2 +1,0 @@
-[secrets]
-GH_TOKEN = { provider = "onepass_mlb", value = "op://Employee/EMU GH CLI PAT/credential" }
