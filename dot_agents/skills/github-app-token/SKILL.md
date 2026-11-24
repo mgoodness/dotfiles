@@ -68,6 +68,8 @@ An App installation's permissions apply repo-wide (or across every repo it's ins
 
 Creating the App and installing it on the target repo(s) is manual dashboard work — script it with the `wizard` skill rather than writing it as prose steps to follow by hand. Store its Client ID as a repo or org **variable** and its private key as a repo or org **secret**; name the pair after the App, not after any one workflow that consumes it, since step 5 expects reuse.
 
+Verify an installation's reach by minting an installation token with `curl -X POST …/app/installations/<id>/access_tokens -H "Authorization: Bearer <jwt>"` (`gh` sends `token`, which rejects a JWT). Done when that token reads the installed repo (200), fails a write (403), and gets 404 on any other repo.
+
 ## Common Mistakes
 
 - **Verify the approval gate empirically** — `author_association` does not reliably distinguish a gated identity from an ungated one; see step 2.
