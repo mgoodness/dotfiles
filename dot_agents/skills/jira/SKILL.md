@@ -36,7 +36,10 @@ assignee and sprint.
 jira issue comment add OZZI-123 -T comment.md --no-input
 ```
 
-Done when `jira issue view OZZI-123 --plain --comments 1` shows it.
+Done when `jira issue view OZZI-123 --plain --comments 1` shows it. A list placed right after a
+one-line paragraph can lose its first bullet into that paragraph, and the CLI cannot edit a comment:
+after posting a list, read the stored body back (`GET /rest/api/3/issue/OZZI-123/comment`) and
+correct it with `PUT /rest/api/3/issue/OZZI-123/comment/<id>`.
 
 ## Move
 
