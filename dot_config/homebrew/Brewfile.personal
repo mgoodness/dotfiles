@@ -5,6 +5,7 @@
 cask "discord"
 cask "rectangle"
 
+mas "1Blocker", id: 1365531024
 mas "GarageBand", id: 682658836
 mas "iMovie", id: 408981434
 mas "Submersion", id: 6757456915
