@@ -184,3 +184,6 @@ ScheduleFrequency = 1
 
 # Don't show activity in the sidebar
 "Workspace.sidebarShowsActivity" = false
+
+# New-session swap prompt: leave pending (Rex's own default)
+"Shortcuts.newSessionSwapPrompt" = "pending"
