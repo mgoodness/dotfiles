@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# shellcheck shell=bash
+
+# Keep a personal Mac reachable over SSH/Rex: no system sleep on AC (the
+# display still sleeps), restart after a power failure, and no Power Nap
+# dark-wakes (reported to force-sleep and drop SSH/Tailscale sessions).
+# Role-gated to `.personal` (see ADR-0005); the Mac mini is the intended
+# target, but a personal laptop on its charger also stays awake.
+# Self-healing: reads each setting first and calls sudo only on drift, so
+# repeated `chezmoi apply` runs are a no-op, matching this repo's other
+# run_after_ scripts.
+
+if [ -n "${CI:-}" ]; then
+    echo "Skipping due to \$CI"
+    exit
+fi
+
+{{ if .personal -}}
+# Value of a setting in the "AC Power" block of `pmset -g custom`. Empty when
+# the machine doesn't expose it (e.g. autorestart on some models), in which
+# case the setting is skipped rather than forced.
+pmset_ac() {
+    pmset -g custom | awk -v key="$1" '
+        /^AC Power:/ { ac = 1; next }
+        /^[A-Za-z].*:$/ { ac = 0 }
+        ac && $1 == key { print $2; exit }'
+}
+
+pmset_ensure() {
+    local key="$1" want="$2" cur
+    cur="$(pmset_ac "$key")"
+    if [ -n "$cur" ] && [ "$cur" != "$want" ]; then
+        echo "Setting pmset $key to $want on AC..."
+        sudo pmset -c "$key" "$want"
+    fi
+}
+
+pmset_ensure sleep 0
+pmset_ensure autorestart 1
+pmset_ensure powernap 0
+{{ end -}}
