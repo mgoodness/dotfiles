@@ -145,6 +145,12 @@ ScheduleFrequency = 1
 # Don't tint tab icons
 "Workspace.tabIconTintMode" = "off"
 
+# Rex's own shell icons, untinted
+"Workspace.shellIconTheme" = "default"
+
+# Reveal the window toolbar on hover
+"Workspace.toolbarBehavior" = "onHover"
+
 # Standard inactive-window pane styles
 "Workspace.usesStandardInactiveWindowPaneStyles" = true
 
