@@ -68,13 +68,13 @@ Parallel git-worktree development via [worktrunk](https://worktrunk.dev) (`wt`, 
 
 > Rex is installed by hand (no Homebrew cask) and pinned in the mlb Dock; `rex skill setup` for pi is kept current by `run_after_23-rex-skill.sh`, and its app settings are declared in `.chezmoidata/defaults.toml`. It doesn't read the Ghostty config (`dot_config/ghostty/`), which stays for standalone Ghostty.
 
-**Rex layout** (terms in `CONTEXT.md`, decisions in ADR-0008): `fan-out` opens a tab per worktree and `cleanup-branch` closes it. Agents are told to leave session labels alone by the "Rex sessions" rule in `dot_pi/agent/AGENTS.md`, backed by `rex.agents.names-sessions = false`.
+**Rex layout** (terms in `GLOSSARY.md`, decisions in ADR-0008): `fan-out` opens a tab per worktree and `cleanup-branch` closes it. Agents are told to leave session labels alone by the "Rex sessions" rule in `dot_pi/agent/AGENTS.md`, backed by `rex.agents.names-sessions = false`.
 
 - **Worktrees**: worktrunk owns create/teardown. The sibling path `repo.branch` keeps each worktree under `~/Code/{host}/`, so per-host identity and signing still apply (ADR-0002). User config: `dot_config/worktrunk/config.toml`.
 - **Hooks** (fire on `wt switch --create`): `pre-start` preps env (mise → direnv fallback). There's no `post-start` hook anymore — it used to open a herdr workspace at the new worktree; herdr is gone (ADR-0006), so `wt switch --create` alone opens no UI; the `fan-out` skill opens the Rex tab.
 - **Shell integration**: installed by `run_after_31-worktrunk-setup.sh` (`functions/wt.fish`, unmanaged by chezmoi). The same script keeps the Pi activity extension (`~/.pi/agent/extensions/worktrunk.ts`) current; `up.fish`'s `__up_wt` does the same between applies.
 
-Design rationale lives in `CONTEXT.md` (glossary) and `docs/adr/` (ADRs 0001, 0002, 0004, 0006, 0008).
+Design rationale lives in `GLOSSARY.md` (glossary) and `docs/adr/` (ADRs 0001, 0002, 0004, 0006, 0008).
 
 ### Homebrew
 
@@ -123,4 +123,4 @@ Canonical five-role vocabulary, label strings unchanged. See `docs/agents/triage
 
 ### Domain docs
 
-Single-context: `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+Single-context: `GLOSSARY.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
