@@ -35,4 +35,10 @@ GEMINI_API_KEY = { provider = "onepass_personal", value = "op://Private/Gemini A
 OPENCODE_API_KEY = { provider = "onepass_personal", value = "op://Private/OpenCode API Key/credential" }
 OPENROUTER_API_KEY = { provider = "onepass_personal", value = "op://Private/OpenRouter API Key/credential" }
 SOFTWAREUPDATE_PASSWORD = { provider = "onepass_personal", value = "op://Private/Mac mini/password" }
+{{- /* hass-cli's HASS_TOKEN, for the registry writes the official MCP server has no
+       tools for (`hass-cli entity delete`, `hass-cli integration delete`). Personal
+       machines only, so it belongs here rather than beside GH_TOKEN: keep it an admin
+       user's token, since Home Assistant's own policy treats roles as no security
+       boundary. */}}
+HASS_TOKEN = { provider = "onepass_personal", value = "op://Private/Home Assistant/credential" }
 {{ end -}}

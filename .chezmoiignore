@@ -17,5 +17,6 @@ Code/github.com/fnox.toml
 {{ end -}}
 {{ if not .personal }}
 .config/homebrew/Brewfile.personal
+.config/fish/conf.d/40-hass.fish
 .pi/agent/mcp.json
 {{ end -}}
